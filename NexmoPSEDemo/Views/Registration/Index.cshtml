@@ -1,0 +1,24 @@
+﻿@model RegistrationModel
+@{
+    ViewData["Title"] = "Registration Page";
+}
+
+<div>
+    <h1>New Player Registration</h1>
+</div>
+<form method="post">
+    <div>
+        <label for="name">First Name</label>
+        <input type="text" name="name" placeholder="Please enter your full name" />
+    </div>
+    <div>
+        <label for="number">Phone Number</label>
+        <input type="text" name="number" placeholder="Please enter your phone number" />
+    </div>
+    <div>
+        <input type="submit" value="Register" />
+    </div>
+</form>
+<div>
+    <label id="feedback">@ViewData["feedback"]</label>
+</div>
