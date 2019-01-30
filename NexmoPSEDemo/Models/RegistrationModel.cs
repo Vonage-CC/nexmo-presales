@@ -8,5 +8,6 @@ namespace NexmoPSEDemo.Models
         public string Number { get; set; }
         public string Feedback { get; set; }
         public string PinCode { get; set; }
+        public string Recipient { get; set; }
     }
 }

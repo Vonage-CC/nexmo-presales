@@ -27,13 +27,15 @@ namespace NexmoPSEDemo.Controllers
             if (ModelState.IsValid)
             {
                 // create a logger placeholder
-                Logger logger = null;
+                Logger logger = NexmoLogger.GetLogger("RegistrationLogger"); ;
 
                 try
                 {
                     if (verifyAction == "Register")
                     {
-                        logger = NexmoLogger.GetLogger("VerifyRequestLogger");
+                        if( logger == null){
+                            logger = NexmoLogger.GetLogger("RegistrationLogger");
+                        }
                         logger.Open();
 
                         var results = NexmoApi.SendVerifyRequest(viewModel, logger, configuration);
@@ -41,10 +43,8 @@ namespace NexmoPSEDemo.Controllers
                         {
                             logger.Log("Verify request successfully created with requestId: " + results.request_id);
                             ViewData["feedback"] = "Thanks " + viewModel.Name + ". We have sent a verification code to the number you provided.";
-                            TempData["requestId"] = results.request_id;
                             ViewData["requestId"] = results.request_id;
-                            viewModel.RequestId = results.request_id;
-                            TempData["number"] = viewModel.Number;
+                            ViewData["number"] = viewModel.Number;
                         }
                         else if (results.status == "10")
                         {
@@ -57,11 +57,15 @@ namespace NexmoPSEDemo.Controllers
                     }
                     else if(verifyAction == "Check")
                     {
-                        logger = NexmoLogger.GetLogger("VerifyCheckLogger");
+                        if (logger == null)
+                        {
+                            logger = NexmoLogger.GetLogger("RegistrationLogger");
+                        }
                         logger.Open();
 
                         string pinCode = viewModel.PinCode;
                         string requestId = viewModel.RequestId;
+                        string number = viewModel.Recipient; 
                         var results = NexmoApi.CheckVerifyRequest(viewModel, logger, configuration, requestId);
 
                         // log the request response for future debugging
@@ -75,14 +79,14 @@ namespace NexmoPSEDemo.Controllers
                         {
                             // provide feedback on the page
                             ViewData["feedback"] = "Your code has been successfully verified.";
-                            logger.Log("PIN code: " + pinCode + " successfully verified.");
+                            logger.Log("PIN code: " + pinCode + " successfully verified. We have sent an confirmation message to the number provided.");
 
                             // send confirmation message
-                            var smsResults = NexmoApi.SendSMS(TempData["number"].ToString(), configuration, "Your account has been created successfully. You can access it here: http://dashboard.nexmo.com", "Nexmo PSE", "60");
+                            var smsResults = NexmoApi.SendSMS(number, configuration, "Your account has been created successfully. You can access it here: http://dashboard.nexmo.com", "Nexmo PSE", "60");
                             foreach(SMS.SMSResponseDetail responseDetail in smsResults.messages)
                             {
                                 string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
-                                messageDetails += " for Verify requestId: " + TempData["requestId"];
+                                messageDetails += " for Verify requestId: " + requestId;
                                 messageDetails += " to: " + responseDetail.to;
                                 messageDetails += " at price: " + responseDetail.message_price;
                                 messageDetails += " with status: " + responseDetail.status;
@@ -103,8 +107,11 @@ namespace NexmoPSEDemo.Controllers
                 }
                 finally
                 {
-                    logger.Close();
-                    logger.Deregister();
+                    //if (logger != null)
+                    //{
+                        //logger.Close();
+                        //logger.Deregister();
+                    //}
                 }
             }
 

@@ -76,7 +76,8 @@ namespace NexmoPSEDemo.Common
             }
             fileLogger.ArchiveDirectoryPath = archiveDirectory;
 
-            // Set up the new instand of the file logger and return it
+            // Set up the new instance of the file logger and return it
+            Logger.CloseLoggers();
             Logger.AddLogger(loggerName, fileLogger);
             Logger logger = Logger.GetLogger(loggerName);
 

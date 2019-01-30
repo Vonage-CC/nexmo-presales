@@ -39,7 +39,6 @@ namespace NexmoPSEDemo.Controllers
                     foreach (SMS.SMSResponseDetail responseDetail in smsResults.messages)
                     {
                         string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
-                        messageDetails += " for requestId: " + TempData["requestId"];
                         messageDetails += " to: " + responseDetail.to;
                         messageDetails += " at price: " + responseDetail.message_price;
                         messageDetails += " with status: " + responseDetail.status;
