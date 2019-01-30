@@ -28,7 +28,8 @@ tarballs/
 test-results/
 Thumbs.db
 .vs/
-appsettings.*
+appsettings.json
+appsettings.development.json
 
 # Mac bundle stuff
 *.dmg
