@@ -1,5 +1,66 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model SMSModel
 @{
+    ViewData["Title"] = "Messaging";
 }
+
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
+        </svg>
+        SMS notifications
+    </h3>
+
+    <form method="post">
+        <div class="Vlt-grid">
+            <div class="Vlt-Col">
+                <div class="Vlt-card Vlt-article">
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="sender">Sender</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="sender" placeholder="Please enter your sender details" />
+                        </div>
+
+                        <small>Please Note:</small>
+                        <small class="Vlt-form__element__hint">
+                            You can enter alphanumeric characters as a sender ID. 
+                            <br />
+                            However some restrictions apply in some countries.
+                            <br />
+                            More details can be found
+                            <a href="https://help.nexmo.com/hc/en-us/sections/200622473-Country-Specific-Features-and-Restrictions">
+                                here
+                            </a>
+                            .
+                        </small>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="number">Recipient Phone Number</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="number" placeholder="Please enter the phone number to send the message to" />
+                        </div>
+
+                    </div>
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="message">Message</label>
+                        <div class="Vlt-textarea">
+                            <textarea rows="4" cols="30" name="message" placeholder="Please enter the message to send"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-input">
+                            <input type="submit" value="Send SMS" name="sms" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Vlt-col">
+                <div class="Vlt-card Vlt-article">
+                    <small>Request Status</small>
+                    <small class="Vlt-form__element__hint">@ViewData["feedback"]</small>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

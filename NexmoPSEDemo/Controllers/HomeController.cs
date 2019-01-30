@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NexmoPSEDemo.Models;
+using Nexmo.Api;
+using Microsoft.Extensions.Configuration;
+using System;
+using NSpring.Logging;
+using NexmoPSEDemo.Common;
 
 namespace NexmoPSEDemo.Controllers
 {

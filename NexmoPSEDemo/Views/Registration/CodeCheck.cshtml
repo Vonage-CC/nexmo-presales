@@ -1,5 +1,19 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model RegistrationModel
+
 @{
+    ViewData["Title"] = "Registration - PIN Check";
 }
+
+<div>
+    <label id="feedback">@TempData["feedback"]</label>
+</div>
+
+<form method="post">
+    <div>
+        <label for="codeCheck">Please enter the code you received in the box below</label>
+        <input type="text" placeholder="Enter code here" name="pincode" />
+    </div>
+    <div>
+        <input type="submit" value="Check Code" />
+    </div>
+</form>

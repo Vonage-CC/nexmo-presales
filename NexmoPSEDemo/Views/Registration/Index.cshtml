@@ -1,24 +1,65 @@
 ﻿@model RegistrationModel
 @{
-    ViewData["Title"] = "Registration Page";
+    ViewData["Title"] = "Registration";
 }
 
-<div>
-    <h1>New Player Registration</h1>
-</div>
-<form method="post">
-    <div>
-        <label for="name">First Name</label>
-        <input type="text" name="name" placeholder="Please enter your full name" />
-    </div>
-    <div>
-        <label for="number">Phone Number</label>
-        <input type="text" name="number" placeholder="Please enter your phone number" />
-    </div>
-    <div>
-        <input type="submit" value="Register" />
-    </div>
-</form>
-<div>
-    <label id="feedback">@ViewData["feedback"]</label>
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
+        </svg>
+        New User Registration
+    </h3>
+
+    <form method="post">
+        <div class="Vlt-grid">
+            <div class="Vlt-Col">
+                <div class="Vlt-card Vlt-article">
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="name">First Name</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="name" placeholder="Please enter your full name" />
+                        </div>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="number">Phone Number</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="number" placeholder="Please enter your phone number" />
+                        </div>
+
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-input">
+                            <input type="submit" value="Register" name="verifyAction" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="Vlt-col">
+                <div class="Vlt-card Vlt-article">
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="codeCheck">Please enter the code you received in the box below</label>
+                        <div class="Vlt-input">
+                            <input type="text" placeholder="Enter code here" name="pincode" />
+                        </div>
+                        <input type="hidden" value='@ViewData["RequestId"]' name="requestId" />
+
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-input">
+                            <input type="submit" value="Check" name="verifyAction" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="Vlt-col">
+                <div class="Vlt-card Vlt-article">
+                    <small>Request Status</small>
+                    <small class="Vlt-form__element__hint">@ViewData["feedback"]</small>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>

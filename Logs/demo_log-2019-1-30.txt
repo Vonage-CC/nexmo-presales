@@ -1,0 +1,21 @@
+﻿2019-01-30 08:50:41.817+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+
+2019-01-30 08:50:42.430+00:00  [I]  Verify request successfully created with requestId: 19bcfbfab9ba4ca5b28f19be0777c6bfNULL
+
+2019-01-30 08:51:10.288+00:00  [I]  ViewModel: NexmoPSEDemo.Models.RegistrationModelNULL
+2019-01-30 08:51:10.288+00:00  [I]  ConfigurationMicrosoft.Extensions.Configuration.ConfigurationRootNULL
+
+2019-01-30 08:51:10.289+00:00  [I]  Request ID: NULL
+2019-01-30 08:51:10.292+00:00  [E]  "System.NullReferenceException: Object reference not set to an instance of an object.\n   at NexmoPSEDemo.Controllers.RegistrationController.Index(RegistrationModel viewModel, String verifyAction) in H:\\My Drive\\Documents\\nexmo\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\NexmoPSEDemo\\Controllers\\RegistrationController.cs:line 66"
+
+2019-01-30 08:59:37.313+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+
+2019-01-30 08:59:37.916+00:00  [I]  Verify request successfully created with requestId: 8dc237021c92487989e3e1364d28fe05NULL
+
+2019-01-30 08:59:50.111+00:00  [E]  "System.NullReferenceException: Object reference not set to an instance of an object.\n   at NexmoPSEDemo.Controllers.RegistrationController.Index(RegistrationModel viewModel, String verifyAction) in H:\\My Drive\\Documents\\nexmo\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\NexmoPSEDemo\\Controllers\\RegistrationController.cs:line 62"
+2019-01-30 09:35:56.670+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-01-30 09:35:58.314+00:00  [I]  Verify request successfully created with requestId: 0349303fd77b4beb9be550a0ad3cb8f3NULL
+2019-01-30 09:42:16.731+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-01-30 09:42:18.832+00:00  [I]  Verify request successfully created with requestId: 447ef6caa9794398bad235058011e0dfNULL
+2019-01-30 09:45:25.439+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-01-30 09:45:28.108+00:00  [I]  Verify request successfully created with requestId: e97af53b7ad64c91906394718441b01dNULL
