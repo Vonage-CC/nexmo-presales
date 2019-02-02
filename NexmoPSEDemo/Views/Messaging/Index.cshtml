@@ -6,9 +6,9 @@
 <div class="Vlt-card Vlt-article">
     <h3 class="Vlt-title--icon">
         <svg class="Vlt-teal">
-            <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
+            <use xlink:href="~/symbol/volta-icons.svg"#Vlt-icon-rocket"></use>
         </svg>
-        SMS notifications
+        Sending Notifications
     </h3>
 
     <form method="post">
@@ -33,20 +33,23 @@
                             <input type="text" name="sender" value="447418342149" />
                         </div>
 
-                        <small>Please Note:</small>
-                        <small class="Vlt-form__element__hint">
-                            For WhatsApp do not change the number in the box
-                            <br />
-                            You can enter alphanumeric characters as a sender ID for SMS.
-                            <br />
-                            However some restrictions apply in some countries.
-                            <br />
-                            More details can be found
-                            <a href="https://help.nexmo.com/hc/en-us/sections/200622473-Country-Specific-Features-and-Restrictions">
-                                here
-                            </a>
-                            .
-                        </small>
+                        <div class="Vlt-callout Vlt-callout--shoutout">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                For WhatsApp do not change the number in the box
+                            </div>
+                        </div>
+
+                        <div class="Vlt-callout Vlt-callout--warning">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                You can enter alphanumeric characters as a sender ID for SMS. However some restrictions apply in some countries. More details can be found
+                                <a href="https://help.nexmo.com/hc/en-us/sections/200622473-Country-Specific-Features-and-Restrictions" target="_blank">
+                                    here
+                                </a>
+                                .
+                            </div>
+                        </div>
                     </div>
                     <div class="Vlt-form__element">
                         <label class="Vlt-label" for="number">Recipient Phone Number</label>
@@ -58,9 +61,8 @@
                     <div class="Vlt-form__element">
                         <label class="Vlt-label" for="text">Message</label>
                         <div class="Vlt-textarea">
-                            <textarea rows="4" cols="30" name="text" placeholder="Please enter the message to send"></textarea>
+                            <textarea rows="4" cols="30" name="text" placeholder="Please enter a message or select from the one of templates below" id="message"></textarea>
                         </div>
-
                     </div>
                     <div class="Vlt-form__element">
                         <div class="Vlt-input">
@@ -71,10 +73,37 @@
             </div>
             <div class="Vlt-col">
                 <div class="Vlt-card Vlt-article">
-                    <small>Request Status</small>
-                    <small class="Vlt-form__element__hint">@ViewData["feedback"]</small>
+                    <h5>Result</h5>
+                    <div class="Vlt-callout Vlt-callout--good">
+                        <i></i>
+                        <div class="Vlt-callout__content">
+                            @ViewData["feedback"]
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </form>
+
+    <h3>Templates</h3>
+    <div class="Vlt-grid">
+        <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'low-balance-notification')">
+            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="low-balance-notification">
+                <h4>Low balance notification</h4>
+                <p>Your account balance is running low. Would you like to top-up your account now? To top-up with £10 reply 1, to top-up with £20 reply 2. To stop these messages reply STOP</p>
+            </div>
+        </div>
+        <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'bet-won-notification')">
+            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="bet-won-notification">
+                <h4>Bet won notification</h4>
+                <p>Great news! The bet you placed on the match Arsenal vs Chelsea has been successfully won. We have added your winnings to your account.</p>
+            </div>
+        </div>
+        <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'player-reminder-notification')">
+            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="player-reminder-notification">
+                <h4>Player reminder notification</h4>
+                <p>Hello Jean-Philippe. We have noticed that you have not logged into your account for several days. Why not come back today and enjoy a free £5 top-up. Click the link to access your account now. <a href="#">Access your account</a>.</p>
+            </div>
+        </div>
+    </div>
 </div>

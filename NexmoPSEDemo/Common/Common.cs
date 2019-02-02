@@ -5,12 +5,9 @@ using Nexmo.Api;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using static Nexmo.Api.NumberVerify;
 using static Nexmo.Api.SMS;
 
@@ -33,6 +30,7 @@ namespace NexmoPSEDemo.Common
             configFile = "appsettings.json";
 #endif
             IConfigurationBuilder builder = new ConfigurationBuilder().AddJsonFile(configFile);
+            builder.AddUserSecrets<Startup>();
             IConfigurationRoot configuration = builder.Build();
 
             return configuration;
@@ -152,7 +150,7 @@ namespace NexmoPSEDemo.Common
             string url = configuration["appSettings:Nexmo.Url.Api"] + "/v0.1/messages";
             if (messagingModel.Type == "WhatsApp")
                 url = configuration["appSettings:Nexmo.Url.WA.Sandbox"];
-            string token = configuration["appSettings:Nexmo.Messaging.WA.Token"]; // TODO: replace with input from web user???
+            string token = configuration["Nexmo:Messaging.WA.Token"]; // TODO: replace with input from web user???
 
             // get the json object to pass in the request
             string messageObj = GenerateMessageJson(messagingModel);
@@ -251,8 +249,8 @@ namespace NexmoPSEDemo.Common
         {
             var client = new Client(creds: new Nexmo.Api.Request.Credentials
             {
-                ApiKey = configuration["appSettings:Nexmo.api_key"],
-                ApiSecret = configuration["appSettings:Nexmo.api_secret"],
+                ApiKey = configuration["Nexmo:Api.Key"],
+                ApiSecret = configuration["Nexmo:Api.Secret"],
                 AppUserAgent = configuration["appSettings:Nexmo.UserAgent"]
             });
 
