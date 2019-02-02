@@ -1,6 +1,6 @@
-﻿@model MessagingModel
+﻿@model FailoverModel
 @{
-    ViewData["Title"] = "SMS notification";
+    ViewData["Title"] = "Failover notification (WhatsApp -> Facebook Messenger -> SMS)";
 }
 
 <div class="Vlt-card Vlt-article">
@@ -8,7 +8,7 @@
         <svg class="Vlt-teal">
             <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
         </svg>
-        SMS notifications
+        Failover notification (WhatsApp -> Facebook Messenger -> SMS)
     </h3>
 
     <form method="post">
@@ -16,28 +16,14 @@
             <div class="Vlt-col">
                 <div class="Vlt-card Vlt-article">
                     <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="type">Select the type of message</label>
-                        <div class="Vlt-select">
-                            <select id="select" name="type">
-                                <option>SMS</option>
-                                <option>WhatsApp</option>
-                                <option disabled="disabled">Viber</option>
-                                <option disabled="disabled">Facebook Messenger</option>
-                            </select>
-                        </div>
-
-                    </div>
-                    <div class="Vlt-form__element">
                         <label class="Vlt-label" for="sender">Sender</label>
                         <div class="Vlt-input">
-                            <input type="text" name="sender" value="447418342149" />
+                            <input type="text" name="sender" placeholder="Please enter your sender details" />
                         </div>
 
                         <small>Please Note:</small>
                         <small class="Vlt-form__element__hint">
-                            For WhatsApp do not change the number in the box
-                            <br />
-                            You can enter alphanumeric characters as a sender ID for SMS.
+                            You can enter alphanumeric characters as a sender ID.
                             <br />
                             However some restrictions apply in some countries.
                             <br />
@@ -56,15 +42,15 @@
 
                     </div>
                     <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="text">Message</label>
+                        <label class="Vlt-label" for="message">Message</label>
                         <div class="Vlt-textarea">
-                            <textarea rows="4" cols="30" name="text" placeholder="Please enter the message to send"></textarea>
+                            <textarea rows="4" cols="30" name="message" placeholder="Please enter the message to send"></textarea>
                         </div>
 
                     </div>
                     <div class="Vlt-form__element">
                         <div class="Vlt-input">
-                            <input type="submit" value="Send Message" />
+                            <input type="submit" value="Send Message with Failover" name="failover" />
                         </div>
                     </div>
                 </div>
@@ -78,3 +64,4 @@
         </div>
     </form>
 </div>
+

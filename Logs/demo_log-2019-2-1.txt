@@ -1,0 +1,7 @@
+﻿2019-02-01 13:28:47.130+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-01 13:28:48.409+00:00  [I]  Verify request successfully created with requestId: c369fc723a0d4f1db722acd455c2ce49NULL
+2019-02-01 13:28:59.583+00:00  [I]  Making a PIN check request with requestId: c369fc723a0d4f1db722acd455c2ce49 and PIN code: 7393NULL
+2019-02-01 13:28:59.694+00:00  [I]  Response returned with status code: 0 and error text:  and price: 0.10000000 EUR and eventId: 140000000444BA20NULL
+2019-02-01 13:28:59.694+00:00  [I]  PIN code: 7393 successfully verified. We have sent an confirmation message to the number provided.NULL
+2019-02-01 13:29:00.166+00:00  [I]  SMS sent successfully with messageId: 140000000444BD85 for Verify requestId: c369fc723a0d4f1db722acd455c2ce49 to: 447843608441 at price: 0.03330000 with status: 0NULL
+2019-02-01 13:36:25.767+00:00  [I]  SMS sent successfully with messageId: 150000000299C341 to: 447843608441 at price: 0.03330000 with status: 0NULL

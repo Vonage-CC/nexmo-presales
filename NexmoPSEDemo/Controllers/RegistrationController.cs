@@ -26,7 +26,7 @@ namespace NexmoPSEDemo.Controllers
         {
             if (ModelState.IsValid)
             {
-                // create a logger placeholder
+                // create a logger
                 Logger logger = NexmoLogger.GetLogger("RegistrationLogger"); ;
 
                 try
@@ -82,7 +82,13 @@ namespace NexmoPSEDemo.Controllers
                             logger.Log("PIN code: " + pinCode + " successfully verified. We have sent an confirmation message to the number provided.");
 
                             // send confirmation message
-                            var smsResults = NexmoApi.SendSMS(number, configuration, "Your account has been created successfully. You can access it here: http://dashboard.nexmo.com", "Nexmo PSE", "60");
+                            var messagingModel = new MessagingModel()
+                            {
+                                Sender = viewModel.Name,
+                                Number = viewModel.Number,
+                                Text = "Your account has been created successfully. You can access it here: http://dashboard.nexmo.com"
+                            };
+                            var smsResults = NexmoApi.SendSMS(messagingModel, configuration, "60");
                             foreach(SMS.SMSResponseDetail responseDetail in smsResults.messages)
                             {
                                 string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
