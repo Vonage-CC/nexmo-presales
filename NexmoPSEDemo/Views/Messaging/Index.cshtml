@@ -72,15 +72,7 @@
                 </div>
             </div>
             <div class="Vlt-col">
-                <div class="Vlt-card Vlt-article">
-                    <h5>Result</h5>
-                    <div class="Vlt-callout Vlt-callout--good">
-                        <i></i>
-                        <div class="Vlt-callout__content">
-                            @ViewData["feedback"]
-                        </div>
-                    </div>
-                </div>
+                @{Html.RenderPartial("StatusView"); }
             </div>
         </div>
     </form>
@@ -102,7 +94,7 @@
         <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'player-reminder-notification')">
             <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="player-reminder-notification">
                 <h4>Player reminder notification</h4>
-                <p>Hello Jean-Philippe. We have noticed that you have not logged into your account for several days. Why not come back today and enjoy a free £5 top-up. Click the link to access your account now. <a href="#">Access your account</a>.</p>
+                <p>Hello Jean-Philippe. We have noticed that you have not logged into your account for several days. Why not come back today and enjoy a free £5 top-up. Click the link to access your account now. http://dashboard.nexmo.com.</p>
             </div>
         </div>
     </div>

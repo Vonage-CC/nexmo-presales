@@ -32,7 +32,7 @@ namespace NexmoPSEDemo.Controllers
 
                 try
                 {
-                    logger = NexmoLogger.GetLogger("SMSLogger");
+                    logger = NexmoLogger.GetLogger("MessagingLogger");
                     logger.Open();
 
                     // TODO: Update the content type based on content send (e.g. video, audio, text, etc...)
@@ -44,7 +44,7 @@ namespace NexmoPSEDemo.Controllers
                             if (NexmoApi.SendMessage(messagingModel, logger, configuration))
                                 ViewData["feedback"] = "Your " + messagingModel.Type + " message was sent succesfully.";
                             else
-                                ViewData["feedback"] = "We could not send your " + messagingModel.Type + " message. Please try again later.";
+                                ViewData["error"] = "We could not send your " + messagingModel.Type + " message. Please try again later.";
                             break;
                         case "Viber":
                             break;
@@ -69,7 +69,7 @@ namespace NexmoPSEDemo.Controllers
                 catch (Exception e)
                 {
                     logger.Log(Level.Exception, e);
-                    ViewData["feedback"] = "There has been an issue dealing with your request. Please try again later.";
+                    ViewData["error"] = "There has been an issue dealing with your request. Please try again later.";
                 }
                 finally
                 {
@@ -103,12 +103,12 @@ namespace NexmoPSEDemo.Controllers
                     if (NexmoApi.SendDispatchFailover(failoverModel, logger, configuration))
                         ViewData["feedback"] = "Your message has been sent successfully.";
                     else
-                        ViewData["feedback"] = "We could not send your message. Please try again later";
+                        ViewData["error"] = "We could not send your message. Please try again later";
                 }
                 catch (Exception e)
                 {
                     logger.Log(Level.Exception, e);
-                    ViewData["feedback"] = "There has been an issue dealing with your request. Please try again later.";
+                    ViewData["error"] = "There has been an issue dealing with your request. Please try again later.";
                 }
                 finally
                 {

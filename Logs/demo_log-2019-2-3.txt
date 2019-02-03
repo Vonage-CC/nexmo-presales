@@ -1,3 +1,91 @@
 ﻿2019-02-03 10:43:25.449+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
 2019-02-03 10:44:46.993+00:00  [I]  SMS sent successfully with messageId:  to: 447843608441 at price: 0.03330000 with status: 9NULL
 2019-02-03 10:46:55.242+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:12:17.096+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:12:17.922+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:16:01.000+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:16:01.704+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:16:13.320+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:16:13.425+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:17:55.555+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:17:55.660+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:17:58.269+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:17:58.371+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:18:02.594+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:18:02.723+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:18:08.239+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:18:08.340+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:18:09.489+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:18:09.580+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:18:10.426+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:18:10.522+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:18:11.337+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:18:11.443+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:21:51.867+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:21:52.251+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:21:53.816+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:21:53.935+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:22:22.084+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:22:22.193+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-03 11:42:13.346+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:42:14.366+00:00  [I]  Verify request successfully created with requestId: fc279488204245a5a228fd455832964eNULL
+2019-02-03 11:43:30.070+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:43:30.333+00:00  [I]  Verify request successfully created with requestId: bed6ed122505434aa86fe1a81b83b217NULL
+2019-02-03 11:43:55.351+00:00  [I]  Making a PIN check request with requestId: bed6ed122505434aa86fe1a81b83b217 and PIN code: 3965NULL
+2019-02-03 11:43:55.514+00:00  [I]  Response returned with status code: 0 and error text:  and price: 0.10000000 EUR and eventId: 1400000004E3D58CNULL
+2019-02-03 11:43:55.514+00:00  [I]  PIN code: 3965 successfully verified. We have sent an confirmation message to the number provided.NULL
+2019-02-03 11:43:56.077+00:00  [I]  SMS sent successfully with messageId:  for Verify requestId: bed6ed122505434aa86fe1a81b83b217 to:  at price:  with status: 2NULL
+2019-02-03 11:44:26.682+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:44:26.912+00:00  [I]  Verify request successfully created with requestId: dfcfa8b52b644de88ca85d4e9a66755eNULL
+2019-02-03 11:44:44.808+00:00  [I]  Making a PIN check request with requestId: dfcfa8b52b644de88ca85d4e9a66755e and PIN code: 9611NULL
+2019-02-03 11:44:45.088+00:00  [I]  Response returned with status code: 0 and error text:  and price: 0.10000000 EUR and eventId: 1300000004BEB87CNULL
+2019-02-03 11:44:45.088+00:00  [I]  PIN code: 9611 successfully verified. We have sent an confirmation message to the number provided.NULL
+2019-02-03 11:44:45.183+00:00  [I]  SMS sent successfully with messageId:  for Verify requestId: dfcfa8b52b644de88ca85d4e9a66755e to:  at price:  with status: 2NULL
+2019-02-03 11:56:15.116+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:56:15.962+00:00  [I]  Verify request successfully created with requestId: 247f7919521e4893964bc4ecb039ad91NULL
+2019-02-03 11:58:05.773+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 11:58:06.106+00:00  [I]  Verify request successfully created with requestId: 685c2f2aa94042d994e4366f6f31bcafNULL
+2019-02-03 12:01:07.621+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:01:08.112+00:00  [I]  Verify request successfully created with requestId: 88cdc1e6121047ffa6c363a088a5d99dNULL
+2019-02-03 12:01:19.085+00:00  [I]  Making a PIN check request with requestId: 88cdc1e6121047ffa6c363a088a5d99d and PIN code: 1234NULL
+2019-02-03 12:01:19.203+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-03 12:01:19.208+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-03 12:02:23.059+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:02:23.959+00:00  [I]  Verify request successfully created with requestId: eeedd91882d549babd62c804fb2bab97NULL
+2019-02-03 12:02:31.101+00:00  [I]  Making a PIN check request with requestId: eeedd91882d549babd62c804fb2bab97 and PIN code: 1234NULL
+2019-02-03 12:02:31.218+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-03 12:02:31.219+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-03 12:02:36.807+00:00  [I]  Making a PIN check request with requestId:  and PIN code: 789NULL
+2019-02-03 12:02:37.087+00:00  [I]  Response returned with status code: 2 and error text: Your request is incomplete and missing the mandatory parameter: request_id and price:   and eventId: NULL
+2019-02-03 12:02:37.087+00:00  [W]  The code could not be verified with status: 2 and message: Your request is incomplete and missing the mandatory parameter: request_idNULL
+2019-02-03 12:03:31.514+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:03:31.704+00:00  [I]  Verify request successfully created with requestId: 19d0d0d9bd4a47dab800aa6a4b1b4c5bNULL
+2019-02-03 12:03:37.605+00:00  [I]  Making a PIN check request with requestId: 19d0d0d9bd4a47dab800aa6a4b1b4c5b and PIN code: 1234NULL
+2019-02-03 12:03:37.713+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-03 12:03:37.713+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-03 12:03:51.421+00:00  [I]  Making a PIN check request with requestId:  and PIN code: 5432543NULL
+2019-02-03 12:03:51.522+00:00  [I]  Response returned with status code: 2 and error text: Your request is incomplete and missing the mandatory parameter: request_id and price:   and eventId: NULL
+2019-02-03 12:03:51.522+00:00  [W]  The code could not be verified with status: 2 and message: Your request is incomplete and missing the mandatory parameter: request_idNULL
+2019-02-03 12:06:59.518+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:07:00.325+00:00  [I]  Verify request successfully created with requestId: 1b34034909e84162b08102c617436a4cNULL
+2019-02-03 12:09:19.350+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:09:19.905+00:00  [I]  Verify request successfully created with requestId: a8a4aef33cc0417ba86040175efcbec2NULL
+2019-02-03 12:11:30.644+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:11:31.101+00:00  [I]  Verify request successfully created with requestId: 51fa394802224736ace3bfbf596af082NULL
+2019-02-03 12:11:36.073+00:00  [I]  Making a PIN check request with requestId: 51fa394802224736ace3bfbf596af082 and PIN code: 12345NULL
+2019-02-03 12:11:36.190+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-03 12:11:36.190+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-03 12:14:11.761+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:14:12.320+00:00  [I]  Verify request successfully created with requestId: 360e65eb5fb3487a96badc934f3fc280NULL
+2019-02-03 12:14:17.100+00:00  [I]  Making a PIN check request with requestId: 360e65eb5fb3487a96badc934f3fc280 and PIN code: 341423NULL
+2019-02-03 12:14:17.288+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-03 12:14:17.288+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-03 12:18:17.304+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 12:18:18.593+00:00  [I]  Verify request successfully created with requestId: 58de4e33738f4ee68d64b659d3f3e6d5NULL
+2019-02-03 12:18:23.820+00:00  [I]  Making a PIN check request with requestId: 58de4e33738f4ee68d64b659d3f3e6d5 and PIN code: 234213NULL
+2019-02-03 12:18:23.939+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-03 12:18:23.941+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-03 12:20:41.347+00:00  [I]  SMS sent successfully with messageId: 1300000004C06F0F to: 447843608441 at price: 0.03330000 with status: 0NULL
+2019-02-03 12:20:41.347+00:00  [I]  SMS sent successfully with messageId: 1300000004C06F10 to: 447843608441 at price: 0.03330000 with status: 0NULL
+2019-02-03 12:21:53.615+00:00  [I]  SMS sent successfully with messageId: 1300000004C07BB6 to: 447843608441 at price: 0.03330000 with status: 0NULL
+2019-02-03 12:21:53.615+00:00  [I]  SMS sent successfully with messageId: 1300000004C07BB7 to: 447843608441 at price: 0.03330000 with status: 0NULL

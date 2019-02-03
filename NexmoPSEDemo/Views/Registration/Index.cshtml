@@ -26,17 +26,26 @@
                         <div class="Vlt-input">
                             <input type="text" name="number" placeholder="Please enter your phone number" />
                         </div>
-
                     </div>
+
+                    <div class="Vlt-callout Vlt-callout--shoutout">
+                        <i></i>
+                        <div class="Vlt-callout__content">
+                            Your phone number must be in the E.164 format
+                            <br />
+                            e.g. in the UK 447123123456
+                        </div>
+                    </div>
+
                     <div class="Vlt-form__element">
                         <div class="Vlt-input">
                             <input type="submit" value="Register" name="verifyAction" />
                         </div>
-
+                        <input type="hidden" id="registrationStatus" value='@ViewData["RegistrationStatus"]' />
                     </div>
                 </div>
             </div>
-            <div class="Vlt-col">
+            <div id="pinCheckWindow" class="Vlt-col">
                 <div class="Vlt-card Vlt-article">
                     <div class="Vlt-form__element">
                         <label class="Vlt-label" for="codeCheck">Please enter the code you received in the box below</label>
@@ -56,11 +65,11 @@
                 </div>
             </div>
             <div class="Vlt-col">
-                <div class="Vlt-card Vlt-article">
-                    <small>Request Status</small>
-                    <small class="Vlt-form__element__hint">@ViewData["feedback"]</small>
-                </div>
+                @{Html.RenderPartial("StatusView"); }
             </div>
         </div>
     </form>
 </div>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="~/js/registration.js"></script>

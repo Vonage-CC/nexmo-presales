@@ -27,6 +27,16 @@
                     </li>
                     <li>
                         <h5>
+                            <a asp-action="reset" asp-controller="registration">Password reset with Verify API</a>
+                        </h5>
+                    </li>
+                    <li>
+                        <h5>
+                            <a asp-action="transaction" asp-controller="registration">Transaction validation with Verify API</a>
+                        </h5>
+                    </li>
+                    <li>
+                        <h5>
                             <a href="http://2fa.nexmodemo.com/" target="_blank">2FA DIY with WhatsApp (external)</a>
                         </h5>
                     </li>
@@ -41,12 +51,13 @@
                 <ul class="Vlt-list Vlt-list--big-number">
                     <li>
                         <h5>
-                            <a asp-action="index" asp-controller="messaging">Send an SMS notification to a mobile number</a>
+                            <a asp-action="index" asp-controller="messaging">Send a notification to a mobile number</a>
                         </h5>
                     </li>
                     <li>
                         <h5>
-                            <a asp-action="failover" asp-controller="messaging">Send notification with failover from social channel to SMS to a mobile number</a>
+                            <a class="Vlt-sidemenu__link--disabled" href="#">Send notification with failover from social channel to SMS to a mobile number</a>
+                            @*<a asp-action="failover" asp-controller="messaging">Send notification with failover from social channel to SMS to a mobile number</a>*@
                         </h5>
                     </li>
                 </ul>
@@ -87,6 +98,25 @@
                 <li>
                     <h5>
                         <a href="https://tokbox-reference-apps.herokuapp.com/login/education" target="_blank">Education</a>
+                    </h5>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="Vlt-col--2of3">
+        <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow">
+            <h4>
+                Phone Number Validation
+            </h4>
+            <ul class="Vlt-list Vlt-list--big-number">
+                <li>
+                    <h5>
+                        <a asp-action="index" asp-controller="validation">Phone Number Validation</a>
+                    </h5>
+                </li>
+                <li>
+                    <h5>
+                        <a asp-action="soft" asp-controller="validation">Soft User Validation</a>
                     </h5>
                 </li>
             </ul>

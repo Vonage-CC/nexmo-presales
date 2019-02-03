@@ -18,6 +18,7 @@ namespace NexmoPSEDemo.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
+            ViewData["RegistrationStatus"] = "new";
             return View();
         }
 
@@ -45,15 +46,16 @@ namespace NexmoPSEDemo.Controllers
                             ViewData["feedback"] = "Thanks " + viewModel.Name + ". We have sent a verification code to the number you provided.";
                             ViewData["requestId"] = results.request_id;
                             ViewData["number"] = viewModel.Number;
+                            ViewData["RegistrationStatus"] = "started";
                         }
                         else if (results.status == "10")
                         {
-                            ViewData["feedback"] = "Please wait for the previous request to complete, then try again.";
+                            ViewData["warning"] = "Please wait for the previous request to complete, then try again.";
                             logger.Log(Level.Warning, "Response code: " + results.status + " - Concurrent verifications to the same number are not allowed. Request ID: " + results.request_id);
                         }
                         else
                         {
-                            ViewData["feedback"] = "Your request could not be created at this time. Please try again later.";
+                            ViewData["error"] = "Your request could not be created at this time. Please try again later.";
                             logger.Log(Level.Warning, "Response code: " + results.status + " - Request could not be completed. Request ID: " + results.request_id + " - Error Text: " + results.error_text);
                         }
                     }
@@ -82,6 +84,7 @@ namespace NexmoPSEDemo.Controllers
                             // provide feedback on the page
                             ViewData["feedback"] = "Your code has been successfully verified.";
                             logger.Log("PIN code: " + pinCode + " successfully verified. We have sent an confirmation message to the number provided.");
+                            ViewData["RegistrationStatus"] = "completed";
 
                             // send confirmation message
                             var messagingModel = new MessagingModel()
@@ -103,15 +106,16 @@ namespace NexmoPSEDemo.Controllers
                         }
                         else
                         {
-                            ViewData["feedback"] = "Your code could not be verified. Please try again.";
+                            ViewData["warning"] = "Your code could not be verified. Please try again.";
                             logger.Log(Level.Warning, "The code could not be verified with status: " + results.status + " and message: " + results.error_text);
+                            ViewData["RegistrationStatus"] = "started";
                         }
                     }
                 }
                 catch (Exception e)
                 {
                     logger.Log(Level.Exception, e);
-                    ViewData["feedback"] = "There has been an issue dealing with your request. Please try again later.";
+                    ViewData["error"] = "There has been an issue dealing with your request. Please try again later.";
                 }
                 finally
                 {
