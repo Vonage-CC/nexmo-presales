@@ -1,7 +1,87 @@
-﻿
+﻿@model ValidationModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Validate Phone Number";
 }
 
-<h2>Index</h2>
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg" #Vlt-icon-rocket"></use>
+        </svg>
+        Sending Notifications
+    </h3>
+
+    <form method="post">
+        <div class="Vlt-grid">
+            <div class="Vlt-col">
+                <div class="Vlt-card Vlt-article">
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="type">Would you like to include CNAM information?</label>
+                        <div class="Vlt-switch">
+                            <label>
+                                <input type="checkbox" name="cnam" value="cnam" />
+                                <span class="Vlt-switch__slider"></span>
+                            </label>
+                        </div>
+                        <div class="Vlt-callout Vlt-callout--warning">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                CNAM is only available in the USA and incurs an extra charge. It is only available in Number Insight Standard and Advanced.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="number">Phone Number</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="number" placeholder="Please enter the phone number to validate" />
+                        </div>
+                        <div class="Vlt-callout Vlt-callout--shoutout">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                Your phone number must be in the E.164 format
+                                <br />
+                                e.g. in the UK 447123123456
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Vlt-text-separator Vlt-text-separator--big">
+                        <span>Country (Optional)</span>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-native-dropdown">
+                            <select name="country">
+                                <option selected="selected" value="0">Choose a country</option>
+                                <option value="FR">France</option>
+                                <option value="IT">Italy</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="US">United States</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="Vlt-text-separator Vlt-text-separator--big">
+                        <span>Number Insight Version</span>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-native-dropdown">
+                            <select name="version">
+                                <option value="basic">Basic (Free)</option>
+                                <option value="standard">Standard</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-input">
+                            <input type="submit" value="Validate Number" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Vlt-col">
+                @{Html.RenderPartial("StatusView"); }
+            </div>
+        </div>
+    </form>
+</div>
 

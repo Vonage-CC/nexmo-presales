@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using static Nexmo.Api.NumberInsight;
 using static Nexmo.Api.NumberVerify;
 using static Nexmo.Api.SMS;
 
@@ -150,7 +151,7 @@ namespace NexmoPSEDemo.Common
             string url = configuration["appSettings:Nexmo.Url.Api"] + "/v0.1/messages";
             if (messagingModel.Type == "WhatsApp")
                 url = configuration["appSettings:Nexmo.Url.WA.Sandbox"];
-            string token = configuration["Nexmo:Messaging.WA.Token"]; // TODO: replace with input from web user???
+            string token = configuration["appSettings:Nexmo.Messaging.WA.Token"]; // TODO: replace with input from web user???
 
             // get the json object to pass in the request
             string messageObj = GenerateMessageJson(messagingModel);
@@ -245,16 +246,164 @@ namespace NexmoPSEDemo.Common
             return true;
         }
 
+        public static NumberInsightBasicResponse BasicNumberInsightRequest(ValidationModel validationModel, IConfigurationRoot configuration)
+        {
+            var client = GenerateNexmoClient(configuration);
+
+            return client.NumberInsight.RequestBasic(request: new NumberInsight.NumberInsightRequest
+            {
+                Country = (validationModel.Country == "0") ? "" : validationModel.Country,
+                Number = validationModel.Number
+            });
+        }
+
+        public static NumberInsightStandardResponse StandardNumberInsightRequest(ValidationModel validationModel, IConfigurationRoot configuration)
+        {
+            var client = GenerateNexmoClient(configuration);
+
+            return client.NumberInsight.RequestStandard(request: new NumberInsight.NumberInsightRequest
+            {
+                CallerIDName = (validationModel.Cnam == null) ? "" : validationModel.Cnam,
+                Country = (validationModel.Country == "0") ? "" : validationModel.Country,
+                Number = validationModel.Number
+            });
+        }
+
+        public static NumberInsightAdvancedResponse AdvancedNumberInsightRequest(ValidationModel validationModel, IConfigurationRoot configuration)
+        {
+            var client = GenerateNexmoClient(configuration);
+
+            return client.NumberInsight.RequestAdvanced(request: new NumberInsight.NumberInsightRequest
+            {
+                CallerIDName = (validationModel.Cnam == null) ? "false" : "true",
+                Country = (validationModel.Country == "0") ? "" : validationModel.Country,
+                Number = validationModel.Number
+            });
+        }
+
         private static Client GenerateNexmoClient(IConfigurationRoot configuration)
         {
             var client = new Client(creds: new Nexmo.Api.Request.Credentials
             {
-                ApiKey = configuration["Nexmo:Api.Key"],
-                ApiSecret = configuration["Nexmo:Api.Secret"],
+                ApiKey = configuration["appSettings:Nexmo.api_key"],
+                ApiSecret = configuration["appSettings:Nexmo.api_secret"],
                 AppUserAgent = configuration["appSettings:Nexmo.UserAgent"]
             });
 
             return client;
+        }
+
+        public static BasicObject GenerateBasicObject(NumberInsightBasicResponse response)
+        {
+            BasicObject responseObject = new BasicObject()
+            {
+                status = response.Status,
+                status_message = response.StatusMessage,
+                request_id = response.RequestId,
+                international_format_number = response.InternationalFormatNumber,
+                national_format_number = response.NationalFormatNumber,
+                country_code = response.CountryCode,
+                country_code_iso3 = response.CountryCodeIso3,
+                country_name = response.CountryName,
+                country_prefix = response.CountryPrefix,
+            };
+
+            return responseObject;
+        }
+
+        public static StandardObject GenerateStandardObject(NumberInsightStandardResponse response)
+        {
+            CurrentCarrier currentCarrier = new CurrentCarrier()
+            {
+                network_code = response.CurrentCarrier.NetworkCode,
+                name = response.CurrentCarrier.Name,
+                country = response.CurrentCarrier.Country,
+                network_type = response.CurrentCarrier.NetworkType
+            };
+
+            CallerIdentity callerIdentity = new CallerIdentity()
+            {
+                caller_type = response.CallerType,
+                caller_name = response.CallerName,
+                first_name = response.FirstName,
+                last_name = response.LastName
+            };
+
+            StandardObject responseObject = new StandardObject()
+            {
+                status = response.Status,
+                status_message = response.StatusMessage,
+                request_id = response.RequestId,
+                international_format_number = response.InternationalFormatNumber,
+                national_format_number = response.NationalFormatNumber,
+                country_code = response.CountryCode,
+                country_code_iso3 = response.CountryCodeIso3,
+                country_name = response.CountryName,
+                country_prefix = response.CountryPrefix,
+                current_carrier = currentCarrier,
+                caller_identity = callerIdentity
+            };
+
+            return responseObject;
+        }
+
+        public static AdvancedObject GenerateAdvancedObject(NumberInsightAdvancedResponse response)
+        {
+            CurrentCarrier currentCarrier = new CurrentCarrier()
+            {
+                network_code = response.CurrentCarrier.NetworkCode,
+                name = response.CurrentCarrier.Name,
+                country = response.CurrentCarrier.Country,
+                network_type = response.CurrentCarrier.NetworkType
+            };
+
+            OriginalCarrier originalCarrier = new OriginalCarrier()
+            {
+                network_code = response.OriginalCarrier.NetworkCode,
+                name = response.OriginalCarrier.Name,
+                country = response.OriginalCarrier.Country,
+                network_type = response.OriginalCarrier.NetworkType
+            };
+
+            Models.Roaming roaming = new Models.Roaming()
+            {
+                status = response.RoamingInformation.status,
+                roaming_country_code = response.RoamingInformation.roaming_country_code,
+                roaming_network_code = response.RoamingInformation.roaming_network_code,
+                roaming_network_name = response.RoamingInformation.roaming_network_name
+            };
+
+            CallerIdentity callerIdentity = new CallerIdentity()
+            {
+                caller_type = response.CallerType,
+                caller_name = response.CallerName,
+                first_name = response.FirstName,
+                last_name = response.LastName
+            };
+
+            AdvancedObject responseObject = new AdvancedObject()
+            {
+                status = response.Status,
+                status_message = response.StatusMessage,
+                request_id = response.RequestId,
+                international_format_number = response.InternationalFormatNumber,
+                national_format_number = response.NationalFormatNumber,
+                country_code = response.CountryCode,
+                country_code_iso3 = response.CountryCodeIso3,
+                country_name = response.CountryName,
+                country_prefix = response.CountryPrefix,
+                current_carrier = currentCarrier,
+                original_carrier = originalCarrier,
+                ported = response.PortedStatus,
+                roaming = roaming,
+                caller_identity = callerIdentity,
+                lookup_outcome = response.LookupOutcome.ToString(),
+                lookup_outcome_message = response.LookupOutcomeMessage,
+                valid_number = response.NumberValidity,
+                reachable = response.NumberReachability
+            };
+
+            return responseObject;
         }
 
         private static string GenerateMessageJson(MessagingModel messagingModel)

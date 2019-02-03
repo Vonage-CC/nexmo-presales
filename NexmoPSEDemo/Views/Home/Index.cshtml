@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
 <div class="Vlt-card Vlt-article">
@@ -40,6 +40,23 @@
                             <a href="http://2fa.nexmodemo.com/" target="_blank">2FA DIY with WhatsApp (external)</a>
                         </h5>
                     </li>
+                    <li>
+                        <h5>
+                            <a class="Vlt-sidemenu__link--disabled" asp-action="soft" asp-controller="registration">Soft User Validation with Number Insight</a>
+                        </h5>
+                    </li>
+                </ul>
+            </div>
+            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow">
+                <h4>
+                    Phone Number Validation
+                </h4>
+                <ul class="Vlt-list Vlt-list--big-number">
+                    <li>
+                        <h5>
+                            <a asp-action="index" asp-controller="validation">Phone Number Validation</a>
+                        </h5>
+                    </li>                    
                 </ul>
             </div>
         </div>
@@ -62,6 +79,28 @@
                     </li>
                 </ul>
             </div>
+            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow">
+                <h4>
+                    Video (external)
+                </h4>
+                <ul class="Vlt-list Vlt-list--big-number">
+                    <li>
+                        <h5>
+                            <a href="https://tokbox-reference-apps.herokuapp.com/login/telehealth" target="_blank">Healthcare</a>
+                        </h5>
+                    </li>
+                    <li>
+                        <h5>
+                            <a href="https://tokbox-reference-apps.herokuapp.com/login/financial" target="_blank">Finance</a>
+                        </h5>
+                    </li>
+                    <li>
+                        <h5>
+                            <a href="https://tokbox-reference-apps.herokuapp.com/login/education" target="_blank">Education</a>
+                        </h5>
+                    </li>
+                </ul>
+            </div>
         </div>
         <div class="Vlt-col">
             <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow">
@@ -76,50 +115,6 @@
                     </li>
                 </ul>
             </div>
-        </div>
-    </div>
-    <div class="Vlt-grid__separator"><!-- Empty line breaker --></div>
-    <div class="Vlt-col--1of3">
-        <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow">
-            <h4>
-                Video (external)
-            </h4>
-            <ul class="Vlt-list Vlt-list--big-number">
-                <li>
-                    <h5>
-                        <a href="https://tokbox-reference-apps.herokuapp.com/login/telehealth" target="_blank">Healthcare</a>
-                    </h5>
-                </li>
-                <li>
-                    <h5>
-                        <a href="https://tokbox-reference-apps.herokuapp.com/login/financial" target="_blank">Finance</a>
-                    </h5>
-                </li>
-                <li>
-                    <h5>
-                        <a href="https://tokbox-reference-apps.herokuapp.com/login/education" target="_blank">Education</a>
-                    </h5>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="Vlt-col--2of3">
-        <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow">
-            <h4>
-                Phone Number Validation
-            </h4>
-            <ul class="Vlt-list Vlt-list--big-number">
-                <li>
-                    <h5>
-                        <a asp-action="index" asp-controller="validation">Phone Number Validation</a>
-                    </h5>
-                </li>
-                <li>
-                    <h5>
-                        <a asp-action="soft" asp-controller="validation">Soft User Validation</a>
-                    </h5>
-                </li>
-            </ul>
         </div>
     </div>
 </div>

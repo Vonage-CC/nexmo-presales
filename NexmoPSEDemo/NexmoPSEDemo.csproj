@@ -12,10 +12,6 @@
     <PackageReference Include="nspring" Version="1.4.5304.31350" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.1.1" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\..\NEXMO_PSE_COMMON\NEXMO_PSE_COMMON.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
   </ItemGroup>
