@@ -49,10 +49,12 @@ namespace NexmoPSEDemo.Controllers
                         else if (results.status == "10")
                         {
                             ViewData["feedback"] = "Please wait for the previous request to complete, then try again.";
+                            logger.Log(Level.Warning, "Response code: " + results.status + " - Concurrent verifications to the same number are not allowed. Request ID: " + results.request_id);
                         }
                         else
                         {
                             ViewData["feedback"] = "Your request could not be created at this time. Please try again later.";
+                            logger.Log(Level.Warning, "Response code: " + results.status + " - Request could not be completed. Request ID: " + results.request_id + " - Error Text: " + results.error_text);
                         }
                     }
                     else if(verifyAction == "Check")

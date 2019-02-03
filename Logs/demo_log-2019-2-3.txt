@@ -1,0 +1,3 @@
+﻿2019-02-03 10:43:25.449+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-03 10:44:46.993+00:00  [I]  SMS sent successfully with messageId:  to: 447843608441 at price: 0.03330000 with status: 9NULL
+2019-02-03 10:46:55.242+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
