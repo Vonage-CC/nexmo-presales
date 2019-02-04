@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -37,10 +38,11 @@ namespace NexmoPSEDemo.Controllers
         // POST api/<controller>
         [HttpPost]
         [Route("api/status")]
-        public void Status()
+        public HttpResponseMessage Status()
         {
             // create a logger placeholder
             Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
 
             try
             {
@@ -59,20 +61,24 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
             finally
             {
                 logger.Close();
                 logger.Deregister();
             }
+
+            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
         }
 
         [HttpPost]
         [Route("api/inbound")]
-        public void Inbound()
+        public HttpResponseMessage Inbound()
         {
             // create a logger placeholder
             Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
 
             try
             {
@@ -91,12 +97,15 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
             finally
             {
                 logger.Close();
                 logger.Deregister();
             }
+
+            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
         }
 
         // PUT api/<controller>/5
