@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using NexmoPSEDemo.Common;
+using NexmoPSEDemo.Models;
 using NSpring.Logging;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -90,8 +91,9 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
+                    var fmObject = JsonConvert.DeserializeObject<FMRootObject>(value.Result);
                     logger.Log("Inbound from: " + host);
-                    logger.Log("Inbound body: " + value.Result);
+                    logger.Log("Inbound body: " + JsonConvert.SerializeObject(fmObject, Formatting.Indented));
                 }
             }
             catch (Exception e)

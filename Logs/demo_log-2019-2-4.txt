@@ -19,18 +19,29 @@
 	"test": "value 1",
 	"test2": "value 2"
 }NULL
-2019-02-04 23:22:26.528+00:00  [I]  Inbound from: localhost:44354NULL
-2019-02-04 23:22:26.528+00:00  [I]  Inbound body: {
-	"test": "value 1",
-	"test2": "value 2"
-}NULL
-2019-02-04 23:22:35.641+00:00  [I]  Inbound from: localhost:44354NULL
-2019-02-04 23:22:35.641+00:00  [I]  Inbound body: {
-	"test": "value 1",
-	"test2": "value 2"
-}NULL
-2019-02-04 23:22:55.473+00:00  [I]  Status update from: localhost:44354NULL
-2019-02-04 23:22:55.473+00:00  [I]  Status update body: {
-	"test": "value 1",
-	"test2": "value 2"
+2019-02-04 23:26:07.854+00:00  [I]  Inbound from: nexmopsedemo.azurewebsites.netNULL
+2019-02-04 23:26:07.854+00:00  [I]  Inbound body: {"message_uuid":"46bfb22e-d182-49db-bc9c-ae79797be785","to":{"id":"527965154359951","type":"messenger"},"from":{"id":"2055406624507330","type":"messenger"},"timestamp":"2019-02-04T23:26:07.294Z","direction":"inbound","message":{"content":{"type":"text","text":"Hey Nexmo"}}}NULL
+2019-02-04 23:33:57.048+00:00  [I]  Inbound from: localhost:44354NULL
+2019-02-04 23:33:57.048+00:00  [I]  Inbound body: NexmoPSEDemo.Models.FMRootObjectNULL
+2019-02-04 23:36:22.486+00:00  [I]  Inbound from: localhost:44354NULL
+2019-02-04 23:36:22.488+00:00  [I]  Inbound body: "{\"message_uuid\":\"46bfb22e-d182-49db-bc9c-ae79797be785\",\"to\":{\"id\":\"527965154359951\",\"type\":\"messenger\"},\"from\":{\"id\":\"2055406624507330\",\"type\":\"messenger\"},\"timestamp\":\"2019-02-04T23:26:07.294Z\",\"direction\":\"inbound\",\"message\":{\"content\":{\"type\":\"text\",\"text\":\"Hey Nexmo\"}}}"NULL
+2019-02-04 23:37:23.444+00:00  [I]  Inbound from: localhost:44354NULL
+2019-02-04 23:37:23.449+00:00  [I]  Inbound body: {
+  "message_uuid": "46bfb22e-d182-49db-bc9c-ae79797be785",
+  "to": {
+    "Type": "messenger",
+    "Number": null
+  },
+  "from": {
+    "Type": "messenger",
+    "Number": null
+  },
+  "timestamp": "2019-02-04T23:26:07.294Z",
+  "direction": "inbound",
+  "message": {
+    "Content": {
+      "Type": "text",
+      "Text": "Hey Nexmo"
+    }
+  }
 }NULL
