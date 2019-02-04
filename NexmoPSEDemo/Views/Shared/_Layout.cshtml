@@ -34,6 +34,7 @@
                 <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="messaging">Messaging</a></li>
                 <li class="Vlt-tabs__link"><a href="http://jon.nexmodemo.com/vstitchapp/index.html">In-App Messaging</a></li>
                 <li class="Vlt-tabs__link"><a href="https://tokbox-reference-apps.herokuapp.com">Video</a></li>
+                <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="validation">Number Lookup</a></li>
             </ul>
         </div>
         @*TODO: Implement call action with VAPI*@
@@ -184,6 +185,23 @@ loadMenu();
                                     </use>
                                 </svg>
                                 <span class="Vlt-sidemenu__label">Education</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <p class="Vlt-sidemenu__trigger">
+                        <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-merge-2"></use></svg>
+                        <span class="Vlt-sidemenu__label">Phone Number Lookup</span>
+                    </p>
+                    <ul>
+                        <li>
+                            <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="validation">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">Data Cleansing</span>
                             </a>
                         </li>
                     </ul>
