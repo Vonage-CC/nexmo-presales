@@ -1,0 +1,55 @@
+﻿@model ValidationModel
+@{
+    ViewData["Title"] = "Registration with Number Insight Advanced API";
+}
+
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
+        </svg>
+        New User Registration
+    </h3>
+
+    <form method="post">
+        <div class="Vlt-grid">
+            <div class="Vlt-col">
+                <div class="Vlt-card Vlt-article">
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="name">Full Name</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="name" placeholder="Please enter your full name" />
+                        </div>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="number">Phone Number</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="number" placeholder="Please enter your phone number" />
+                        </div>
+
+                        <div class="Vlt-callout Vlt-callout--shoutout">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                Your phone number must be in the E.164 format
+                                <br />
+                                e.g. in the UK 447123123456
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-input">
+                            <input type="submit" value="Register" />
+                            <input type="hidden" value="advanced" name="version" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Vlt-col">
+                @{Html.RenderPartial("StatusView"); }
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
+<script src="~/js/registration.js"></script>
