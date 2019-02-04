@@ -149,17 +149,20 @@ namespace NexmoPSEDemo.Common
         {
             // extract the url and token from the configuration file
             string url = configuration["appSettings:Nexmo.Url.Api"] + "/v0.1/messages";
+            string token = configuration["appSettings:Nexmo.Messaging.App.Token"]; // TODO: replace with input from web user???
+
             if (messagingModel.Type == "WhatsApp")
+            {
                 url = configuration["appSettings:Nexmo.Url.WA.Sandbox"];
-            string token = configuration["appSettings:Nexmo.Messaging.WA.Token"]; // TODO: replace with input from web user???
+                token = configuration["appSettings:Nexmo.Messaging.WA.Token"];
+            }
 
             // get the json object to pass in the request
             string messageObj = GenerateMessageJson(messagingModel);
 
             // start creating the HTTP request
             var request = new HttpRequestMessage(HttpMethod.Post, url);
-            if(messagingModel.Type == "WhatsApp")
-                request.Headers.Add("Authorization", "Bearer " + token);
+            request.Headers.Add("Authorization", "Bearer " + token);
 
             try
             {

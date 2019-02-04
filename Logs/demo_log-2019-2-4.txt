@@ -1,9 +1,21 @@
-﻿2019-02-04 21:34:52.948+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: 301b1a9d-831b-4c39-90f9-35a5623c8b14NULL
-2019-02-04 21:35:57.983+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: 654a182d-c86c-480b-adbe-33c17ec29248NULL
-2019-02-04 21:39:46.074+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: cb5b2acd-713e-411a-93e8-3c72e25d3544NULL
-2019-02-04 21:41:30.409+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: 8ba858fd-0592-4bad-9cce-57ef78c690daNULL
-2019-02-04 21:44:14.317+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: c2edd88b-d68f-4232-a565-02a0d4d5d485NULL
-2019-02-04 21:45:19.402+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: d1822af8-76b3-4743-aa75-8571ab42da3cNULL
-2019-02-04 21:46:12.294+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: ead4a868-0a8b-43df-b309-589e434b30d3NULL
-2019-02-04 21:47:40.581+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: 6a21a730-f421-4df5-9d1b-d97fd6d2d2aaNULL
-2019-02-04 21:48:07.005+00:00  [I]  Soft validation with NI advanced request successfully created with requestId: 1161138c-b1b7-4a4d-8222-41aed2772f88NULL
+﻿2019-02-04 09:49:53.816+00:00  [I]  Verify request created with number: 447872021606 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-04 09:49:54.706+00:00  [I]  Verify request successfully created with requestId: 1cbd40b37ddf454fb2534d2ecdea389eNULL
+2019-02-04 09:50:06.879+00:00  [I]  Verify request created with number:  and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-04 09:50:06.959+00:00  [W]  Response code: 2 - Request could not be completed. Request ID:  - Error Text: Your request is incomplete and missing the mandatory parameter: numberNULL
+2019-02-04 14:37:45.112+00:00  [I]  Request ID: 0b368624-6cc6-4897-87ba-6d1cba42b3b4 has completed successfully with status code: 0 and status text: SuccessNULL
+2019-02-04 14:45:34.647+00:00  [I]  SMS sent successfully with messageId:  to: 447843608441 at price: 0.03330000 with status: 9NULL
+2019-02-04 23:07:03.469+00:00  [I]  Inbound from: NULL
+2019-02-04 23:07:03.469+00:00  [I]  Inbound body: {
+	"test": "value 1",
+	"test2": "value 2"
+}NULL
+2019-02-04 23:08:32.456+00:00  [I]  Status update from: NULL
+2019-02-04 23:08:32.456+00:00  [I]  Status update body: {
+	"test": "value 1",
+	"test2": "value 2"
+}NULL
+2019-02-04 23:16:02.035+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-04 23:16:02.035+00:00  [I]  Status update body: {
+	"test": "value 1",
+	"test2": "value 2"
+}NULL
