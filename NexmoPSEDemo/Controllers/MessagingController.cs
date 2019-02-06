@@ -55,9 +55,9 @@ namespace NexmoPSEDemo.Controllers
                             foreach (SMS.SMSResponseDetail responseDetail in smsResults.messages)
                             {
                                 string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
-                                messageDetails += " to: " + responseDetail.to;
-                                messageDetails += " at price: " + responseDetail.message_price;
-                                messageDetails += " with status: " + responseDetail.status;
+                                messageDetails += " \n to: " + responseDetail.to;
+                                messageDetails += " \n at price: " + responseDetail.message_price;
+                                messageDetails += " \n with status: " + responseDetail.status;
                                 logger.Log(messageDetails);
                                 ViewData["feedback"] = messageDetails;
                             }

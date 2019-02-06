@@ -1,0 +1,66 @@
+﻿2019-02-06 09:12:43.017+00:00  [I]  SMS sent successfully with messageId: 150000000431D588 to: 447843608441 at price: 0.03330000 with status: 0NULL
+2019-02-06 09:13:10.346+00:00  [I]  {"from":{"type":"whatsapp","number":"447418342149"},"to":{"type":"whatsapp","number":"447843608441"},"message":{"content":{"type":"text","text":"your account balance is running low. would you like to top-up your account now? to top-up with £10 reply 1, to top-up with £20 reply 2. to stop these messages reply stop"}}}NULL
+2019-02-06 09:13:11.057+00:00  [I]  AcceptedNULL
+2019-02-06 09:13:11.059+00:00  [I]  "Method: POST, RequestUri: 'https://sandbox.nexmodemo.com/v0.1/messages/', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer paadnexmojpchevkx4\n  Request-Context: appId=cid-v1:9f31fcab-e623-4016-a57e-45b9495e3d0c\n  x-ms-request-root-id: ff9a0fef-42bfcfcba00bc494\n  x-ms-request-id: |ff9a0fef-42bfcfcba00bc494.1.\n  Request-Id: |ff9a0fef-42bfcfcba00bc494.1.\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 320\n}"
+2019-02-06 09:13:11.059+00:00  [I]  ["[Date, System.String[]]", "[Server, System.String[]]", "[Transfer-Encoding, System.String[]]"]
+2019-02-06 09:13:11.059+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-06 09:20:52.509+00:00  [I]  {"from":{"type":"whatsapp","number":"447418342149"},"to":{"type":"whatsapp","number":"447843608441"},"message":{"content":{"type":"text","text":"another wa test from the demo app."}}}NULL
+2019-02-06 09:20:52.978+00:00  [I]  AcceptedNULL
+2019-02-06 09:20:52.978+00:00  [I]  "Method: POST, RequestUri: 'https://sandbox.nexmodemo.com/v0.1/messages/', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer paadnexmojpchevkx4\n  Request-Context: appId=cid-v1:9f31fcab-e623-4016-a57e-45b9495e3d0c\n  x-ms-request-root-id: ff9a0ff2-42bfcfcba00bc494\n  x-ms-request-id: |ff9a0ff2-42bfcfcba00bc494.1.\n  Request-Id: |ff9a0ff2-42bfcfcba00bc494.1.\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 183\n}"
+2019-02-06 09:20:52.978+00:00  [I]  ["[Date, System.String[]]", "[Server, System.String[]]", "[Transfer-Encoding, System.String[]]"]
+2019-02-06 09:20:52.978+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-06 09:20:53.847+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-06 09:20:53.847+00:00  [I]  Status update body: {"message_uuid":"8ce46b4a-ee5a-424a-8e9b-de0bafb4dfc7","to":{"number":"447843608441","type":"whatsapp"},"from":{"number":"447418342149","type":"whatsapp"},"timestamp":"2019-02-06T09:20:53.165Z","status":"submitted"}NULL
+2019-02-06 09:20:53.859+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-06 09:20:53.859+00:00  [I]  Status update body: {"message_uuid":"8ce46b4a-ee5a-424a-8e9b-de0bafb4dfc7","to":{"number":"447843608441","type":"whatsapp"},"from":{"number":"447418342149","type":"whatsapp"},"timestamp":"2019-02-06T09:20:53.288Z","status":"rejected","error":{"code":1340,"reason":"Sent Outside Allowed Window"}}NULL
+2019-02-06 11:11:09.075+00:00  [I]  Verify request created with number: 447843608441 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-06 11:11:09.858+00:00  [I]  Verify request successfully created with requestId: 65ad9ade579f4ceaa742d8b9e5cefacfNULL
+2019-02-06 11:11:27.012+00:00  [I]  Making a PIN check request with requestId: 65ad9ade579f4ceaa742d8b9e5cefacf and PIN code: 7654NULL
+2019-02-06 11:11:27.097+00:00  [I]  Response returned with status code: 16 and error text: The code provided does not match the expected value and price:   and eventId: NULL
+2019-02-06 11:11:27.099+00:00  [W]  The code could not be verified with status: 16 and message: The code provided does not match the expected valueNULL
+2019-02-06 11:11:32.354+00:00  [I]  Making a PIN check request with requestId:  and PIN code: 8179NULL
+2019-02-06 11:11:32.430+00:00  [I]  Response returned with status code: 2 and error text: Your request is incomplete and missing the mandatory parameter: request_id and price:   and eventId: NULL
+2019-02-06 11:11:32.430+00:00  [W]  The code could not be verified with status: 2 and message: Your request is incomplete and missing the mandatory parameter: request_idNULL
+2019-02-06 11:11:43.063+00:00  [I]  Making a PIN check request with requestId:  and PIN code: 8179NULL
+2019-02-06 11:11:43.139+00:00  [I]  Response returned with status code: 2 and error text: Your request is incomplete and missing the mandatory parameter: request_id and price:   and eventId: NULL
+2019-02-06 11:11:43.139+00:00  [W]  The code could not be verified with status: 2 and message: Your request is incomplete and missing the mandatory parameter: request_idNULL
+2019-02-06 11:11:49.789+00:00  [I]  Making a PIN check request with requestId:  and PIN code: 8179NULL
+2019-02-06 11:11:49.865+00:00  [I]  Response returned with status code: 2 and error text: Your request is incomplete and missing the mandatory parameter: request_id and price:   and eventId: NULL
+2019-02-06 11:11:49.865+00:00  [W]  The code could not be verified with status: 2 and message: Your request is incomplete and missing the mandatory parameter: request_idNULL
+2019-02-06 11:12:27.444+00:00  [I]  Verify request created with number: 447375641691 and brand: Nexmo PSE Demo and senderId: Nexmo PSE and pinExpiry: 60 and nextEventWait: 60NULL
+2019-02-06 11:12:27.780+00:00  [I]  Verify request successfully created with requestId: fc923f37e70e4be9affab1ef3c9578a5NULL
+2019-02-06 20:45:52.071+00:00  [I]  Request ID: 4c5b7b93-e924-429e-bf71-5126f0b174e6 has completed successfully with status code: 0 and status text: SuccessNULL
+2019-02-06 20:46:11.630+00:00  [I]  Request ID: 04b44680-a391-4763-a48f-a135217ce130 has completed successfully with status code: 0 and status text: SuccessNULL
+2019-02-06 20:47:34.638+00:00  [I]  Request ID: 20c8d40d-21ac-4e13-8405-c128c2122d67 has completed successfully with status code: 0 and status text: SuccessNULL
+2019-02-06 20:48:47.804+00:00  [I]  Request ID: 0d565623-14f1-4fa3-8535-f4bee1ac5115 has completed successfully with status code: 0 and status text: SuccessNULL
+2019-02-06 20:49:22.955+00:00  [I]  Request ID: 754e3fbe-fe79-4456-82c7-5d88107412a5 has completed successfully with status code: 0 and status text: SuccessNULL
+2019-02-06 21:15:03.977+00:00  [I]  SMS sent successfully with messageId: 14000000061348ED 
+ to: 447843608441 
+ at price: 0.03330000 
+ with status: 0NULL
+2019-02-06 21:15:45.872+00:00  [I]  "{\"from\":{\"type\":\"whatsapp\",\"number\":\"447418342149\"},\"to\":{\"type\":\"whatsapp\",\"number\":\"447843608441\"},\"message\":{\"content\":{\"type\":\"template\",\"template\":{\"name\":\"whatsapp:hsm:technology:nexmo:simplewelcome\",\"parameters\":[{\"default\":\"nexmo\"},{\"default\":\"interact with us over whatsapp\"}]}}}}"NULL
+2019-02-06 21:15:47.099+00:00  [I]  AcceptedNULL
+2019-02-06 21:15:47.100+00:00  [I]  "Method: POST, RequestUri: 'https://sandbox.nexmodemo.com/v0.1/messages/', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer paadnexmojpchevkx4\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 289\n}"
+2019-02-06 21:15:47.100+00:00  [I]  ["[Date, System.String[]]", "[Server, System.String[]]", "[Transfer-Encoding, System.String[]]"]
+2019-02-06 21:15:47.100+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-06 21:21:01.340+00:00  [I]  "{\"from\":{\"type\":\"whatsapp\",\"number\":\"447418342149\"},\"to\":{\"type\":\"whatsapp\",\"number\":\"447843608441\"},\"message\":{\"content\":{\"type\":\"template\",\"template\":{\"name\":\"whatsapp:hsm:technology:nexmo:simplewelcome\",\"parameters\":[{\"default\":null},{\"default\":\"interact with us over whatsapp\"}]}}}}"NULL
+2019-02-06 21:21:02.713+00:00  [W]  BadRequestNULL
+2019-02-06 21:21:02.713+00:00  [W]  Bad RequestNULL
+2019-02-06 21:22:09.181+00:00  [I]  SMS sent successfully with messageId: 140000000613B2C6 
+ to: 447843608441 
+ at price: 0.03330000 
+ with status: 0NULL
+2019-02-06 21:22:30.813+00:00  [I]  "{\"from\":{\"type\":\"whatsapp\",\"number\":\"447418342149\"},\"to\":{\"type\":\"whatsapp\",\"number\":\"447843608441\"},\"message\":{\"content\":{\"type\":\"text\",\"text\":\"testing wa\"}}}"NULL
+2019-02-06 21:22:31.673+00:00  [I]  AcceptedNULL
+2019-02-06 21:22:31.676+00:00  [I]  "Method: POST, RequestUri: 'https://sandbox.nexmodemo.com/v0.1/messages/', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer paadnexmojpchevkx4\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 159\n}"
+2019-02-06 21:22:31.676+00:00  [I]  ["[Date, System.String[]]", "[Server, System.String[]]", "[Transfer-Encoding, System.String[]]"]
+2019-02-06 21:22:31.676+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-06 21:23:20.834+00:00  [I]  SMS sent successfully with messageId: 150000000467435B 
+ to: 447843608441 
+ at price: 0.03330000 
+ with status: 0NULL
+2019-02-06 21:23:31.902+00:00  [I]  "{\"from\":{\"type\":\"whatsapp\",\"number\":\"447418342149\"},\"to\":{\"type\":\"whatsapp\",\"number\":\"447843608441\"},\"message\":{\"content\":{\"type\":\"text\",\"text\":\"how do you like wa?\"}}}"NULL
+2019-02-06 21:23:32.805+00:00  [I]  AcceptedNULL
+2019-02-06 21:23:32.805+00:00  [I]  "Method: POST, RequestUri: 'https://sandbox.nexmodemo.com/v0.1/messages/', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer paadnexmojpchevkx4\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 168\n}"
+2019-02-06 21:23:32.805+00:00  [I]  ["[Date, System.String[]]", "[Server, System.String[]]", "[Transfer-Encoding, System.String[]]"]
+2019-02-06 21:23:32.805+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"

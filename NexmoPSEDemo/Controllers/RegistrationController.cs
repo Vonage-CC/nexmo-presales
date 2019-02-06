@@ -158,7 +158,7 @@ namespace NexmoPSEDemo.Controllers
                     {
                         logger.Log("Soft validation with NI advanced request successfully created with requestId: " + results.RequestId);
                         var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateAdvancedObject(results), Formatting.Indented);
-                        ViewData["feedback"] = "Thanks " + validationModel.Name + ". We have checked your phone number and your account has been validated. More details: " + responseObject;
+                        ViewData["feedback"] = "Thanks " + validationModel.Name + ". We have checked your phone number and your account has been validated. More details: \n" + responseObject;
                     }
                     else if (results.NumberValidity != "valid")
                     {

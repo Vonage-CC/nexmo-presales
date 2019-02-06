@@ -42,7 +42,7 @@ namespace NexmoPSEDemo.Controllers
                             {
                                 var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateBasicObject(response), Formatting.Indented);
                                 logger.Log("Request ID: " + response.RequestId + " has completed successfully with status code: " + response.Status + " and status text: " + response.StatusMessage);
-                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: " + responseObject;
+                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: \n" + responseObject;
                             }
                             break;
                         case "standard":
@@ -52,7 +52,7 @@ namespace NexmoPSEDemo.Controllers
                             {
                                 var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateStandardObject(standardResponse), Formatting.Indented);
                                 logger.Log("Request ID: " + standardResponse.RequestId + " has completed successfully with status code: " + standardResponse.Status + " and status text: " + standardResponse.StatusMessage);
-                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: " + responseObject;
+                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: \n" + responseObject;
                             }
                             break;
                         case "advanced":
@@ -62,7 +62,7 @@ namespace NexmoPSEDemo.Controllers
                             {
                                 var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateAdvancedObject(advancedResponse), Formatting.Indented);
                                 logger.Log("Request ID: " + advancedResponse.RequestId + " has completed successfully with status code: " + advancedResponse.Status + " and status text: " + advancedResponse.StatusMessage);
-                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: " + responseObject;
+                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: \n" + responseObject;
                             }
                             break;
                     }

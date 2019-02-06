@@ -8,6 +8,8 @@
         public string ContentType { get; set; }
         public string Text { get; set; }
         public string RequestId { get; set; }
+        public string Template { get; set; }
+        public string Brand { get; set; }
     }
 
     public class MessagingObject
@@ -15,5 +17,12 @@
         public From From { get; set; }
         public To To { get; set; }
         public Message Message { get; set; }
+    }
+
+    public class TemplateMessagingObject
+    {
+        public From From { get; set; }
+        public To To { get; set; }
+        public TemplateMessage Message { get; set; }
     }
 }
