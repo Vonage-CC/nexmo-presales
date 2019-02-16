@@ -5,6 +5,7 @@ using Nexmo.Api;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
@@ -92,6 +93,7 @@ namespace NexmoPSEDemo.Common
 
     public static class NexmoApi
     {
+        // Verify API
         public static VerifyResponse SendVerifyRequest(RegistrationModel viewModel, Logger logger, IConfigurationRoot configuration)
         {
             var verifyRequest = new NumberVerify.VerifyRequest
@@ -133,6 +135,7 @@ namespace NexmoPSEDemo.Common
             return client.NumberVerify.Check(request: checkRequest);
         }
 
+        // SMS API
         public static SMSResponse SendSMS(MessagingModel messagingModel, IConfigurationRoot configuration, string pinExpiry)
         {
             var client = GenerateNexmoClient(configuration);
@@ -145,6 +148,7 @@ namespace NexmoPSEDemo.Common
             });
         }
 
+        // Messaging API
         public static bool SendMessage(MessagingModel messagingModel, Logger logger, IConfigurationRoot configuration)
         {
             // extract the url and token from the configuration file
@@ -176,13 +180,13 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Info, response.RequestMessage);
                         logger.Log(Level.Info, response.Headers);
                         logger.Log(Level.Info, response.Content);
+
+                        return true;
                     }
                     else
                     {
                         logger.Log(Level.Warning, response.StatusCode.ToString());
                         logger.Log(Level.Warning, response.ReasonPhrase);
-
-                        return false;
                     }
                 }
             }
@@ -190,13 +194,12 @@ namespace NexmoPSEDemo.Common
             {
                 logger.Log(Level.Exception, e.Message);
                 logger.Log(Level.Exception, e.StackTrace);
-
-                return false;
             }
 
-            return true;
+            return false;
         }
 
+        // Disptach API
         public static bool SendDispatchFailover(FailoverModel failoverModel, Logger logger, IConfigurationRoot configuration)
         {
             // extract the url and token from the configuration file
@@ -225,15 +228,164 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Info, response.RequestMessage);
                         logger.Log(Level.Info, response.Headers);
                         logger.Log(Level.Info, response.Content);
+
+                        return true;
                     }
                     else
                     {
                         logger.Log(Level.Warning, response.StatusCode.ToString());
                         logger.Log(Level.Warning, response.ReasonPhrase);
-
-                        return false;
                     }
                 }                
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return false;
+        }
+
+        // Voice API
+        public static bool MakeVoiceCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
+        {
+            //TODO: Fix the 401 issue. For now testing by generating the jwt token in the terminal
+            //string privateKeyString = System.IO.File.ReadAllText(configuration["appSettings:Nexmo.Application.Key"]);
+            //byte[] key = Encoding.ASCII.GetBytes(privateKeyString);
+
+            //var tokenData = new byte[64];
+            //var rng = RandomNumberGenerator.Create();
+            //rng.GetBytes(tokenData);
+            //var jwtTokenId = Convert.ToBase64String(tokenData);
+            //var iat = (long) (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
+
+            //var claims = new[]
+            //{
+            //    new Claim("iat", iat.ToString()),
+            //    new Claim("jti", jwtTokenId),
+            //    new Claim("application_id", configuration["appSettings:Nexmo.Application.Id"])
+            //};
+
+            //var jwtToken = new JwtSecurityToken(
+            //claims: claims,
+            //expires: new System.DateTime(2020, 1, 31),
+            //signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            //);
+
+            //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
+            //string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            string encodedJwt = configuration["Nexmo.Voice.Jwt.Token"];
+
+            // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
+            //var client = new Client(creds: new Credentials
+            //{
+            //    ApiKey = configuration["appSettings:Nexmo.api_key"],
+            //    ApiSecret = configuration["appSettings:Nexmo.api_secret"],
+            //    ApplicationId = configuration["appSettings:Nexmo.Application.Id"],
+            //    ApplicationKey = privateKeyString
+            //});
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingLogger");
+                logger.Open();
+
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls";
+                logger.Log(Level.Info, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Add("Authorization", "Bearer " + encodedJwt);
+
+                // TODO move this section to the UI and generate a VoiceModel object in the front end
+                var to = new List<CallTo>()
+                {
+                    new CallTo()
+                    {
+                        Type = "phone",
+                        Number = "447843608441"
+                    }
+                };
+                var from = new CallFrom()
+                {
+                    Type = "phone",
+                    Number = "33644631466"
+                };
+                var answerUrls = new List<string>()
+                {
+                    "http://jpchenot.nexmodemo.com/basic-tts-ncco.json"
+                };
+                var eventUrls = new List<string>()
+                {
+                    "https://7be4339c.ngrok.io/vapi/events"
+                };
+                VoiceRootObject requestObject = new VoiceRootObject
+                {
+                    To = to,
+                    From = from,
+                    //Answer_url = answerUrls,
+                    Ncco = @"[
+                                {
+                                  'action': 'talk',
+                                  'text': 'This is a text to speech call from Nexmo'
+                                }
+                              ]",
+                    Event_url = eventUrls
+                };
+                //
+
+                string jsonRequestContent = JsonConvert.SerializeObject(requestObject);
+                request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log(Level.Info, response.StatusCode);
+                        logger.Log(Level.Info, response.RequestMessage);
+                        logger.Log(Level.Info, response.Headers);
+                        logger.Log(Level.Info, response.Content);
+
+                        return true;
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, response.StatusCode);
+                        logger.Log(Level.Warning, response.ReasonPhrase);
+                    }
+                }                
+
+                // TODO Implement the Nexmo library once the RSA issue is resolved.
+                // MAKE A PHONE CALL
+                //Call.CallResponse response = client.Call.Do(new Call.CallCommand
+                //{
+                //    to = new[]
+                //    {
+                //        new Call.Endpoint
+                //        {
+                //            type = "phone",
+                //            number = "447843608441"
+                //        }
+                //    },
+                //    from = new Call.Endpoint
+                //    {
+                //        type = "phone",
+                //        number = "33644631466"
+                //    },
+                //    answer_url = new[]
+                //    {
+                //        "http://jpchenot.nexmodemo.com/basic-tts-ncco.json"
+                //    },
+                //    event_url = new[]
+                //    {
+                //        "https://4bbeea69.ngrok.io/vapi/events"
+                //    }
+                //});
+
+                //Console.WriteLine(response.conversation_uuid);
+                //Console.WriteLine(response.uuid);
+                //Console.WriteLine(response.status);
             }
             catch (Exception e)
             {
@@ -243,9 +395,10 @@ namespace NexmoPSEDemo.Common
                 return false;
             }
 
-            return true;
+            return false;
         }
-
+        
+        // Number Insight API
         public static NumberInsightBasicResponse BasicNumberInsightRequest(ValidationModel validationModel, IConfigurationRoot configuration)
         {
             var client = GenerateNexmoClient(configuration);
@@ -281,6 +434,7 @@ namespace NexmoPSEDemo.Common
             });
         }
 
+        // Shared methods to be used by Nexmo APIs methods
         private static Client GenerateNexmoClient(IConfigurationRoot configuration)
         {
             var client = new Client(creds: new Nexmo.Api.Request.Credentials
