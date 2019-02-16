@@ -1,6 +1,6 @@
 ﻿@model MessagingModel
 @{
-    ViewData["Title"] = "SMS notification";
+    ViewData["Title"] = "Messaging notification";
 }
 
 <div class="Vlt-card Vlt-article">
@@ -21,8 +21,8 @@
                             <select id="select" name="type">
                                 <option>SMS</option>
                                 <option>WhatsApp</option>
+                                <option>Facebook Messenger</option>
                                 <option disabled="disabled">Viber</option>
-                                <option disabled="disabled">Facebook Messenger</option>
                             </select>
                         </div>
 
@@ -55,8 +55,19 @@
                         <label class="Vlt-label" for="number">Recipient Phone Number</label>
                         <div class="Vlt-input">
                             <input type="text" name="number" placeholder="Please enter the phone number to send the message to" />
+                        </div>                        
+                    </div>
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="brand">Brand Name</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="brand" placeholder="Please enter your brand name" />
                         </div>
-
+                        <div class="Vlt-callout Vlt-callout--shoutout">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                Optional! Enter only if you selected the WhatsApp Welcome Template.
+                            </div>
+                        </div>
                     </div>
                     <div class="Vlt-form__element">
                         <label class="Vlt-label" for="text">Message</label>
@@ -67,6 +78,7 @@
                     <div class="Vlt-form__element">
                         <div class="Vlt-input">
                             <input type="submit" value="Send Message" />
+                            <input type="hidden" id="template" name="template" value="false" />
                         </div>
                     </div>
                 </div>
@@ -79,6 +91,12 @@
 
     <h3>Templates</h3>
     <div class="Vlt-grid">
+        <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'wa-welcome-template')">
+            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="wa-welcome-template">
+                <h4>WhatsApp Welcome Template</h4>
+                <p>Interact with us over whatsapp</p>
+            </div>
+        </div>
         <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'low-balance-notification')">
             <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="low-balance-notification">
                 <h4>Low balance notification</h4>
@@ -89,12 +107,6 @@
             <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="bet-won-notification">
                 <h4>Bet won notification</h4>
                 <p>Great news! The bet you placed on the match Arsenal vs Chelsea has been successfully won. We have added your winnings to your account.</p>
-            </div>
-        </div>
-        <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'player-reminder-notification')">
-            <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="player-reminder-notification">
-                <h4>Player reminder notification</h4>
-                <p>Hello Jean-Philippe. We have noticed that you have not logged into your account for several days. Why not come back today and enjoy a free £5 top-up. Click the link to access your account now. http://dashboard.nexmo.com.</p>
             </div>
         </div>
     </div>

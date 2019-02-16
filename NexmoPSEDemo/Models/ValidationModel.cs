@@ -1,12 +1,13 @@
 ﻿
 namespace NexmoPSEDemo.Models
 {
-    public class ValidationModel
+    public class ValidationModel : RegistrationModel
     {
         public string Cnam { get; set; }
-        public string Number { get; set; }
+        //public string Number { get; set; }
         public string Country { get; set; }
         public string Version { get; set; }
+        public string Sender { get; set; }
     }
 
     public class CurrentCarrier

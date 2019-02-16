@@ -5,7 +5,7 @@ namespace NexmoPSEDemo.Models
 {
     public class FailoverModel
     {
-        public string RequestId { get; set; }
+        public string RequestId { get; set; }        
     }
 
     public class From
@@ -20,6 +20,23 @@ namespace NexmoPSEDemo.Models
         public string Number { get; set; }
     }
 
+    public class Parameter
+    {
+        public string Default { get; set; }
+    }
+
+    public class Template
+    {
+        public string Name { get; set; }
+        public List<Parameter> Parameters { get; set; }
+    }
+
+    public class TemplateContent
+    {
+        public string Type { get; set; }
+        public Template Template { get; set; }
+    }
+
     public class Content
     {
         public string Type { get; set; }
@@ -29,6 +46,11 @@ namespace NexmoPSEDemo.Models
     public class Message
     {
         public Content Content { get; set; }
+    }
+
+    public class TemplateMessage
+    {
+        public TemplateContent Content { get; set; }
     }
 
     public class Failover

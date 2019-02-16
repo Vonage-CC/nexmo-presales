@@ -40,9 +40,9 @@ namespace NexmoPSEDemo.Controllers
 
                             if (response.Status == "0")
                             {
-                                var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateBasicObject(response));
+                                var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateBasicObject(response), Formatting.Indented);
                                 logger.Log("Request ID: " + response.RequestId + " has completed successfully with status code: " + response.Status + " and status text: " + response.StatusMessage);
-                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: " + responseObject;
+                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: \n" + responseObject;
                             }
                             break;
                         case "standard":
@@ -50,9 +50,9 @@ namespace NexmoPSEDemo.Controllers
 
                             if (standardResponse.Status == "0")
                             {
-                                var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateStandardObject(standardResponse));
+                                var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateStandardObject(standardResponse), Formatting.Indented);
                                 logger.Log("Request ID: " + standardResponse.RequestId + " has completed successfully with status code: " + standardResponse.Status + " and status text: " + standardResponse.StatusMessage);
-                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: " + responseObject;
+                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: \n" + responseObject;
                             }
                             break;
                         case "advanced":
@@ -60,9 +60,9 @@ namespace NexmoPSEDemo.Controllers
 
                             if (advancedResponse.Status == "0")
                             {
-                                var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateAdvancedObject(advancedResponse));
+                                var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateAdvancedObject(advancedResponse), Formatting.Indented);
                                 logger.Log("Request ID: " + advancedResponse.RequestId + " has completed successfully with status code: " + advancedResponse.Status + " and status text: " + advancedResponse.StatusMessage);
-                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: " + responseObject;
+                                ViewData["feedback"] = "Your request completed successfully. Please see below the response: \n" + responseObject;
                             }
                             break;
                     }
@@ -79,11 +79,6 @@ namespace NexmoPSEDemo.Controllers
                 }
             }
 
-            return View();
-        }
-
-        public IActionResult Soft()
-        {
             return View();
         }
     }

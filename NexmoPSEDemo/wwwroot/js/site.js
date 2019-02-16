@@ -5,11 +5,15 @@
 function fillTextareaWithTemplate(textarea, contentId) {
     var content = $("#" + contentId + " > p").html();
     $("#" + textarea).html(content);
+
+    if (contentId == "wa-welcome-template") {
+        $("#template").val("true");
+    }
 };
 
 function toggleStatusBoxes() {
     // only show callouts with information
-    if ($("#infoCallout > div > div").text() == "")
+    if ($("#infoCallout > div > div > pre").text() == "")
         $("#infoCallout").hide();
     else
         $("#infoCallout").slideDown();

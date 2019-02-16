@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using Nexmo.Api;
 using NexmoPSEDemo.Common;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
+using static Nexmo.Api.NumberInsight;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -119,15 +121,73 @@ namespace NexmoPSEDemo.Controllers
                 }
                 finally
                 {
-                    //if (logger != null)
-                    //{
-                        //logger.Close();
-                        //logger.Deregister();
-                    //}
+                    if (logger != null)
+                    {
+                        logger.Close();
+                        logger.Deregister();
+                    }
                 }
             }
 
             return View(viewModel);
         }
+
+        public IActionResult Soft()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Soft(ValidationModel validationModel)
+        {
+            if (ModelState.IsValid)
+            {
+                // create a logger
+                Logger logger = NexmoLogger.GetLogger("SoftValidationLogger"); ;
+
+                try
+                {
+                    if (logger == null)
+                    {
+                        logger = NexmoLogger.GetLogger("SoftValidationLogger");
+                    }
+                    logger.Open();
+
+                    NumberInsightAdvancedResponse results = NexmoApi.AdvancedNumberInsightRequest(validationModel, configuration);
+                    if (results.Status == "0" && results.NumberValidity == "valid")
+                    {
+                        logger.Log("Soft validation with NI advanced request successfully created with requestId: " + results.RequestId);
+                        var responseObject = JsonConvert.SerializeObject(NexmoApi.GenerateAdvancedObject(results), Formatting.Indented);
+                        ViewData["feedback"] = "Thanks " + validationModel.Name + ". We have checked your phone number and your account has been validated. More details: \n" + responseObject;
+                    }
+                    else if (results.NumberValidity != "valid")
+                    {
+                        logger.Log("Soft validation with NI advanced request failed with number validity: " + results.NumberValidity + " for requestId: " + results.RequestId);
+                        ViewData["feedback"] = "Thanks " + validationModel.Name + ". Unfortunately it seems that the number you provided is invalid. Please try again with a different phone number.";
+                    }
+                    else
+                    {
+                        ViewData["error"] = "Your request could not be completed at this time. Please try again later.";
+                        logger.Log(Level.Exception, "Response code: " + results.Status + " - Request could not be completed. Request ID: " + results.RequestId + " - Error Text: " + results.ErrorText);
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.Log(Level.Exception, e);
+                    ViewData["error"] = "There has been an issue dealing with your request. Please try again later.";
+                }
+                finally
+                {
+                    if (logger != null)
+                    {
+                        logger.Close();
+                        logger.Deregister();
+                    }
+                }
+            }
+
+            return View(validationModel);
+        }
+
     }
 }

@@ -153,21 +153,29 @@ namespace NexmoPSEDemo.Common
         {
             // extract the url and token from the configuration file
             string url = configuration["appSettings:Nexmo.Url.Api"] + "/v0.1/messages";
+            string token = configuration["appSettings:Nexmo.Messaging.App.Token"]; // TODO: replace with input from web user???
+
             if (messagingModel.Type == "WhatsApp")
+            {
                 url = configuration["appSettings:Nexmo.Url.WA.Sandbox"];
-            string token = configuration["appSettings:Nexmo.Messaging.WA.Token"]; // TODO: replace with input from web user???
+                token = configuration["appSettings:Nexmo.Messaging.WA.Token"];
+            }
 
             // get the json object to pass in the request
             string messageObj = GenerateMessageJson(messagingModel);
 
-            // start creating the HTTP request
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-            if(messagingModel.Type == "WhatsApp")
-                request.Headers.Add("Authorization", "Bearer " + token);
+            if (messagingModel.Template == "true")
+            {
+                messageObj = GenerateTemplateMessageJson(messagingModel);
+            }
+
+                // start creating the HTTP request
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Headers.Add("Authorization", "Bearer " + token);
 
             try
             {
-                logger.Log(messageObj);
+                logger.Log(JsonConvert.SerializeObject(messageObj, Formatting.Indented));
                 request.Content = new StringContent(messageObj, Encoding.UTF8, "application/json");
 
                 using (var client = new HttpClient())
@@ -576,6 +584,37 @@ namespace NexmoPSEDemo.Common
                     {
                         Type = messagingModel.ContentType,
                         Text = messagingModel.Text
+                    }
+                }
+            };
+
+            return JsonConvert.SerializeObject(messageJson).ToLower();
+        }
+
+        private static string GenerateTemplateMessageJson(MessagingModel messagingModel)
+        {
+            string sender = "447418342149";
+            if (messagingModel.Type != "WhatsApp")
+                sender = messagingModel.Sender;
+
+            var messageJson = new TemplateMessagingObject()
+            {
+                From = new From() { Type = messagingModel.Type, Number = sender },
+                To = new To() { Type = messagingModel.Type, Number = messagingModel.Number },
+                Message = new TemplateMessage()
+                {
+                    Content = new TemplateContent()
+                    {
+                        Type = "template",
+                        Template = new Template()
+                        {
+                            Name = "whatsapp:hsm:technology:nexmo:simplewelcome",
+                            Parameters = new List<Parameter>()
+                            {
+                                new Parameter(){Default = messagingModel.Brand},
+                                new Parameter(){Default = messagingModel.Text}
+                            }
+                        }
                     }
                 }
             };
