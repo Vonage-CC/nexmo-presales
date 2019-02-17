@@ -16,30 +16,30 @@ using NSpring.Logging;
 
 namespace NexmoPSEDemo.Controllers
 {
-    public class InboundMessagingController : Controller
+    
+    public class InboundVoiceController : Controller
     {
         // load the configuration file to access Nexmo's API credentials
         readonly IConfigurationRoot configuration = Common.Configuration.GetConfigFile();
 
-        // GET: api/<controller>
+        // GET: vapi/<controller>
         [HttpGet]
-        [Route("api/[controller]")]
+        [Route("vapi/[controller]")]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<controller>/5
+        // GET vapi/<controller>/5
         //[HttpGet("{id}")]
-        //[Route("api/inboundmessaging")]
         //public string Get(int id)
         //{
         //    return "value";
         //}
 
-        // POST api/<controller>
+        // POST vapi/status
         [HttpPost]
-        [Route("api/status")]
+        [Route("vapi/status")]
         public HttpResponseMessage Status()
         {
             // create a logger placeholder
@@ -48,7 +48,7 @@ namespace NexmoPSEDemo.Controllers
 
             try
             {
-                logger = NexmoLogger.GetLogger("MessagingStatusLogger");
+                logger = NexmoLogger.GetLogger("VoiceStatusLogger");
                 logger.Open();
 
                 var headers = Request.Headers;
@@ -56,8 +56,8 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    logger.Log("Messaging Status update from: " + host);
-                    logger.Log("Messaging Status update body: " + value.Result);
+                    logger.Log("Voice Status update from: " + host);
+                    logger.Log("Voice Status update body: " + value.Result);
                 }
             }
             catch (Exception e)
@@ -74,9 +74,10 @@ namespace NexmoPSEDemo.Controllers
             return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
         }
 
+        // POST vapi/inbound
         [HttpPost]
-        [Route("api/inbound")]
-        public HttpResponseMessage Inbound()
+        [Route("vapi/inbound")]
+        public string Inbound()
         {
             // create a logger placeholder
             Logger logger = null;
@@ -84,7 +85,7 @@ namespace NexmoPSEDemo.Controllers
 
             try
             {
-                logger = NexmoLogger.GetLogger("InboundMessagingLogger");
+                logger = NexmoLogger.GetLogger("InboundVoiceLogger");
                 logger.Open();
 
                 var headers = Request.Headers;
@@ -92,15 +93,17 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    var fmObject = JsonConvert.DeserializeObject<FMRootObject>(value.Result);
-                    logger.Log("Messaging Inbound from: " + host);
-                    logger.Log("Messaging Inbound body: " + JsonConvert.SerializeObject(fmObject, Formatting.Indented));
+                    var voiceObject = JsonConvert.DeserializeObject<FMRootObject>(value.Result);
+                    logger.Log("Voice Inbound from: " + host);
+                    logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceObject, Formatting.Indented));
                 }
+
+                //httpRequest = Common.NexmoApi.AnswerVoiceCall(logger, configuration);
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                //return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -108,19 +111,19 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            //return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            string ncco = Common.NexmoApi.AnswerVoiceCall(logger, configuration);
+            return ncco;
         }
 
-        // PUT api/<controller>/5
+        // PUT vapi/<controller>/5
         [HttpPut("{id}")]
-        [Route("api/[controller]")]
         public void Put(int id, [FromBody]string value)
         {
         }
 
-        // DELETE api/<controller>/5
+        // DELETE vapi/<controller>/5
         [HttpDelete("{id}")]
-        [Route("api/[controller]")]
         public void Delete(int id)
         {
         }

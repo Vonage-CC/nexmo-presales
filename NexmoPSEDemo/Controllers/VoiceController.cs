@@ -18,12 +18,13 @@ namespace NexmoPSEDemo.Controllers
         // Load the configuration file
         IConfigurationRoot configuration = Common.Configuration.GetConfigFile();
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Index(VoiceModel voiceModel)
         {
             if (ModelState.IsValid)
             {
@@ -32,7 +33,7 @@ namespace NexmoPSEDemo.Controllers
 
                 try
                 {
-                    if (NexmoApi.MakeVoiceCall(new VoiceModel(), logger, configuration))
+                    if (NexmoApi.MakeVoiceCall(voiceModel, logger, configuration))
                     {
                         ViewData["feedback"] = "Your phone call is starting now...";
                     }
@@ -46,13 +47,22 @@ namespace NexmoPSEDemo.Controllers
                     logger.Log(Level.Exception, e);
                     ViewData["error"] = "There has been an issue dealing with your request. Please try again later.";
                 }
-                finally
-                {
-                    logger.Close();
-                    logger.Deregister();
-                }
             }
 
+            return View();
+        }
+
+        public IActionResult Alarm()
+        {
+            ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
+            ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Alarm(VoiceModel voiceModel)
+        {
             return View();
         }
     }

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Voice Proxy";
+    ViewData["Title"] = "Alarm triggering an alert";
 }
 
 <div class="Vlt-card Vlt-article">
@@ -8,7 +8,7 @@
         <svg class="Vlt-teal">
             <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
         </svg>
-        Simple Text to Speech Call
+        Alarm triggering an alert
     </h3>
 
     <form method="post">
@@ -16,18 +16,28 @@
             <div class="Vlt-col">
                 <div class="Vlt-card Vlt-article">
                     <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="from">Sender Phone Number</label>
+                        <label class="Vlt-label" for="from">Select a number to call to simulate the alarm being triggered</label>
                         <div class="Vlt-input">
-                            <input type="text" name="from" placeholder="Please enter the phone number to call from" />
-                        </div>
-                    </div>
-                    <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="to">Recipient Phone Number</label>
-                        <div class="Vlt-input">
-                            <input type="text" name="to" placeholder="Please enter the phone number to call" />
+                            <select name="from">
+                                <option value="FR" selected="selected">@ViewData["From.FR"] (France)</option>
+                                <option value="UK">@ViewData["From.UK"] (UK)</option>
+                            </select>
                         </div>
 
                         <div class="Vlt-callout Vlt-callout--shoutout">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                In real life the call would be triggered by the alarm system. However to avoid abuse of this website, we kindly request that you call one of the numbers above.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="to">Phone number to call in an emergency</label>
+                        <div class="Vlt-input">
+                            <input type="text" name="to" placeholder="Please enter the phone number to call in an emergency" />
+                        </div>
+
+                        <div class="Vlt-callout Vlt-callout--tip">
                             <i></i>
                             <div class="Vlt-callout__content">
                                 Phone numbers must be in the E.164 format
@@ -37,16 +47,9 @@
                         </div>
                     </div>
                     <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="text">Message</label>
                         <div class="Vlt-input">
-                            <textarea cols="60" rows="3" name="text" placeholder="Please enter the message to be read out to the recipient"></textarea>
+                            <input type="submit" value="Save" />
                         </div>
-                    </div>
-                    <div class="Vlt-form__element">
-                        <div class="Vlt-input">
-                            <input type="submit" value="Call" />
-                        </div>
-                        <input type="hidden" id="action" name="action" value="talk" />
                     </div>
                 </div>
             </div>

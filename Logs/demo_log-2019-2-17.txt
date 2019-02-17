@@ -1,0 +1,60 @@
+﻿2019-02-17 21:05:08.175+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:05:08.175+00:00  [I]  Status update body: {"from":"33644631466","to":"447843608441","uuid":"7bb9d310-8799-49c4-a87b-6060ff6feb89","conversation_uuid":"CON-4f040511-36a1-4edf-a572-17e391345d61","status":"ringing","direction":"outbound","timestamp":"2019-02-17T21:05:07.375Z"}NULL
+2019-02-17 21:05:21.152+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:05:21.152+00:00  [I]  Status update body: {"start_time":null,"rate":null,"from":"33644631466","to":"447843608441","uuid":"7bb9d310-8799-49c4-a87b-6060ff6feb89","conversation_uuid":"CON-4f040511-36a1-4edf-a572-17e391345d61","status":"answered","direction":"outbound","network":null,"timestamp":"2019-02-17T21:05:20.773Z"}NULL
+2019-02-17 21:05:21.345+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:05:21.345+00:00  [I]  Status update body: {"end_time":"2019-02-17T21:05:21.000Z","uuid":"7bb9d310-8799-49c4-a87b-6060ff6feb89","network":"23410","duration":"1","start_time":"2019-02-17T21:05:20.000Z","rate":"0.02400000","price":"0.00040000","from":"33644631466","to":"447843608441","conversation_uuid":"CON-4f040511-36a1-4edf-a572-17e391345d61","status":"completed","direction":"outbound","timestamp":"2019-02-17T21:05:21.274Z"}NULL
+2019-02-17 21:14:35.195+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:14:35.195+00:00  [I]  Status update body: {"from":"33644631466","to":"447843608441","uuid":"594987a1-331f-4bc3-a229-358d0554d5d8","conversation_uuid":"CON-0903e76a-e0f9-4b44-8d89-2bc5dd2e279a","status":"started","direction":"outbound","timestamp":"2019-02-17T21:14:34.783Z"}NULL
+2019-02-17 21:14:46.094+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:14:46.094+00:00  [I]  Status update body: {"start_time":null,"rate":null,"from":"33644631466","to":"447843608441","uuid":"594987a1-331f-4bc3-a229-358d0554d5d8","conversation_uuid":"CON-0903e76a-e0f9-4b44-8d89-2bc5dd2e279a","status":"answered","direction":"outbound","network":null,"timestamp":"2019-02-17T21:14:45.711Z"}NULL
+2019-02-17 21:14:46.277+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:14:46.277+00:00  [I]  Status update body: {"end_time":"2019-02-17T21:14:46.000Z","uuid":"594987a1-331f-4bc3-a229-358d0554d5d8","network":"23410","duration":"1","start_time":"2019-02-17T21:14:45.000Z","rate":"0.02400000","price":"0.00040000","from":"33644631466","to":"447843608441","conversation_uuid":"CON-0903e76a-e0f9-4b44-8d89-2bc5dd2e279a","status":"completed","direction":"outbound","timestamp":"2019-02-17T21:14:46.206Z"}NULL
+2019-02-17 21:33:39.360+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:33:39.360+00:00  [I]  Status update body: {"from":"33644631466","to":"447843608441","uuid":"c7edc007-7bcc-43e4-ae14-cc26b9904133","conversation_uuid":"CON-6c1c7e1d-d513-4423-922d-83b19e2b9561","status":"started","direction":"outbound","timestamp":"2019-02-17T21:33:38.939Z"}NULL
+2019-02-17 21:33:43.091+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:33:43.091+00:00  [I]  Status update body: {"start_time":null,"rate":null,"from":"33644631466","to":"447843608441","uuid":"c7edc007-7bcc-43e4-ae14-cc26b9904133","conversation_uuid":"CON-6c1c7e1d-d513-4423-922d-83b19e2b9561","status":"answered","direction":"outbound","network":null,"timestamp":"2019-02-17T21:33:43.019Z"}NULL
+2019-02-17 21:33:46.119+00:00  [I]  Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-17 21:33:46.119+00:00  [I]  Status update body: {"end_time":"2019-02-17T21:33:46.000Z","uuid":"c7edc007-7bcc-43e4-ae14-cc26b9904133","network":"23410","duration":"4","start_time":"2019-02-17T21:33:42.000Z","rate":"0.02400000","price":"0.00160000","from":"33644631466","to":"447843608441","conversation_uuid":"CON-6c1c7e1d-d513-4423-922d-83b19e2b9561","status":"completed","direction":"outbound","timestamp":"2019-02-17T21:33:46.043Z"}NULL
+2019-02-17 21:50:06.831+00:00  [I]  https://api.nexmo.com/v1/callsNULL
+2019-02-17 21:50:18.532+00:00  [E]  One or more errors occurred. (No such host is known)NULL
+2019-02-17 21:50:18.589+00:00  [E]     at System.Threading.Tasks.Task`1.GetResultCore(Boolean waitCompletionNotification)
+   at NexmoPSEDemo.Common.NexmoApi.MakeVoiceCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration) in D:\OneDrive - Nexmo\Applications\visual studio apps\Nexmo PSE Demo\nexmo-presales\NexmoPSEDemo\NexmoPSEDemo\Common\Common.cs:line 347NULL
+2019-02-17 21:51:39.957+00:00  [I]  https://api.nexmo.com/v1/callsNULL
+2019-02-17 21:52:36.243+00:00  [I]  "Created"
+2019-02-17 21:52:36.243+00:00  [I]  "Method: POST, RequestUri: 'https://api.nexmo.com/v1/calls', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDc4MTgyNTksImp0aSI6IjRiMjRlNWMwLTFiMjUtMTFlOS04ZmM1LTE1NWYwNjdjMzFkYiIsImFwcGxpY2F0aW9uX2lkIjoiYTVmZDQ2NzAtM2UyZC00NGEzLTg3NmMtMDI2Mjc4YWQ5M2E2IiwiZXhwIjoiMTU4MDQyODgwMCJ9.iLV1ugmlZtYXHvpnKU48ciMr2mss1XSbXRKQ6r6VqGAcJbmZy_Gyx5ScoWhR6likqMqstQ8kk1_V88IibhIZw43Iq8rOyf0MxtTdmeceZbbYCA_oMLtdo1HGqWuLtW1twN5U6F-6BzBInTaIf6hjlf-v0tVznr3jpH4OXANuJC6xEF0X07iVZADeCdyRWGDqr3A8tE3pYeo_lBgv67dSAUCUu3AveIP02hqpNvSJB1sm0GYFiH9V9Nk5jdrKPrteP9WD-UP_2UuZMUpZKdL3FMmVRIbUAdECGyJOB0JsZdPbcFtxaou2pir5UYJ8hZReQyoTWm8ATgAnv5-M9UKo1g\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 224\n}"
+2019-02-17 21:52:36.243+00:00  [I]  ["[Server, System.String[]]", "[Date, System.String[]]", "[Connection, System.String[]]", "[X-Frame-Options, System.String[]]", "[X-XSS-Protection, System.String[]]", "[Strict-Transport-Security, System.String[]]", "[X-Content-Type-Options, System.String[]]", "[X-Nexmo-Trace-Id, System.String[]]"]
+2019-02-17 21:52:36.243+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-17 21:53:04.583+00:00  [I]  https://api.nexmo.com/v1/callsNULL
+2019-02-17 21:53:10.341+00:00  [I]  "Created"
+2019-02-17 21:53:10.341+00:00  [I]  "Method: POST, RequestUri: 'https://api.nexmo.com/v1/calls', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDc4MTgyNTksImp0aSI6IjRiMjRlNWMwLTFiMjUtMTFlOS04ZmM1LTE1NWYwNjdjMzFkYiIsImFwcGxpY2F0aW9uX2lkIjoiYTVmZDQ2NzAtM2UyZC00NGEzLTg3NmMtMDI2Mjc4YWQ5M2E2IiwiZXhwIjoiMTU4MDQyODgwMCJ9.iLV1ugmlZtYXHvpnKU48ciMr2mss1XSbXRKQ6r6VqGAcJbmZy_Gyx5ScoWhR6likqMqstQ8kk1_V88IibhIZw43Iq8rOyf0MxtTdmeceZbbYCA_oMLtdo1HGqWuLtW1twN5U6F-6BzBInTaIf6hjlf-v0tVznr3jpH4OXANuJC6xEF0X07iVZADeCdyRWGDqr3A8tE3pYeo_lBgv67dSAUCUu3AveIP02hqpNvSJB1sm0GYFiH9V9Nk5jdrKPrteP9WD-UP_2UuZMUpZKdL3FMmVRIbUAdECGyJOB0JsZdPbcFtxaou2pir5UYJ8hZReQyoTWm8ATgAnv5-M9UKo1g\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 233\n}"
+2019-02-17 21:53:10.341+00:00  [I]  ["[Server, System.String[]]", "[Date, System.String[]]", "[Connection, System.String[]]", "[X-Frame-Options, System.String[]]", "[X-XSS-Protection, System.String[]]", "[Strict-Transport-Security, System.String[]]", "[X-Content-Type-Options, System.String[]]", "[X-Nexmo-Trace-Id, System.String[]]"]
+2019-02-17 21:53:10.341+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-17 22:07:00.643+00:00  [I]  https://api.nexmo.com/v1/callsNULL
+2019-02-17 22:07:01.549+00:00  [I]  "Created"
+2019-02-17 22:07:01.549+00:00  [I]  "Method: POST, RequestUri: 'https://api.nexmo.com/v1/calls', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDc4MTgyNTksImp0aSI6IjRiMjRlNWMwLTFiMjUtMTFlOS04ZmM1LTE1NWYwNjdjMzFkYiIsImFwcGxpY2F0aW9uX2lkIjoiYTVmZDQ2NzAtM2UyZC00NGEzLTg3NmMtMDI2Mjc4YWQ5M2E2IiwiZXhwIjoiMTU4MDQyODgwMCJ9.iLV1ugmlZtYXHvpnKU48ciMr2mss1XSbXRKQ6r6VqGAcJbmZy_Gyx5ScoWhR6likqMqstQ8kk1_V88IibhIZw43Iq8rOyf0MxtTdmeceZbbYCA_oMLtdo1HGqWuLtW1twN5U6F-6BzBInTaIf6hjlf-v0tVznr3jpH4OXANuJC6xEF0X07iVZADeCdyRWGDqr3A8tE3pYeo_lBgv67dSAUCUu3AveIP02hqpNvSJB1sm0GYFiH9V9Nk5jdrKPrteP9WD-UP_2UuZMUpZKdL3FMmVRIbUAdECGyJOB0JsZdPbcFtxaou2pir5UYJ8hZReQyoTWm8ATgAnv5-M9UKo1g\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 216\n}"
+2019-02-17 22:07:01.549+00:00  [I]  ["[Server, System.String[]]", "[Date, System.String[]]", "[Connection, System.String[]]", "[X-Frame-Options, System.String[]]", "[X-XSS-Protection, System.String[]]", "[Strict-Transport-Security, System.String[]]", "[X-Content-Type-Options, System.String[]]", "[X-Nexmo-Trace-Id, System.String[]]"]
+2019-02-17 22:07:01.549+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"
+2019-02-17 23:05:12.029+00:00  [I]  Voice Inbound from: localhost:36802NULL
+2019-02-17 23:05:12.043+00:00  [I]  Voice Inbound body: {
+  "message_uuid": null,
+  "to": null,
+  "from": null,
+  "timestamp": "0001-01-01T00:00:00",
+  "direction": null,
+  "message": null
+}NULL
+2019-02-17 23:10:43.115+00:00  [I]  Voice Inbound from: localhost:36802NULL
+2019-02-17 23:10:43.137+00:00  [I]  Voice Inbound body: {
+  "message_uuid": null,
+  "to": null,
+  "from": null,
+  "timestamp": "0001-01-01T00:00:00",
+  "direction": null,
+  "message": null
+}NULL
+2019-02-17 23:11:36.789+00:00  [I]  https://api.nexmo.com/v1/callsNULL
+2019-02-17 23:11:37.738+00:00  [I]  "Created"
+2019-02-17 23:11:37.738+00:00  [I]  "Method: POST, RequestUri: 'https://api.nexmo.com/v1/calls', Version: 2.0, Content: System.Net.Http.StringContent, Headers:\n{\n  Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NDc4MTgyNTksImp0aSI6IjRiMjRlNWMwLTFiMjUtMTFlOS04ZmM1LTE1NWYwNjdjMzFkYiIsImFwcGxpY2F0aW9uX2lkIjoiYTVmZDQ2NzAtM2UyZC00NGEzLTg3NmMtMDI2Mjc4YWQ5M2E2IiwiZXhwIjoiMTU4MDQyODgwMCJ9.iLV1ugmlZtYXHvpnKU48ciMr2mss1XSbXRKQ6r6VqGAcJbmZy_Gyx5ScoWhR6likqMqstQ8kk1_V88IibhIZw43Iq8rOyf0MxtTdmeceZbbYCA_oMLtdo1HGqWuLtW1twN5U6F-6BzBInTaIf6hjlf-v0tVznr3jpH4OXANuJC6xEF0X07iVZADeCdyRWGDqr3A8tE3pYeo_lBgv67dSAUCUu3AveIP02hqpNvSJB1sm0GYFiH9V9Nk5jdrKPrteP9WD-UP_2UuZMUpZKdL3FMmVRIbUAdECGyJOB0JsZdPbcFtxaou2pir5UYJ8hZReQyoTWm8ATgAnv5-M9UKo1g\n  Content-Type: application/json; charset=utf-8\n  Content-Length: 243\n}"
+2019-02-17 23:11:37.738+00:00  [I]  ["[Server, System.String[]]", "[Date, System.String[]]", "[Connection, System.String[]]", "[X-Frame-Options, System.String[]]", "[X-XSS-Protection, System.String[]]", "[Strict-Transport-Security, System.String[]]", "[X-Content-Type-Options, System.String[]]", "[X-Nexmo-Trace-Id, System.String[]]"]
+2019-02-17 23:11:37.738+00:00  [I]  "System.Net.Http.HttpConnection+HttpConnectionResponseContent"

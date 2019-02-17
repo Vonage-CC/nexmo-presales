@@ -12,6 +12,8 @@ using System.Text;
 using static Nexmo.Api.NumberInsight;
 using static Nexmo.Api.NumberVerify;
 using static Nexmo.Api.SMS;
+using static Nexmo.Api.Voice.Call;
+using static Nexmo.Api.VoiceHooks;
 
 namespace NexmoPSEDemo.Common
 {
@@ -26,7 +28,7 @@ namespace NexmoPSEDemo.Common
             // use this for PC
             if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
-                configFile = "C:\\Users\\jchenot\\OneDrive - Nexmo\\Applications\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\NexmoPSEDemo\\appsettings.json";
+                configFile = "D:\\OneDrive - Nexmo\\Applications\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\NexmoPSEDemo\\appsettings.json";
             }
 #else
             configFile = "appsettings.json";
@@ -51,7 +53,7 @@ namespace NexmoPSEDemo.Common
             // use this for PC
             if(Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
-                logDirectory = "C:\\Users\\jchenot\\OneDrive - Nexmo\\Applications\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\Logs\\";
+                logDirectory = "D:\\OneDrive - Nexmo\\Applications\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\Logs\\";
             }
 #else
             logDirectory = "../../LogFiles/Application/";
@@ -283,7 +285,7 @@ namespace NexmoPSEDemo.Common
 
             //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
             //string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            string encodedJwt = configuration["Nexmo.Voice.Jwt.Token"];
+            string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
 
             // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
             //var client = new Client(creds: new Credentials
@@ -304,45 +306,41 @@ namespace NexmoPSEDemo.Common
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
                 request.Headers.Add("Authorization", "Bearer " + encodedJwt);
 
-                // TODO move this section to the UI and generate a VoiceModel object in the front end
                 var to = new List<CallTo>()
                 {
                     new CallTo()
                     {
                         Type = "phone",
-                        Number = "447843608441"
+                        Number = voiceModel.To
                     }
                 };
                 var from = new CallFrom()
                 {
                     Type = "phone",
-                    Number = "33644631466"
-                };
-                var answerUrls = new List<string>()
-                {
-                    "http://jpchenot.nexmodemo.com/basic-tts-ncco.json"
+                    Number = voiceModel.From
                 };
                 var eventUrls = new List<string>()
                 {
-                    "https://7be4339c.ngrok.io/vapi/events"
+                    "https://nexmopsedemo.azurewebsites.net/api/status"
+                };
+                List<Ncco> Ncco = new List<Ncco>()
+                {
+                    new Ncco()
+                    {
+                        action = voiceModel.Action,
+                        text = voiceModel.Text
+                    }
                 };
                 VoiceRootObject requestObject = new VoiceRootObject
                 {
                     To = to,
                     From = from,
-                    //Answer_url = answerUrls,
-                    Ncco = @"[
-                                {
-                                  'action': 'talk',
-                                  'text': 'This is a text to speech call from Nexmo'
-                                }
-                              ]",
-                    Event_url = eventUrls
+                    Event_url = eventUrls,
+                    Ncco = Ncco
                 };
-                //
 
                 string jsonRequestContent = JsonConvert.SerializeObject(requestObject);
-                request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
+                request.Content = new StringContent(jsonRequestContent.ToLower(), Encoding.UTF8, "application/json");
 
                 using (var client = new HttpClient())
                 {
@@ -405,7 +403,38 @@ namespace NexmoPSEDemo.Common
 
             return false;
         }
-        
+
+        public static string AnswerVoiceCall(Logger logger, IConfigurationRoot configuration)
+        {
+            var request = new HttpRequestMessage();
+            string jsonRequestContent = String.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingLogger");
+                logger.Open();
+
+                List<Ncco> Ncco = new List<Ncco>()
+                {
+                    new Ncco()
+                    {
+                        action = "talk",
+                        text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. What would you like to do?"
+                    }
+                };
+
+                jsonRequestContent = JsonConvert.SerializeObject(Ncco);
+                request.Content = new StringContent(jsonRequestContent.ToLower(), Encoding.UTF8, "application/json");
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return jsonRequestContent.ToLower();
+        }
+
         // Number Insight API
         public static NumberInsightBasicResponse BasicNumberInsightRequest(ValidationModel validationModel, IConfigurationRoot configuration)
         {

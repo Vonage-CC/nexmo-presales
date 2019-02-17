@@ -35,6 +35,7 @@
                 <li class="Vlt-tabs__link"><a href="http://jon.nexmodemo.com/vstitchapp/index.html">In-App Messaging</a></li>
                 <li class="Vlt-tabs__link"><a href="https://tokbox-reference-apps.herokuapp.com">Video</a></li>
                 <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="validation">Number Lookup</a></li>
+                <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="voice">Voice</a></li>
             </ul>
         </div>
         @*TODO: Implement call action with VAPI*@
@@ -223,6 +224,32 @@ loadMenu();
                                     </use>
                                 </svg>
                                 <span class="Vlt-sidemenu__label">Data Cleansing</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <p class="Vlt-sidemenu__trigger">
+                        <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-merge-2"></use></svg>
+                        <span class="Vlt-sidemenu__label">Voice</span>
+                    </p>
+                    <ul>
+                        <li>
+                            <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="voice">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">Simple Text To Speech Call</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="Vlt-sidemenu__link" asp-action="alarm" asp-controller="voice">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">Alarm triggering an alert</span>
                             </a>
                         </li>
                     </ul>
