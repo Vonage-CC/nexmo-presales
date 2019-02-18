@@ -81,7 +81,7 @@ namespace NexmoPSEDemo.Controllers
         {
             // create a logger placeholder
             Logger logger = null;
-            var httpRequest = new HttpRequestMessage();
+            string ncco = String.Empty;
 
             try
             {
@@ -93,17 +93,16 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    var voiceObject = JsonConvert.DeserializeObject<FMRootObject>(value.Result);
+                    var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
+                    ncco = Common.NexmoApi.AnswerVoiceCall(voiceInboundObject, logger, configuration);
                     logger.Log("Voice Inbound from: " + host);
-                    logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceObject, Formatting.Indented));
+                    logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
+                    logger.Log(value.Result);
                 }
-
-                //httpRequest = Common.NexmoApi.AnswerVoiceCall(logger, configuration);
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                //return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -111,8 +110,6 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            //return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
-            string ncco = Common.NexmoApi.AnswerVoiceCall(logger, configuration);
             return ncco;
         }
 

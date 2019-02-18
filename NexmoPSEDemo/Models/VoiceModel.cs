@@ -38,4 +38,12 @@ namespace NexmoPSEDemo.Models
         public List<string> Event_url { get; set; }
         public List<Ncco> Ncco { get; set; }
     }
+
+    public class VoiceInboundObject
+    {
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Uuid { get; set; }
+        public string Conversation_uuid { get; set; }
+    }
 }

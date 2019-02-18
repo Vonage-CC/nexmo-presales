@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Nexmo.Api;
+using Nexmo.Api.Voice;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
 using System;
@@ -404,16 +405,13 @@ namespace NexmoPSEDemo.Common
             return false;
         }
 
-        public static string AnswerVoiceCall(Logger logger, IConfigurationRoot configuration)
+        public static string AnswerVoiceCall(VoiceInboundObject voiceInboundObject, Logger logger, IConfigurationRoot configuration)
         {
             var request = new HttpRequestMessage();
             string jsonRequestContent = String.Empty;
 
             try
             {
-                logger = NexmoLogger.GetLogger("MessagingLogger");
-                logger.Open();
-
                 List<Ncco> Ncco = new List<Ncco>()
                 {
                     new Ncco()
@@ -424,7 +422,14 @@ namespace NexmoPSEDemo.Common
                 };
 
                 jsonRequestContent = JsonConvert.SerializeObject(Ncco);
-                request.Content = new StringContent(jsonRequestContent.ToLower(), Encoding.UTF8, "application/json");
+                logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
+
+                //var client = GenerateNexmoClient(configuration);
+                //CallCommandResponse result = client.Call.BeginTalk(voiceInboundObject.Uuid, new TalkCommand
+                //{
+                //    text = "",
+                //    voice_name = "Kimberly",
+                //});
             }
             catch (Exception e)
             {
