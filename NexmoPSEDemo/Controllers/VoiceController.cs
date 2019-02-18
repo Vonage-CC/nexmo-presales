@@ -20,6 +20,9 @@ namespace NexmoPSEDemo.Controllers
 
         public IActionResult Index()
         {
+            ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
+            ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+
             return View();
         }
 
@@ -36,6 +39,8 @@ namespace NexmoPSEDemo.Controllers
                     if (NexmoApi.MakeVoiceCall(voiceModel, logger, configuration))
                     {
                         ViewData["feedback"] = "Your phone call is starting now...";
+                        ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
+                        ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
                     }
                     else
                     {
