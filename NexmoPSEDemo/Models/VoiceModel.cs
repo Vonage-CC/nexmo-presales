@@ -25,10 +25,29 @@ namespace NexmoPSEDemo.Models
         public string Number { get; set; }
     }
 
-    public class Ncco
+    public class BasicTTSNcco
     {
-        public string action { get; set; }
-        public string text { get; set; }
+        public string Action { get; set; }
+        public string Text { get; set; }
+    }
+
+    public class BargeInTTSNcco
+    {
+        public string Action { get; set; }
+        public string Text { get; set; }
+        public bool BargeIn { get; set; }
+    }
+
+    public class InputTTSNcco
+    {
+        public string Action { get; set; }
+        public List<string> EventUrl { get; set; }
+    }
+
+    public class InputTTSNccoWithBargeIn
+    {
+        public BargeInTTSNcco TTS { get; set; }
+        public InputTTSNcco Input { get; set; }
     }
 
     public class VoiceRootObject
@@ -36,7 +55,7 @@ namespace NexmoPSEDemo.Models
         public List<CallTo> To { get; set; }
         public CallFrom From { get; set; }
         public List<string> Event_url { get; set; }
-        public List<Ncco> Ncco { get; set; }
+        public List<BasicTTSNcco> Ncco { get; set; }
     }
 
     public class VoiceInboundObject

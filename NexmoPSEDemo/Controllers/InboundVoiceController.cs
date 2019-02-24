@@ -113,6 +113,45 @@ namespace NexmoPSEDemo.Controllers
             return ncco;
         }
 
+        // POST vapi/input
+        [HttpPost]
+        [Route("vapi/input")]
+        public string Input()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            string ncco = String.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("InboundVoiceLogger");
+                logger.Open();
+
+                var headers = Request.Headers;
+                var host = headers["Host"];
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    //var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
+                    //ncco = Common.NexmoApi.AnswerVoiceCall(voiceInboundObject, logger, configuration);
+                    logger.Log("Voice Inbound from: " + host);
+                    //logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
+                    logger.Log(value.Result);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return ncco;
+        }
+
         // PUT vapi/<controller>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)

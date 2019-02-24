@@ -1,25 +1,15 @@
-﻿2019-02-18 00:17:01.217+00:00  [I]  Vapi Inbound Call NCCO: [
-  {
-    "action": "talk",
-    "text": "Your sensor in the kitchen has detected some movement. The alarm has been triggered. What would you like to do?"
-  }
-]NULL
-2019-02-18 00:17:01.414+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
-2019-02-18 00:17:01.414+00:00  [I]  Voice Status update body: {"duration":"0","start_time":null,"rate":"0.00450000","price":"0.00000000","from":"447843608441","to":"447418342793","uuid":"5ec4f91762d584e00d3a2a80de514133","conversation_uuid":"CON-70d180a0-af38-4ed8-bc9b-e912cbedf1f9","status":"completed","direction":"inbound","network":"23409","timestamp":"2019-02-18T00:17:01.315Z"}NULL
-2019-02-18 00:17:01.634+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
-2019-02-18 00:17:01.634+00:00  [I]  Voice Status update body: {"reason":"NCCO download error: 500","conversation_uuid":"CON-70d180a0-af38-4ed8-bc9b-e912cbedf1f9","timestamp":"2019-02-18T00:17:01.261Z"}NULL
-2019-02-18 00:25:11.005+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
-2019-02-18 00:25:11.005+00:00  [I]  Voice Status update body: {"from":"447843608441","to":"447418342793","uuid":"c29174621883f4e83617d88c822f52bb","conversation_uuid":"CON-4de9c1d7-a8ee-4192-86af-b87316c81590","status":"ringing","direction":"inbound","timestamp":"2019-02-18T00:25:07.764Z"}NULL
-2019-02-18 00:25:11.098+00:00  [I]  Vapi Inbound Call NCCO: [{"action":"talk","text":"Your sensor in the kitchen has detected some movement. The alarm has been triggered. What would you like to do?"}]NULL
-2019-02-18 00:25:11.098+00:00  [I]  Voice Inbound from: nexmopsedemo.azurewebsites.netNULL
-2019-02-18 00:25:11.099+00:00  [I]  Voice Inbound body: {
+﻿2019-02-18 20:23:13.149+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-18 20:23:13.149+00:00  [I]  Voice Status update body: {"from":"447843608441","to":"447418342793","uuid":"f5a529301105f408615b52bcda0dd4ec","conversation_uuid":"CON-b1d06a58-c1d8-48b8-8742-aaca94ccd7b4","status":"ringing","direction":"inbound","timestamp":"2019-02-18T20:23:12.479Z"}NULL
+2019-02-18 20:23:13.232+00:00  [I]  Vapi Inbound Call NCCO: [{"TTS":{"Action":"talk","Text":"Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.","BargeIn":true},"Input":{"Action":"input","EventUrl":["https://nexmopsedemo.azurewebsites.net/vapi/input"]}}]NULL
+2019-02-18 20:23:13.232+00:00  [I]  Voice Inbound from: nexmopsedemo.azurewebsites.netNULL
+2019-02-18 20:23:13.237+00:00  [I]  Voice Inbound body: {
   "From": "447843608441",
   "To": "447418342793",
-  "Uuid": "c29174621883f4e83617d88c822f52bb",
-  "Conversation_uuid": "CON-4de9c1d7-a8ee-4192-86af-b87316c81590"
+  "Uuid": "f5a529301105f408615b52bcda0dd4ec",
+  "Conversation_uuid": "CON-b1d06a58-c1d8-48b8-8742-aaca94ccd7b4"
 }NULL
-2019-02-18 00:25:11.099+00:00  [I]  {"from":"447843608441","to":"447418342793","uuid":"c29174621883f4e83617d88c822f52bb","conversation_uuid":"CON-4de9c1d7-a8ee-4192-86af-b87316c81590"}NULL
-2019-02-18 00:25:11.302+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
-2019-02-18 00:25:11.302+00:00  [I]  Voice Status update body: {"start_time":null,"rate":null,"from":"447843608441","to":"447418342793","uuid":"c29174621883f4e83617d88c822f52bb","conversation_uuid":"CON-4de9c1d7-a8ee-4192-86af-b87316c81590","status":"answered","direction":"inbound","network":null,"timestamp":"2019-02-18T00:25:11.218Z"}NULL
-2019-02-18 00:25:18.195+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
-2019-02-18 00:25:18.195+00:00  [I]  Voice Status update body: {"end_time":"2019-02-18T00:25:18.000Z","uuid":"c29174621883f4e83617d88c822f52bb","network":"23409","duration":"7","start_time":"2019-02-18T00:25:11.000Z","rate":"0.00450000","price":"0.00052500","from":"447843608441","to":"447418342793","conversation_uuid":"CON-4de9c1d7-a8ee-4192-86af-b87316c81590","status":"completed","direction":"inbound","timestamp":"2019-02-18T00:25:18.118Z"}NULL
+2019-02-18 20:23:13.237+00:00  [I]  {"from":"447843608441","to":"447418342793","uuid":"f5a529301105f408615b52bcda0dd4ec","conversation_uuid":"CON-b1d06a58-c1d8-48b8-8742-aaca94ccd7b4"}NULL
+2019-02-18 20:23:13.427+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-18 20:23:13.427+00:00  [I]  Voice Status update body: {"duration":"0","start_time":null,"rate":"0.00450000","price":"0.00000000","from":"447843608441","to":"447418342793","uuid":"f5a529301105f408615b52bcda0dd4ec","conversation_uuid":"CON-b1d06a58-c1d8-48b8-8742-aaca94ccd7b4","status":"completed","direction":"inbound","network":"23409","timestamp":"2019-02-18T20:23:13.364Z"}NULL
+2019-02-18 20:23:13.663+00:00  [I]  Voice Status update from: nexmopsedemo.azurewebsites.netNULL
+2019-02-18 20:23:13.663+00:00  [I]  Voice Status update body: {"reason":"Syntax error in NCCO. Invalid value type or action.","conversation_uuid":"CON-b1d06a58-c1d8-48b8-8742-aaca94ccd7b4","timestamp":"2019-02-18T20:23:13.305Z"}NULL

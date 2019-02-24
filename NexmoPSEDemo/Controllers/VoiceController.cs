@@ -29,6 +29,9 @@ namespace NexmoPSEDemo.Controllers
         [HttpPost]
         public IActionResult Index(VoiceModel voiceModel)
         {
+            ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
+            ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+
             if (ModelState.IsValid)
             {
                 // create a logger placeholder
@@ -38,9 +41,7 @@ namespace NexmoPSEDemo.Controllers
                 {
                     if (NexmoApi.MakeVoiceCall(voiceModel, logger, configuration))
                     {
-                        ViewData["feedback"] = "Your phone call is starting now...";
-                        ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
-                        ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+                        ViewData["feedback"] = "Your phone call is starting now...";                        
                     }
                     else
                     {
@@ -68,6 +69,9 @@ namespace NexmoPSEDemo.Controllers
         [HttpPost]
         public IActionResult Alarm(VoiceModel voiceModel)
         {
+            ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
+            ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+
             return View();
         }
     }

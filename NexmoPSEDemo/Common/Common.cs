@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Nexmo.Api;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Text;
 using static Nexmo.Api.NumberInsight;
 using static Nexmo.Api.NumberVerify;
@@ -324,12 +326,12 @@ namespace NexmoPSEDemo.Common
                 {
                     "https://nexmopsedemo.azurewebsites.net/api/status"
                 };
-                List<Ncco> Ncco = new List<Ncco>()
+                List<BasicTTSNcco> Ncco = new List<BasicTTSNcco>()
                 {
-                    new Ncco()
+                    new BasicTTSNcco()
                     {
-                        action = voiceModel.Action,
-                        text = voiceModel.Text
+                        Action = voiceModel.Action,
+                        Text = voiceModel.Text
                     }
                 };
                 VoiceRootObject requestObject = new VoiceRootObject
@@ -412,16 +414,34 @@ namespace NexmoPSEDemo.Common
 
             try
             {
-                List<Ncco> Ncco = new List<Ncco>()
+                //var Ncco = new List<BasicTTSNcco>()
+                //{
+                //    new BasicTTSNcco()
+                //    {
+                //        Action = "talk",
+                //        Text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2."
+                //    }
+                //};
+
+                var InputNcco = new List<InputTTSNccoWithBargeIn>()
                 {
-                    new Ncco()
+                    new InputTTSNccoWithBargeIn()
                     {
-                        action = "talk",
-                        text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. What would you like to do?"
+                        TTS = new BargeInTTSNcco()
+                        {
+                            Action = "talk",
+                            Text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.",
+                            BargeIn = true
+                        },
+                        Input = new InputTTSNcco()
+                        {
+                            Action = "input",
+                            EventUrl = new List<string>(){"https://nexmopsedemo.azurewebsites.net/vapi/input"}
+                        }
                     }
                 };
 
-                jsonRequestContent = JsonConvert.SerializeObject(Ncco);
+                jsonRequestContent = JsonConvert.SerializeObject(InputNcco);
                 logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
 
                 //var client = GenerateNexmoClient(configuration);
