@@ -15,27 +15,57 @@ namespace NexmoPSEDemo.Models
 
     public class CallTo
     {
-        public string Type { get; set; }
-        public string Number { get; set; }
+        public string type { get; set; }
+        public string number { get; set; }
     }
 
     public class CallFrom
     {
-        public string Type { get; set; }
-        public string Number { get; set; }
+        public string type { get; set; }
+        public string number { get; set; }
     }
 
-    public class Ncco
+    public class BasicTTSNcco
     {
         public string action { get; set; }
         public string text { get; set; }
     }
 
+    public class BargeInTTSNcco
+    {
+        public string action { get; set; }
+        public string text { get; set; }
+        public bool bargeIn { get; set; }
+    }
+
+    public class InputTTSNcco
+    {
+        public string action { get; set; }
+        public List<string> eventUrl { get; set; }
+    }
+
     public class VoiceRootObject
     {
-        public List<CallTo> To { get; set; }
-        public CallFrom From { get; set; }
-        public List<string> Event_url { get; set; }
-        public List<Ncco> Ncco { get; set; }
+        public List<CallTo> to { get; set; }
+        public CallFrom from { get; set; }
+        public List<string> event_url { get; set; }
+        public List<BasicTTSNcco> ncco { get; set; }
+    }
+
+    public class VoiceInboundObject
+    {
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Uuid { get; set; }
+        public string Conversation_uuid { get; set; }
+    }
+
+    public class VoiceInputObject
+    {
+        public bool Timed_out { get; set; }
+        public string Dtmf { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string Uuid { get; set; }
+        public string Conversation_uuid { get; set; }
     }
 }

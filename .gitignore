@@ -30,6 +30,8 @@ Thumbs.db
 .vs/
 appsettings.json
 appsettings.development.json
+Logs/
+*.txt
 
 # Mac bundle stuff
 *.dmg

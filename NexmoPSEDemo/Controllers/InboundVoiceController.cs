@@ -81,7 +81,7 @@ namespace NexmoPSEDemo.Controllers
         {
             // create a logger placeholder
             Logger logger = null;
-            var httpRequest = new HttpRequestMessage();
+            string ncco = String.Empty;
 
             try
             {
@@ -93,17 +93,15 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    var voiceObject = JsonConvert.DeserializeObject<FMRootObject>(value.Result);
+                    var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
+                    ncco = NexmoApi.AnswerVoiceCall(voiceInboundObject, logger, configuration);
                     logger.Log("Voice Inbound from: " + host);
-                    logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceObject, Formatting.Indented));
+                    logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
                 }
-
-                //httpRequest = Common.NexmoApi.AnswerVoiceCall(logger, configuration);
             }
             catch (Exception e)
             {
-                logger.Log(Level.Exception, e);
-                //return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                logger.Log(Level.Exception, "Voice Inbound Exception", e);
             }
             finally
             {
@@ -111,8 +109,44 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            //return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
-            string ncco = Common.NexmoApi.AnswerVoiceCall(logger, configuration);
+            return ncco;
+        }
+
+        // POST vapi/input
+        [HttpPost]
+        [Route("vapi/input")]
+        public string Input()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            string ncco = String.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("InputVoiceLogger");
+                logger.Open();
+
+                var headers = Request.Headers;
+                var host = headers["Host"];
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(value.Result);
+                    ncco = NexmoApi.AnswerVoiceCallInput(voiceInputObject, logger, configuration);
+                    logger.Log("Voice Input from: " + host);
+                    logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInputObject, Formatting.Indented));
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
             return ncco;
         }
 

@@ -1,4 +1,6 @@
-﻿namespace NexmoPSEDemo.Models
+﻿using System;
+
+namespace NexmoPSEDemo.Models
 {
     public class MessagingModel
     {

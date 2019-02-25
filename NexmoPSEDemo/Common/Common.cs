@@ -1,5 +1,4 @@
-﻿
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Nexmo.Api;
 using NexmoPSEDemo.Models;
@@ -12,8 +11,6 @@ using System.Text;
 using static Nexmo.Api.NumberInsight;
 using static Nexmo.Api.NumberVerify;
 using static Nexmo.Api.SMS;
-using static Nexmo.Api.Voice.Call;
-using static Nexmo.Api.VoiceHooks;
 
 namespace NexmoPSEDemo.Common
 {
@@ -171,8 +168,8 @@ namespace NexmoPSEDemo.Common
                 messageObj = GenerateTemplateMessageJson(messagingModel);
             }
 
-                // start creating the HTTP request
-                var request = new HttpRequestMessage(HttpMethod.Post, url);
+            // start creating the HTTP request
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
             request.Headers.Add("Authorization", "Bearer " + token);
 
             try
@@ -310,22 +307,22 @@ namespace NexmoPSEDemo.Common
                 {
                     new CallTo()
                     {
-                        Type = "phone",
-                        Number = voiceModel.To
+                        type = "phone",
+                        number = voiceModel.To
                     }
                 };
                 var from = new CallFrom()
                 {
-                    Type = "phone",
-                    Number = voiceModel.From
+                    type = "phone",
+                    number = voiceModel.From
                 };
                 var eventUrls = new List<string>()
                 {
                     "https://nexmopsedemo.azurewebsites.net/api/status"
                 };
-                List<Ncco> Ncco = new List<Ncco>()
+                List<BasicTTSNcco> Ncco = new List<BasicTTSNcco>()
                 {
-                    new Ncco()
+                    new BasicTTSNcco()
                     {
                         action = voiceModel.Action,
                         text = voiceModel.Text
@@ -333,14 +330,14 @@ namespace NexmoPSEDemo.Common
                 };
                 VoiceRootObject requestObject = new VoiceRootObject
                 {
-                    To = to,
-                    From = from,
-                    Event_url = eventUrls,
-                    Ncco = Ncco
+                    to = to,
+                    from = from,
+                    event_url = eventUrls,
+                    ncco = Ncco
                 };
 
                 string jsonRequestContent = JsonConvert.SerializeObject(requestObject);
-                request.Content = new StringContent(jsonRequestContent.ToLower(), Encoding.UTF8, "application/json");
+                request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
 
                 using (var client = new HttpClient())
                 {
@@ -404,27 +401,41 @@ namespace NexmoPSEDemo.Common
             return false;
         }
 
-        public static string AnswerVoiceCall(Logger logger, IConfigurationRoot configuration)
+        public static string AnswerVoiceCall(VoiceInboundObject voiceInboundObject, Logger logger, IConfigurationRoot configuration)
         {
             var request = new HttpRequestMessage();
             string jsonRequestContent = String.Empty;
 
             try
             {
-                logger = NexmoLogger.GetLogger("MessagingLogger");
-                logger.Open();
+                // Open the NCCO json string
+                string ivrInputNcco = "[";
 
-                List<Ncco> Ncco = new List<Ncco>()
+                // Add the talk action to the NCCO
+                var bargeInAction = new BargeInTTSNcco()
                 {
-                    new Ncco()
-                    {
-                        action = "talk",
-                        text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. What would you like to do?"
-                    }
+                    action = "talk",
+                    text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.",
+                    bargeIn = true
                 };
+                ivrInputNcco += JsonConvert.SerializeObject(bargeInAction, Formatting.Indented);
 
-                jsonRequestContent = JsonConvert.SerializeObject(Ncco);
-                request.Content = new StringContent(jsonRequestContent.ToLower(), Encoding.UTF8, "application/json");
+                // Add the separator between the various actions
+                ivrInputNcco += ",";
+
+                // Add the input action to the NCCO
+                var inputAction = new InputTTSNcco()
+                {
+                    action = "input",
+                    eventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/input" }
+                };
+                ivrInputNcco += JsonConvert.SerializeObject(inputAction, Formatting.Indented);
+
+                // Close the NCCO json string
+                ivrInputNcco += "]";
+
+                jsonRequestContent = ivrInputNcco;
+                logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
             }
             catch (Exception e)
             {
@@ -432,7 +443,88 @@ namespace NexmoPSEDemo.Common
                 logger.Log(Level.Exception, e.StackTrace);
             }
 
-            return jsonRequestContent.ToLower();
+            return jsonRequestContent;
+        }
+
+        public static string AnswerVoiceCallInput(VoiceInputObject voiceInputObject, Logger logger, IConfigurationRoot configuration)
+        {
+            var request = new HttpRequestMessage();
+            string jsonRequestContent = String.Empty;
+
+            try
+            {
+                switch (voiceInputObject.Dtmf)
+                {
+                    case "2":
+                        // Send WhatsApp message to confirm reception of acknowledgement
+                        var message = new MessagingModel()
+                        {
+                            Brand = "Alarm Systems Limited",
+                            ContentType = "text",
+                            Type = "WhatsApp",
+                            Number = "447843608441",
+                            Sender = "447418342149",
+                            Template = "true",
+                            Text = "Interact with us over whatsapp"
+                        };
+
+                        if(SendMessage(message, logger, configuration))
+                        {
+                            // Send an NCCO back to confirm the acknowledgement has been received
+                            var confirmAction = new List<BasicTTSNcco>()
+                            {
+                                new BasicTTSNcco()
+                                {
+                                    action = "talk",
+                                    text = "Your input has been registered. A WhatsApp confirmation message has been sent. Thank you. Good bye."
+                                }
+                            };
+
+                            jsonRequestContent = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+                        }
+                        else
+                        {
+                            // Send an NCCO back to confirm the acknowledgement has been received and inform that the confirmation could not be sent via message.
+                            var confirmAction = new List<BasicTTSNcco>()
+                            {
+                                new BasicTTSNcco()
+                                {
+                                    action = "talk",
+                                    text = "Your input has been registered. However we could not send a WhatsApp confirmation message. Thank you. Good bye."
+                                }
+                            };
+
+                            jsonRequestContent = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+                        }
+
+                        break;
+                    case "1":
+                        // TODO: Create connect action
+                        break;
+                    default:
+                        var invalidInputAction = new List<BasicTTSNcco>()
+                        {
+                            new BasicTTSNcco()
+                            {
+                                action = "talk",
+                                text = "We are sorry but your input was invalid. Please call again. Good bye."
+                            }
+                        };
+
+                        jsonRequestContent = JsonConvert.SerializeObject(invalidInputAction, Formatting.Indented);
+
+                        break;
+                }
+
+                logger.Log("Vapi Input Call Reply NCCO: " + jsonRequestContent);
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return jsonRequestContent;
         }
 
         // Number Insight API

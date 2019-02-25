@@ -18,7 +18,17 @@
                     <div class="Vlt-form__element">
                         <label class="Vlt-label" for="from">Sender Phone Number</label>
                         <div class="Vlt-input">
-                            <input type="text" name="from" placeholder="Please enter the phone number to call from" />
+                            <select name="from">
+                                <option value="@ViewData["From.FR"]" selected="selected">@ViewData["From.FR"] (France)</option>
+                                <option value="@ViewData["From.UK"]">@ViewData["From.UK"] (UK)</option>
+                            </select>
+                        </div>
+
+                        <div class="Vlt-callout Vlt-callout--shoutout">
+                            <i></i>
+                            <div class="Vlt-callout__content">
+                                For the sender ID to be set, the number must be a Nexmo number. Those two numbers are linked to this demo application so are good to use.
+                            </div>
                         </div>
                     </div>
                     <div class="Vlt-form__element">
