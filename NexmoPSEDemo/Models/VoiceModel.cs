@@ -65,4 +65,12 @@ namespace NexmoPSEDemo.Models
         public string Uuid { get; set; }
         public string Conversation_uuid { get; set; }
     }
+
+    public class VoiceInputObject
+    {
+        public string From { get; set; }
+        public string To { get; set; }
+        public string Uuid { get; set; }
+        public string Conversation_uuid { get; set; }
+    }
 }

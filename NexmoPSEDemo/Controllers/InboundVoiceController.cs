@@ -97,12 +97,11 @@ namespace NexmoPSEDemo.Controllers
                     ncco = Common.NexmoApi.AnswerVoiceCall(voiceInboundObject, logger, configuration);
                     logger.Log("Voice Inbound from: " + host);
                     logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
-                    logger.Log(value.Result);
                 }
             }
             catch (Exception e)
             {
-                logger.Log(Level.Exception, e);
+                logger.Log(Level.Exception, "Voice Inbound Exception", e);
             }
             finally
             {
@@ -124,7 +123,7 @@ namespace NexmoPSEDemo.Controllers
 
             try
             {
-                logger = NexmoLogger.GetLogger("InboundVoiceLogger");
+                logger = NexmoLogger.GetLogger("InputVoiceLogger");
                 logger.Open();
 
                 var headers = Request.Headers;
@@ -132,11 +131,11 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    //var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
-                    //ncco = Common.NexmoApi.AnswerVoiceCall(voiceInboundObject, logger, configuration);
-                    logger.Log("Voice Inbound from: " + host);
+                    //var voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(value.Result);
+                    //ncco = Common.NexmoApi.AnswerVoiceCall(voiceInputObject, logger, configuration);
+                    logger.Log("Voice Input from: " + host);
                     //logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
-                    logger.Log(value.Result);
+                    logger.Log("Voice Input body: " + value.Result);
                 }
             }
             catch (Exception e)

@@ -414,42 +414,45 @@ namespace NexmoPSEDemo.Common
 
             try
             {
-                //var Ncco = new List<BasicTTSNcco>()
-                //{
-                //    new BasicTTSNcco()
-                //    {
-                //        Action = "talk",
-                //        Text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2."
-                //    }
-                //};
+                // Open the NCCO json string
+                string ivrInputNcco = "[";
 
-                var InputNcco = new List<InputTTSNccoWithBargeIn>()
+                // Add the talk action to the NCCO
+                var bargeInAction = new BargeInTTSNcco()
                 {
-                    new InputTTSNccoWithBargeIn()
-                    {
-                        TTS = new BargeInTTSNcco()
-                        {
-                            Action = "talk",
-                            Text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.",
-                            BargeIn = true
-                        },
-                        Input = new InputTTSNcco()
-                        {
-                            Action = "input",
-                            EventUrl = new List<string>(){"https://nexmopsedemo.azurewebsites.net/vapi/input"}
-                        }
-                    }
+                    Action = "talk",
+                    Text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.",
+                    BargeIn = true
                 };
+                ivrInputNcco += JsonConvert.SerializeObject(bargeInAction, Formatting.Indented);
 
-                jsonRequestContent = JsonConvert.SerializeObject(InputNcco);
-                logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
+                // Add the separator between the various actions
+                ivrInputNcco += ",";
 
-                //var client = GenerateNexmoClient(configuration);
-                //CallCommandResponse result = client.Call.BeginTalk(voiceInboundObject.Uuid, new TalkCommand
+                // Add the input action to the NCCO
+                var inputAction = new InputTTSNcco()
+                {
+                    Action = "input",
+                    EventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/input" }
+                };
+                ivrInputNcco += JsonConvert.SerializeObject(inputAction, Formatting.Indented);
+
+                // Add the separator between the various actions
+                //ivrInputNcco += ",";
+
+                // Add a goodbye message after input
+                //var basicAction = new BasicTTSNcco()
                 //{
-                //    text = "",
-                //    voice_name = "Kimberly",
-                //});
+                //    Action = "talk",
+                //    Text = "Your input has been registered. Thank you. Good bye."
+                //};
+                //ivrInputNcco += JsonConvert.SerializeObject(basicAction, Formatting.Indented);
+
+                // Close the NCCO json string
+                ivrInputNcco += "]";
+
+                jsonRequestContent = ivrInputNcco;
+                logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
             }
             catch (Exception e)
             {
