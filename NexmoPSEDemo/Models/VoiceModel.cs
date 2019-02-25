@@ -43,6 +43,13 @@ namespace NexmoPSEDemo.Models
         public string action { get; set; }
         public List<string> eventUrl { get; set; }
     }
+    public class Endpoint
+    {
+        public string type { get; set; }
+        public string number { get; set; }
+        public string dtmfAnswer { get; set; }
+    }
+
 
     public class VoiceRootObject
     {
@@ -67,5 +74,14 @@ namespace NexmoPSEDemo.Models
         public DateTime Timestamp { get; set; }
         public string Uuid { get; set; }
         public string Conversation_uuid { get; set; }
+    }
+
+    public class VoiceConnectObject
+    {
+        public string action { get; set; }
+        public List<string> eventUrl { get; set; }
+        public string timeout { get; set; }
+        public string from { get; set; }
+        public List<Endpoint> endpoint { get; set; }
     }
 }
