@@ -43,6 +43,12 @@ namespace NexmoPSEDemo.Models
         public string action { get; set; }
         public List<string> eventUrl { get; set; }
     }
+
+    public class VoiceRecipient
+    {
+        public string recipient { get; set; }
+    }
+
     public class VoiceEndpoint
     {
         public string type { get; set; }

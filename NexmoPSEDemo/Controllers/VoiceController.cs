@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
 using NexmoPSEDemo.Common;
 using NexmoPSEDemo.Models;
@@ -71,6 +72,31 @@ namespace NexmoPSEDemo.Controllers
         {
             ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
             ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+
+            // create a logger placeholder
+            Logger logger = null;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("VoiceAlarmLogger");
+                logger.Open();
+                // Get an instance of the blob storage to store the phone number to connect to
+                CloudBlobContainer container = Storage.GetCloudBlobContainer();
+                ViewData["feedback"] = "Create a blob container if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString();
+                ViewData["feedback"] += ". " + container.Name + " has been loaded successfully.";
+
+                var blobUpload = Storage.UploadBlobAsync(container, logger, voiceModel.To, "alarmAlert");
+                ViewData["feedback"] += " The recipient's phone number " + voiceModel.To + " has been saved successfully.";
+            }
+            catch
+            {
+                ViewData["error"] = "The recipient's phone number " + voiceModel.To + " could not be saved. Please try again.";
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
 
             return View();
         }

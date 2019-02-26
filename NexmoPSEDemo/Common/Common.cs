@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Azure;
+using Microsoft.Extensions.Configuration;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
 using Nexmo.Api;
 using NexmoPSEDemo.Models;
@@ -8,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using static Nexmo.Api.NumberInsight;
 using static Nexmo.Api.NumberVerify;
 using static Nexmo.Api.SMS;
@@ -87,6 +91,66 @@ namespace NexmoPSEDemo.Common
             Logger logger = Logger.GetLogger(loggerName);
 
             return logger;
+        }
+    }
+
+    public static class Storage
+    {
+        public static CloudBlobContainer GetCloudBlobContainer()
+        {
+            var configuration = Configuration.GetConfigFile();
+            var connString = configuration["ConnectionStrings:AzureStorageConnectionString"];
+            var storageAccount = CloudStorageAccount.Parse(connString);
+            CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
+            CloudBlobContainer container = blobClient.GetContainerReference("vapi-connect-container");
+            return container;
+        }
+
+        public static async Task<bool> UploadBlobAsync(CloudBlobContainer container, Logger logger, string recipient, string blockBlob)
+        {
+            CloudBlockBlob blob = container.GetBlockBlobReference(blockBlob);
+            try
+            {
+                await blob.UploadTextAsync("{\"recipient\": \"" + recipient + "\"}");
+                logger.Log(Level.Exception, "Blob upload completed successfully.");
+                return true;
+            }
+            catch(Exception e)
+            {
+                logger.Log(Level.Exception, "Blob upload did not succeed: " + e.Message);
+            }
+
+            return false;
+        }
+
+        public static string GetBlob(string blockBlob)
+        {
+            CloudBlobContainer container = GetCloudBlobContainer();
+            string blobValue = string.Empty;
+            var blobs = container.ListBlobsSegmentedAsync(new BlobContinuationToken() { NextMarker = "" }).Result;
+            foreach (IListBlobItem item in blobs.Results)
+            {
+                if (item.GetType() == typeof(CloudBlockBlob))
+                {
+                    CloudBlockBlob blob = (CloudBlockBlob)item;
+                    if(blob.Name == blockBlob)
+                    {
+                        blobValue = blob.DownloadTextAsync().Result;
+                    }
+                }
+                else if (item.GetType() == typeof(CloudPageBlob))
+                {
+                    CloudPageBlob blob = (CloudPageBlob)item;
+                    // TODO: Implement logic
+                }
+                else if (item.GetType() == typeof(CloudBlobDirectory))
+                {
+                    CloudBlobDirectory dir = (CloudBlobDirectory)item;
+                    // TODO: Implement logic
+                }
+            }
+
+            return blobValue;
         }
     }
 
@@ -851,12 +915,16 @@ namespace NexmoPSEDemo.Common
             // Add the separator between the various actions
             ivrInputNcco += ",";
 
+            // Get the recipient's phone number to use in the endpoint
+            string recipientBlob = Storage.GetBlob("alarmAlert");
+            VoiceRecipient voiceRecipient = JsonConvert.DeserializeObject<VoiceRecipient>(recipientBlob);
+
             // Add the input action to the NCCO
             var endpoint = new List<VoiceEndpoint>()
             {
                 new VoiceEndpoint(){
                     type = "phone",
-                    number = "33617747369",
+                    number = voiceRecipient.recipient,
                     dtmfAnswer = "1"
                 }
             };
