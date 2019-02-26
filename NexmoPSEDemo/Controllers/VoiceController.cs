@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage.Blob;
-using Newtonsoft.Json;
 using NexmoPSEDemo.Common;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
@@ -64,6 +58,34 @@ namespace NexmoPSEDemo.Controllers
             ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
             ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
 
+            // create a logger placeholder
+            Logger logger = null;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("VoiceAlarmLogger");
+                logger.Open();
+
+                // Get an instance of the blob storage to store the phone number to connect to
+                CloudBlobContainer container = Storage.GetCloudBlobContainer();
+                ViewData["feedback"] = "Create a blob container if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString() + " \n";
+                ViewData["feedback"] += "The storage container has been loaded successfully. \n";
+                logger.Log(container.Name + " has been loaded successfully.");
+
+                var blobUpload = Storage.UploadBlobAsync(container, logger, string.Empty, "alarmAlert");
+                ViewData["feedback"] += "The recipient's phone number has been reset successfully.";
+                logger.Log("The recipient's phone number has been reset successfully.");
+            }
+            catch
+            {
+                ViewData["error"] = "The recipient's phone number could not be reset. Please try again.";
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
             return View();
         }
 
@@ -80,13 +102,16 @@ namespace NexmoPSEDemo.Controllers
             {
                 logger = NexmoLogger.GetLogger("VoiceAlarmLogger");
                 logger.Open();
+
                 // Get an instance of the blob storage to store the phone number to connect to
                 CloudBlobContainer container = Storage.GetCloudBlobContainer();
-                ViewData["feedback"] = "Create a blob container if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString();
-                ViewData["feedback"] += ". " + container.Name + " has been loaded successfully.";
+                ViewData["feedback"] = "Create a blob container if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString() + " \n";
+                ViewData["feedback"] += "The storage container has been loaded successfully. \n";
+                logger.Log(container.Name + " has been loaded successfully.");
 
                 var blobUpload = Storage.UploadBlobAsync(container, logger, voiceModel.To, "alarmAlert");
-                ViewData["feedback"] += " The recipient's phone number " + voiceModel.To + " has been saved successfully.";
+                ViewData["feedback"] += "The recipient's phone number " + voiceModel.To + " has been saved successfully.";
+                logger.Log("The recipient's phone number " + voiceModel.To + " has been saved successfully.");
             }
             catch
             {
