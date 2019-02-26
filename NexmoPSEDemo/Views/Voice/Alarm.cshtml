@@ -15,42 +15,58 @@
         <div class="Vlt-grid">
             <div class="Vlt-col">
                 <div class="Vlt-card Vlt-article">
-                    <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="from">Select a number to call to simulate the alarm being triggered</label>
-                        <div class="Vlt-input">
-                            <select name="from">
-                                <option value="FR" selected="selected">@ViewData["From.FR"] (France)</option>
-                                <option value="UK">@ViewData["From.UK"] (UK)</option>
-                            </select>
-                        </div>
+                    <ul class="Vlt-list Vlt-list--big-number">
+                        <li>
+                            <div class="Vlt-form__element">
+                                <label class="Vlt-label" for="to">Please start by entering a phone number to connect to in an emergency</label>
+                                <div class="Vlt-input">
+                                    <input type="text" name="to" placeholder="Please enter the phone number to connect to in an emergency" />
+                                </div>
 
-                        <div class="Vlt-callout Vlt-callout--shoutout">
-                            <i></i>
-                            <div class="Vlt-callout__content">
-                                In real life the call would be triggered by the alarm system. However to avoid abuse of this website, we kindly request that you call one of the numbers above.
-                            </div>
-                        </div>
-                    </div>
-                    <div class="Vlt-form__element">
-                        <label class="Vlt-label" for="to">Phone number to call in an emergency</label>
-                        <div class="Vlt-input">
-                            <input type="text" name="to" placeholder="Please enter the phone number to call in an emergency" />
-                        </div>
+                                <div class="Vlt-callout Vlt-callout--tip">
+                                    <i></i>
+                                    <div class="Vlt-callout__content">
+                                        Phone numbers must be in the E.164 format
+                                        <br />
+                                        e.g. in the UK 447123123456
+                                    </div>
+                                </div>
 
-                        <div class="Vlt-callout Vlt-callout--tip">
-                            <i></i>
-                            <div class="Vlt-callout__content">
-                                Phone numbers must be in the E.164 format
-                                <br />
-                                e.g. in the UK 447123123456
+                                <div class="Vlt-callout Vlt-callout--warning">
+                                    <i></i>
+                                    <div class="Vlt-callout__content">
+                                        The phone number entered above is deleted every time this page loads. 
+                                        <br />
+                                        Please make sure you do not reload the page while calling.
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                    </div>
-                    <div class="Vlt-form__element">
-                        <div class="Vlt-input">
-                            <input type="submit" value="Save" />
-                        </div>
-                    </div>
+                            <div class="Vlt-form__element">
+                                <div class="Vlt-input">
+                                    <input type="submit" value="Save" />
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="Vlt-form__element">
+                                <label class="Vlt-label" for="from">Now please select a number to call to simulate the alarm being triggered</label>
+                                <div class="Vlt-input">
+                                    <select name="from">
+                                        <option value="FR" selected="selected">@ViewData["From.FR"] (France)</option>
+                                        <option value="UK">@ViewData["From.UK"] (UK)</option>
+                                    </select>
+                                </div>
+
+                                <div class="Vlt-callout Vlt-callout--shoutout">
+                                    <i></i>
+                                    <div class="Vlt-callout__content">
+                                        In real life the call would be triggered by the alarm system. However to avoid abuse of this website, we kindly request that you call one of the numbers above.
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
             <div class="Vlt-col">
