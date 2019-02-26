@@ -455,51 +455,16 @@ namespace NexmoPSEDemo.Common
             {
                 switch (voiceInputObject.Dtmf)
                 {
-                    case "2":
-                        // Send WhatsApp message to confirm reception of acknowledgement
-                        var message = new MessagingModel()
-                        {
-                            Brand = "Alarm Systems Limited",
-                            ContentType = "text",
-                            Type = "WhatsApp",
-                            Number = "447843608441",
-                            Sender = "447418342149",
-                            Template = "true",
-                            Text = "Interact with us over whatsapp"
-                        };
-
-                        if(SendMessage(message, logger, configuration))
-                        {
-                            // Send an NCCO back to confirm the acknowledgement has been received
-                            var confirmAction = new List<BasicTTSNcco>()
-                            {
-                                new BasicTTSNcco()
-                                {
-                                    action = "talk",
-                                    text = "Your input has been registered. A WhatsApp confirmation message has been sent. Thank you. Good bye."
-                                }
-                            };
-
-                            jsonRequestContent = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
-                        }
-                        else
-                        {
-                            // Send an NCCO back to confirm the acknowledgement has been received and inform that the confirmation could not be sent via message.
-                            var confirmAction = new List<BasicTTSNcco>()
-                            {
-                                new BasicTTSNcco()
-                                {
-                                    action = "talk",
-                                    text = "Your input has been registered. However we could not send a WhatsApp confirmation message. Thank you. Good bye."
-                                }
-                            };
-
-                            jsonRequestContent = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
-                        }
+                    case "1":
+                        // Connect the caller to their preferred number
+                        jsonRequestContent = GenerateConnectNcco();
+                        logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
 
                         break;
-                    case "1":
-                        // TODO: Create connect action
+                    case "2":
+                        // Confirm acknowledgement and send confirmation message
+                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(logger, configuration);
+
                         break;
                     default:
                         var invalidInputAction = new List<BasicTTSNcco>()
@@ -824,6 +789,91 @@ namespace NexmoPSEDemo.Common
             jsonObj += "\"text\": \"This is an SMS sent via the Dispatch API\"}}}]}";
 
             return jsonObj;
+        }
+
+        private static string GenerateAcknowledgementConfirmationNccoAndMessage(Logger logger, IConfigurationRoot configuration)
+        {
+            // Send WhatsApp message to confirm reception of acknowledgement
+            var message = new MessagingModel()
+            {
+                Brand = "Alarm Systems Limited",
+                ContentType = "text",
+                Type = "WhatsApp",
+                Number = "447843608441",
+                Sender = "447418342149",
+                Template = "true",
+                Text = "Interact with us over whatsapp"
+            };
+
+            if (SendMessage(message, logger, configuration))
+            {
+                // Send an NCCO back to confirm the acknowledgement has been received
+                var confirmAction = new List<BasicTTSNcco>()
+                            {
+                                new BasicTTSNcco()
+                                {
+                                    action = "talk",
+                                    text = "Your input has been registered. A WhatsApp confirmation message has been sent. Thank you. Good bye."
+                                }
+                            };
+
+                return JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+            }
+            else
+            {
+                // Send an NCCO back to confirm the acknowledgement has been received and inform that the confirmation could not be sent via message.
+                var confirmAction = new List<BasicTTSNcco>()
+                            {
+                                new BasicTTSNcco()
+                                {
+                                    action = "talk",
+                                    text = "Your input has been registered. However we could not send a WhatsApp confirmation message. Thank you. Good bye."
+                                }
+                            };
+
+                return JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+            }
+        }
+
+        private static string GenerateConnectNcco()
+        {
+            // Open the NCCO json string
+            string ivrInputNcco = "[";
+
+            // Add the talk action to the NCCO
+            var basicAction = new BasicTTSNcco()
+            {
+                action = "talk",
+                text = "Please wait while we connect you"
+            };
+            ivrInputNcco += JsonConvert.SerializeObject(basicAction, Formatting.Indented);
+
+            // Add the separator between the various actions
+            ivrInputNcco += ",";
+
+            // Add the input action to the NCCO
+            var endpoint = new List<VoiceEndpoint>()
+            {
+                new VoiceEndpoint(){
+                    type = "phone",
+                    number = "33617747369",
+                    dtmfAnswer = "1"
+                }
+            };
+            var voiceConnectAction = new VoiceConnectObject()
+            {
+                action = "connect",
+                eventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/status" },
+                timeout = "45",
+                from = "447843608441",
+                endpoint = endpoint
+            };
+            ivrInputNcco += JsonConvert.SerializeObject(voiceConnectAction, Formatting.Indented);
+
+            // Close the NCCO json string
+            ivrInputNcco += "]";
+
+            return ivrInputNcco;            
         }
     }
 }
