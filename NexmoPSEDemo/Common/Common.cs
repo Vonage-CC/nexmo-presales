@@ -1,15 +1,21 @@
 ﻿using Microsoft.Azure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Newtonsoft.Json;
 using Nexmo.Api;
+using Nexmo.Api.Request;
+using Nexmo.Api.Voice;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static Nexmo.Api.NumberInsight;
@@ -321,42 +327,10 @@ namespace NexmoPSEDemo.Common
         // Voice API
         public static bool MakeVoiceCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
         {
-            //TODO: Fix the 401 issue. For now testing by generating the jwt token in the terminal
-            //string privateKeyString = System.IO.File.ReadAllText(configuration["appSettings:Nexmo.Application.Key"]);
-            //byte[] key = Encoding.ASCII.GetBytes(privateKeyString);
-
-            //var tokenData = new byte[64];
-            //var rng = RandomNumberGenerator.Create();
-            //rng.GetBytes(tokenData);
-            //var jwtTokenId = Convert.ToBase64String(tokenData);
-            //var iat = (long) (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds;
-
-            //var claims = new[]
-            //{
-            //    new Claim("iat", iat.ToString()),
-            //    new Claim("jti", jwtTokenId),
-            //    new Claim("application_id", configuration["appSettings:Nexmo.Application.Id"])
-            //};
-
-            //var jwtToken = new JwtSecurityToken(
-            //claims: claims,
-            //expires: new System.DateTime(2020, 1, 31),
-            //signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            //);
-
             //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
-            //string encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwtToken);
             string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
 
             // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
-            //var client = new Client(creds: new Credentials
-            //{
-            //    ApiKey = configuration["appSettings:Nexmo.api_key"],
-            //    ApiSecret = configuration["appSettings:Nexmo.api_secret"],
-            //    ApplicationId = configuration["appSettings:Nexmo.Application.Id"],
-            //    ApplicationKey = privateKeyString
-            //});
-
             try
             {
                 logger = NexmoLogger.GetLogger("MessagingLogger");
@@ -421,38 +395,7 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Warning, response.StatusCode);
                         logger.Log(Level.Warning, response.ReasonPhrase);
                     }
-                }                
-
-                // TODO Implement the Nexmo library once the RSA issue is resolved.
-                // MAKE A PHONE CALL
-                //Call.CallResponse response = client.Call.Do(new Call.CallCommand
-                //{
-                //    to = new[]
-                //    {
-                //        new Call.Endpoint
-                //        {
-                //            type = "phone",
-                //            number = "447843608441"
-                //        }
-                //    },
-                //    from = new Call.Endpoint
-                //    {
-                //        type = "phone",
-                //        number = "33644631466"
-                //    },
-                //    answer_url = new[]
-                //    {
-                //        "http://jpchenot.nexmodemo.com/basic-tts-ncco.json"
-                //    },
-                //    event_url = new[]
-                //    {
-                //        "https://4bbeea69.ngrok.io/vapi/events"
-                //    }
-                //});
-
-                //Console.WriteLine(response.conversation_uuid);
-                //Console.WriteLine(response.uuid);
-                //Console.WriteLine(response.status);
+                }
             }
             catch (Exception e)
             {
