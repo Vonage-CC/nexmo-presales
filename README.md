@@ -31,7 +31,5 @@ Getting Started with Nexmo Pre-sales demo built with C#
 }
 ```
 
-2. Add your own Azure storage to Connected Services
-
-3. Update the Storage class in Common/Common.cs
+2. Update the Storage class in Common/Common.cs
 In the GetCloudBlobContainer() method, change this line CloudBlobContainer container = blobClient.GetContainerReference("vapi-connect-container"); and replace vapi-connect-container with the name you would like to use
