@@ -34,3 +34,6 @@ Getting Started with Nexmo Pre-sales demo built with C#
 
 2. Update the Storage class in Common/Common.cs
 In the GetCloudBlobContainer() method, change this line CloudBlobContainer container = blobClient.GetContainerReference("vapi-connect-container"); and replace vapi-connect-container with the name you would like to use
+
+3. Update the Configuration class in Common/Common.cs
+In the GetConfigFile() method, change the path of the configFile variable depending on where your solution is located on your machine.
