@@ -326,7 +326,7 @@ namespace NexmoPSEDemo.Common
         }
 
         // Voice API
-        public static bool MakeVoiceCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
+        public static bool MakeBasicTTSCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
         {
             //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
             string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
@@ -357,7 +357,7 @@ namespace NexmoPSEDemo.Common
                 };
                 var eventUrls = new List<string>()
                 {
-                    "https://nexmopsedemo.azurewebsites.net/api/status"
+                    configuration["appSettings:Nexmo.Voice.Url.Event"]
                 };
                 List<BasicTTSNcco> Ncco = new List<BasicTTSNcco>()
                 {
@@ -409,6 +409,90 @@ namespace NexmoPSEDemo.Common
             return false;
         }
 
+        public static bool MakeAlertTTSCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
+        {
+            //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
+            string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
+
+            // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingLogger");
+                logger.Open();
+
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls";
+                logger.Log(Level.Info, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Add("Authorization", "Bearer " + encodedJwt);
+
+                var to = new List<CallTo>()
+                {
+                    new CallTo()
+                    {
+                        type = "phone",
+                        number = voiceModel.To
+                    }
+                };
+                var from = new CallFrom()
+                {
+                    type = "phone",
+                    number = voiceModel.From
+                };
+                var eventUrls = new List<string>()
+                {
+                    configuration["appSettings:Nexmo.Voice.Url.Event"]
+                };
+                List<BasicTTSNcco> Ncco = new List<BasicTTSNcco>()
+                {
+                    new BasicTTSNcco()
+                    {
+                        action = voiceModel.Action,
+                        text = voiceModel.Text
+                    }
+                };
+                VoiceRootObject requestObject = new VoiceRootObject
+                {
+                    to = to,
+                    from = from,
+                    event_url = eventUrls,
+                    ncco = Ncco
+                };
+
+                string jsonRequestContent = JsonConvert.SerializeObject(requestObject);
+                request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log(Level.Info, response.StatusCode);
+                        logger.Log(Level.Info, response.RequestMessage);
+                        logger.Log(Level.Info, response.Headers);
+                        logger.Log(Level.Info, response.Content);
+
+                        return true;
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, response.StatusCode);
+                        logger.Log(Level.Warning, response.ReasonPhrase);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+
+                return false;
+            }
+
+            return false;
+        }
+
+        // TODO complete this to trigger the call when receiving an SMS
         public static string AnswerVoiceCall(VoiceInboundObject voiceInboundObject, Logger logger, IConfigurationRoot configuration)
         {
             var request = new HttpRequestMessage();
@@ -435,7 +519,7 @@ namespace NexmoPSEDemo.Common
                 var inputAction = new InputTTSNcco()
                 {
                     action = "input",
-                    eventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/input" }
+                    eventUrl = new List<string>() { configuration["appSettings:Nexmo.Voice.Url.Input"] }
                 };
                 ivrInputNcco += JsonConvert.SerializeObject(inputAction, Formatting.Indented);
 

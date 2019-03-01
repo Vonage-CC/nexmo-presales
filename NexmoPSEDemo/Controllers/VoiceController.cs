@@ -34,7 +34,10 @@ namespace NexmoPSEDemo.Controllers
 
                 try
                 {
-                    if (NexmoApi.MakeVoiceCall(voiceModel, logger, configuration))
+                    logger = NexmoLogger.GetLogger("TTSLogger");
+                    logger.Open();
+
+                    if (NexmoApi.MakeBasicTTSCall(voiceModel, logger, configuration))
                     {
                         ViewData["feedback"] = "Your phone call is starting now...";                        
                     }
@@ -47,6 +50,11 @@ namespace NexmoPSEDemo.Controllers
                 {
                     logger.Log(Level.Exception, e);
                     ViewData["error"] = "There has been an issue dealing with your request. Please try again later.";
+                }
+                finally
+                {
+                    logger.Close();
+                    logger.Deregister();
                 }
             }
 

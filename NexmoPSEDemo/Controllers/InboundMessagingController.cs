@@ -95,6 +95,15 @@ namespace NexmoPSEDemo.Controllers
                     var moSmsObject = JsonConvert.DeserializeObject<InboundSmsObject>(value.Result);
                     logger.Log("Messaging SMS Inbound from: " + host);
                     logger.Log("Messaging SMS Inbound body: " + JsonConvert.SerializeObject(moSmsObject, Formatting.Indented));
+
+                    if(moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.FR"] || moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.UK"])
+                    {
+                        //string alertNcco = NexmoApi.GenerateAlertVoiceNcco(new VoiceInboundObject(), logger, configuration);
+                        //if(!NexmoApi.MakeVoiceCall(new VoiceModel(), alertNcco, logger, configuration))
+                        //{
+                        //    httpRequest.CreateResponse(System.Net.HttpStatusCode.UnprocessableEntity);
+                        //}
+                    }
                 }
             }
             catch (Exception e)
