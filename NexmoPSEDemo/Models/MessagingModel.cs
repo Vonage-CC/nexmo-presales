@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace NexmoPSEDemo.Models
 {
@@ -26,5 +27,17 @@ namespace NexmoPSEDemo.Models
         public From From { get; set; }
         public To To { get; set; }
         public TemplateMessage Message { get; set; }
+    }
+
+    public class InboundSmsObject
+    {
+        public string msisdn { get; set; }
+        public string to { get; set; }
+        public string messageId { get; set; }
+        public string text { get; set; }
+        public string type { get; set; }
+        public string keyword { get; set; }
+        [JsonProperty(PropertyName = "message-timestamp")]
+        public string message_timestamp { get; set; }
     }
 }

@@ -31,15 +31,89 @@ namespace NexmoPSEDemo.Controllers
 
         // GET api/<controller>/5
         //[HttpGet("{id}")]
-        //[Route("api/inboundmessaging")]
+        //[Route("messaging/sms/{id}")]
         //public string Get(int id)
         //{
         //    return "value";
         //}
 
-        // POST api/<controller>
+        // POST messaging/sms/status
         [HttpPost]
-        [Route("api/status")]
+        [Route("messaging/sms/status")]
+        public HttpResponseMessage SmsStatus()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingSmsStatusLogger");
+                logger.Open();
+
+                var headers = Request.Headers;
+                var host = headers["Host"];
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    logger.Log("Messaging SMS Status update from: " + host);
+                    logger.Log("Messaging SMS Status update body: " + value.Result);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [Route("messaging/sms/inbound")]
+        public HttpResponseMessage SmsInbound()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("InboundMessagingSmsLogger");
+                logger.Open();
+
+                var headers = Request.Headers;
+                var host = headers["Host"];
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var moSmsObject = JsonConvert.DeserializeObject<InboundSmsObject>(value.Result);
+                    logger.Log("Messaging SMS Inbound from: " + host);
+                    logger.Log("Messaging SMS Inbound body: " + JsonConvert.SerializeObject(moSmsObject, Formatting.Indented));
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+        }
+
+        // Messaging endpoints
+        [HttpPost]
+        [Route("messaging/status")]
         public HttpResponseMessage Status()
         {
             // create a logger placeholder
@@ -75,7 +149,7 @@ namespace NexmoPSEDemo.Controllers
         }
 
         [HttpPost]
-        [Route("api/inbound")]
+        [Route("messaging/inbound")]
         public HttpResponseMessage Inbound()
         {
             // create a logger placeholder
