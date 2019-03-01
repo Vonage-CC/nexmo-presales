@@ -35,7 +35,7 @@ namespace NexmoPSEDemo.Common
             // use this for PC
             if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
-                configFile = "D:\\OneDrive - Nexmo\\Applications\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\NexmoPSEDemo\\appsettings.json";
+                configFile = "D:\\Documents\\My Web Sites\\nexmo-presales\\NexmoPSEDemo\\appsettings.json";
             }
 #else
             configFile = "appsettings.json";
@@ -52,6 +52,7 @@ namespace NexmoPSEDemo.Common
     {
         public static Logger GetLogger(string loggerName)
         {
+            IConfigurationRoot configuration = Configuration.GetConfigFile();
             string logDirectory;
             // Make sure the directory to write the log files to exists
 #if DEBUG
@@ -60,7 +61,7 @@ namespace NexmoPSEDemo.Common
             // use this for PC
             if(Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
-                logDirectory = "D:\\OneDrive - Nexmo\\Applications\\visual studio apps\\Nexmo PSE Demo\\nexmo-presales\\NexmoPSEDemo\\Logs\\";
+                logDirectory = configuration["appSettings:Logs.Path"];
             }
 #else
             logDirectory = "../../LogFiles/Application/";
