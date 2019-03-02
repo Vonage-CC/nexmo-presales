@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,6 +63,15 @@ namespace NexmoPSEDemo.Models
         public CallFrom from { get; set; }
         public List<string> event_url { get; set; }
         public List<BasicTTSNcco> ncco { get; set; }
+    }
+
+    public class VoiceInputRootObject
+    {
+        public List<CallTo> to { get; set; }
+        public CallFrom from { get; set; }
+        public List<string> event_url { get; set; }
+        [JsonIgnore]
+        public string ncco { get; set; }
     }
 
     public class VoiceInboundObject

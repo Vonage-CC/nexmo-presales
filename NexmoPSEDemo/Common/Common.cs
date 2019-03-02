@@ -375,7 +375,7 @@ namespace NexmoPSEDemo.Common
                     ncco = Ncco
                 };
 
-                string jsonRequestContent = JsonConvert.SerializeObject(requestObject);
+                string jsonRequestContent = JsonConvert.SerializeObject(requestObject, Formatting.Indented);
                 request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
 
                 using (var client = new HttpClient())
@@ -425,6 +425,8 @@ namespace NexmoPSEDemo.Common
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
                 request.Headers.Add("Authorization", "Bearer " + encodedJwt);
 
+                // Add the recipient to the request json
+                string ttsIvrCallRequestJson = "{\"to\":";
                 var to = new List<CallTo>()
                 {
                     new CallTo()
@@ -433,33 +435,34 @@ namespace NexmoPSEDemo.Common
                         number = voiceModel.To
                     }
                 };
+                ttsIvrCallRequestJson += JsonConvert.SerializeObject(to, Formatting.Indented);
+
+                // Add the sender to the request json
+                ttsIvrCallRequestJson += ",\"from\":";
                 var from = new CallFrom()
                 {
                     type = "phone",
                     number = voiceModel.From
                 };
+                ttsIvrCallRequestJson += JsonConvert.SerializeObject(from, Formatting.Indented);
+
+                // Add the event Urls to the request json
+                ttsIvrCallRequestJson += ",\"event_url\":";
                 var eventUrls = new List<string>()
                 {
                     configuration["appSettings:Nexmo.Voice.Url.Event"]
                 };
-                List<BasicTTSNcco> Ncco = new List<BasicTTSNcco>()
-                {
-                    new BasicTTSNcco()
-                    {
-                        action = voiceModel.Action,
-                        text = voiceModel.Text
-                    }
-                };
-                VoiceRootObject requestObject = new VoiceRootObject
-                {
-                    to = to,
-                    from = from,
-                    event_url = eventUrls,
-                    ncco = Ncco
-                };
+                ttsIvrCallRequestJson += JsonConvert.SerializeObject(eventUrls, Formatting.Indented);
 
-                string jsonRequestContent = JsonConvert.SerializeObject(requestObject);
-                request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
+                // Add the ncco to the request json
+                ttsIvrCallRequestJson += ",\"ncco\":";
+                ttsIvrCallRequestJson += AnswerVoiceCall(logger, configuration);
+
+                // Close the NCCO json string
+                ttsIvrCallRequestJson += "}";
+
+                logger.Log("Make TTS Call request json: " + ttsIvrCallRequestJson);
+                request.Content = new StringContent(ttsIvrCallRequestJson, Encoding.UTF8, "application/json");
 
                 using (var client = new HttpClient())
                 {
@@ -492,8 +495,7 @@ namespace NexmoPSEDemo.Common
             return false;
         }
 
-        // TODO complete this to trigger the call when receiving an SMS
-        public static string AnswerVoiceCall(VoiceInboundObject voiceInboundObject, Logger logger, IConfigurationRoot configuration)
+        public static string AnswerVoiceCall(Logger logger, IConfigurationRoot configuration)
         {
             var request = new HttpRequestMessage();
             string jsonRequestContent = String.Empty;

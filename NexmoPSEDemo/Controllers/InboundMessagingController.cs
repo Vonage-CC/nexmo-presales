@@ -98,11 +98,16 @@ namespace NexmoPSEDemo.Controllers
 
                     if(moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.FR"] || moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.UK"])
                     {
-                        //string alertNcco = NexmoApi.GenerateAlertVoiceNcco(new VoiceInboundObject(), logger, configuration);
-                        //if(!NexmoApi.MakeVoiceCall(new VoiceModel(), alertNcco, logger, configuration))
-                        //{
-                        //    httpRequest.CreateResponse(System.Net.HttpStatusCode.UnprocessableEntity);
-                        //}
+                        VoiceModel voiceModel = new VoiceModel()
+                        {
+                            From = moSmsObject.to,
+                            To = moSmsObject.msisdn
+                        };
+                        var alertNcco = NexmoApi.MakeAlertTTSCall(voiceModel, logger, configuration);
+                        if (alertNcco)
+                        {
+                            httpRequest.CreateResponse(System.Net.HttpStatusCode.UnprocessableEntity);
+                        }
                     }
                 }
             }

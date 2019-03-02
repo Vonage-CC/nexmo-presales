@@ -94,7 +94,7 @@ namespace NexmoPSEDemo.Controllers
                 {
                     var value = reader.ReadToEndAsync();
                     var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
-                    ncco = NexmoApi.AnswerVoiceCall(voiceInboundObject, logger, configuration);
+                    ncco = NexmoApi.AnswerVoiceCall(logger, configuration);
                     logger.Log("Voice Inbound from: " + host);
                     logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
                 }
