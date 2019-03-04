@@ -257,7 +257,7 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Info, response.StatusCode.ToString());
                         logger.Log(Level.Info, response.RequestMessage);
                         logger.Log(Level.Info, response.Headers);
-                        logger.Log(Level.Info, response.Content);
+                        logger.Log(Level.Info, response.Content.ReadAsStringAsync().Result);
 
                         return true;
                     }
@@ -547,20 +547,28 @@ namespace NexmoPSEDemo.Common
 
             try
             {
+                //var inFlightCallDetails = GetInFlightCallDetails(voiceInputObject.Uuid, logger, configuration);
+                //logger.Log("Retrieved in flight call details. Deciding what action to take based on user input: " + voiceInputObject.Dtmf);
+
                 switch (voiceInputObject.Dtmf)
                 {
                     case "1":
                         // Connect the caller to their preferred number
-                        jsonRequestContent = GenerateConnectNcco();
+                        logger.Log("User input: 1. Triggering connect action.");
+                        jsonRequestContent = GenerateConnectNcco(configuration);
                         logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
 
                         break;
                     case "2":
                         // Confirm acknowledgement and send confirmation message
-                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(logger, configuration);
+                        logger.Log("User input: 2. Triggering WhatsApp message.");
+                        logger.Log("Starting sending WhatsApp message in response to ackowledgement to alarm alert.");
+                        //jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(inFlightCallDetails.to.Number, logger, configuration);
+                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage("447843608441", logger, configuration);
 
                         break;
                     default:
+                        logger.Log("User input: " + voiceInputObject.Dtmf + ". Triggering basic invalid input basic action.");
                         var invalidInputAction = new List<BasicTTSNcco>()
                         {
                             new BasicTTSNcco()
@@ -885,19 +893,123 @@ namespace NexmoPSEDemo.Common
             return jsonObj;
         }
 
-        private static string GenerateAcknowledgementConfirmationNccoAndMessage(Logger logger, IConfigurationRoot configuration)
+        private static InFlightCallDetails GetInFlightCallDetails(string uuid, Logger logger, IConfigurationRoot configuration)
         {
+            //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
+            string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
+            InFlightCallDetails inFlightCallDetails = new InFlightCallDetails();
+
+            // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
+            try
+            {
+                logger = NexmoLogger.GetLogger("CallDetailsLogger");
+                logger.Open();
+
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls/" + uuid;
+                logger.Log(Level.Info, url);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Add("Authorization", "Bearer " + encodedJwt);
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+                    var rawInFlightCallDetails = response.Content.ReadAsStringAsync().Result;
+                    logger.Log("Call Details Raw Response: " + rawInFlightCallDetails);
+                    inFlightCallDetails = JsonConvert.DeserializeObject<InFlightCallDetails>(rawInFlightCallDetails, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+                    logger.Log("Returning In Flight Call Details json: " + JsonConvert.SerializeObject(inFlightCallDetails, Formatting.Indented));
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log(Level.Info, "In Flight Call Details response status code: " + response.StatusCode);
+                        logger.Log(Level.Info, "In Flight Call Details response RequestMessage: " + response.RequestMessage);
+                        logger.Log(Level.Info, "In Flight Call Details response headers: " + response.Headers);
+                        logger.Log(Level.Info, "In Flight Call Details response content: " + response.Content.ReadAsStringAsync().Result);
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, "In Flight Call Details response status code: " + response.StatusCode);
+                        logger.Log(Level.Warning, "In Flight Call Details response error description: " + response.ReasonPhrase);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return inFlightCallDetails;
+        }
+
+        private static CallDetails GetCallDetails(string uuid, Logger logger, IConfigurationRoot configuration)
+        {
+            //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
+            string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
+            CallDetails callDetails = new CallDetails();
+
+            // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
+            try
+            {
+                logger = NexmoLogger.GetLogger("CallDetailsLogger");
+                logger.Open();
+
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls/" + uuid;
+                logger.Log(Level.Info, url);
+                var request = new HttpRequestMessage(HttpMethod.Get, url);
+                request.Headers.Add("Authorization", "Bearer " + encodedJwt);
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+                    logger.Log("Call Details Raw Response: " + response.Content.ReadAsStringAsync().Result);
+                    callDetails = JsonConvert.DeserializeObject<CallDetails>(response.Content.ReadAsStringAsync().Result, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log(Level.Info, "Call Details response status code: " + response.StatusCode);
+                        logger.Log(Level.Info, "Call Details response RequestMessage: " + response.RequestMessage);
+                        logger.Log(Level.Info, "Call Details response headers: " + response.Headers);
+                        logger.Log(Level.Info, "Call Details response content: " + response.Content);
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, "Call Details response status code: " + response.StatusCode);
+                        logger.Log(Level.Warning, "Call Details response error description: " + response.ReasonPhrase);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return callDetails;
+        }
+
+        private static string GenerateAcknowledgementConfirmationNccoAndMessage(string number, Logger logger, IConfigurationRoot configuration)
+        {
+            var ncco = string.Empty;
+
             // Send WhatsApp message to confirm reception of acknowledgement
             var message = new MessagingModel()
             {
                 Brand = "Alarm Systems Limited",
                 ContentType = "text",
                 Type = "WhatsApp",
-                Number = "447843608441",
-                Sender = "447418342149",
+                Number = number,
+                Sender = configuration["appSettings:Nexmo.Messaging.WA.Sender"],
                 Template = "true",
                 Text = "Interact with us over whatsapp"
             };
+
+            logger.Log("Sending alarm alert WhatsApp message with NCCO: " + JsonConvert.SerializeObject(message, Formatting.Indented));
 
             if (SendMessage(message, logger, configuration))
             {
@@ -911,7 +1023,10 @@ namespace NexmoPSEDemo.Common
                                 }
                             };
 
-                return JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+                ncco = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+                logger.Log("WhatsApp message successful - Generated alert acknowledgement confirmation NCCO: " + ncco);
+
+                return ncco;
             }
             else
             {
@@ -925,11 +1040,14 @@ namespace NexmoPSEDemo.Common
                                 }
                             };
 
-                return JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+                ncco = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
+                logger.Log("WhatsApp message failed - Generated alert acknowledgement confirmation NCCO: " + ncco);
+
+                return ncco;
             }
         }
 
-        private static string GenerateConnectNcco()
+        private static string GenerateConnectNcco(IConfigurationRoot configuration)
         {
             // Open the NCCO json string
             string ivrInputNcco = "[";
@@ -963,7 +1081,7 @@ namespace NexmoPSEDemo.Common
                 action = "connect",
                 eventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/status" },
                 timeout = "45",
-                from = "447843608441",
+                from = configuration["appSettings:Nexmo.Application.Number.From.UK"],
                 endpoint = endpoint
             };
             ivrInputNcco += JsonConvert.SerializeObject(voiceConnectAction, Formatting.Indented);

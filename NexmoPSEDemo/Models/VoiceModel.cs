@@ -26,6 +26,17 @@ namespace NexmoPSEDemo.Models
         public string number { get; set; }
     }
 
+    public class Self
+    {
+        public string href { get; set; }
+    }
+
+    public class Links
+    {
+        public Self self { get; set; }
+    }
+
+
     public class BasicTTSNcco
     {
         public string action { get; set; }
@@ -98,5 +109,41 @@ namespace NexmoPSEDemo.Models
         public string timeout { get; set; }
         public string from { get; set; }
         public List<VoiceEndpoint> endpoint { get; set; }
+    }
+
+    public class InFlightCallDetails
+    {
+        public string uuid { get; set; }
+        public string status { get; set; }
+        public string direction { get; set; }
+        public string rate { get; set; }
+        public string price { get; set; }
+        public string duration { get; set; }
+        public string network { get; set; }
+        public string conversation_uuid { get; set; }
+        [JsonIgnore]
+        public DateTime start_time { get; set; }
+        [JsonIgnore]
+        public DateTime end_time { get; set; }
+        public To to { get; set; }
+        public From from { get; set; }
+        public Links _links { get; set; }
+    }
+
+    public class CallDetails
+    {
+        public string uuid { get; set; }
+        public string status { get; set; }
+        public string direction { get; set; }
+        public string rate { get; set; }
+        public string price { get; set; }
+        public string duration { get; set; }
+        public string network { get; set; }
+        public string conversation_uuid { get; set; }
+        public DateTime start_time { get; set; }
+        public DateTime end_time { get; set; }
+        public To to { get; set; }
+        public From from { get; set; }
+        public Links _links { get; set; }
     }
 }

@@ -132,9 +132,9 @@ namespace NexmoPSEDemo.Controllers
                 {
                     var value = reader.ReadToEndAsync();
                     var voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(value.Result);
-                    ncco = NexmoApi.AnswerVoiceCallInput(voiceInputObject, logger, configuration);
                     logger.Log("Voice Input from: " + host);
                     logger.Log("Voice Input body: " + JsonConvert.SerializeObject(voiceInputObject, Formatting.Indented));
+                    ncco = NexmoApi.AnswerVoiceCallInput(voiceInputObject, logger, configuration);
                 }
             }
             catch (Exception e)
