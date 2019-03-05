@@ -785,6 +785,19 @@ namespace NexmoPSEDemo.Common
             if (messagingModel.Type != "WhatsApp")
                 sender = messagingModel.Sender;
 
+            var parameters = new List<Parameter>();
+            parameters.Add(new Parameter()
+            {
+                Default = messagingModel.Brand
+            });
+            if (!string.IsNullOrEmpty(messagingModel.Text))
+            {
+                parameters.Add(new Parameter()
+                {
+                    Default = messagingModel.Text
+                });
+            }
+
             var messageJson = new TemplateMessagingObject()
             {
                 From = new From() { Type = messagingModel.Type, Number = sender },
@@ -796,12 +809,8 @@ namespace NexmoPSEDemo.Common
                         Type = "template",
                         Template = new Template()
                         {
-                            Name = "whatsapp:hsm:technology:nexmo:simplewelcome",
-                            Parameters = new List<Parameter>()
-                            {
-                                new Parameter(){Default = messagingModel.Brand},
-                                new Parameter(){Default = messagingModel.Text}
-                            }
+                            Name = messagingModel.TemplateName,
+                            Parameters = parameters
                         }
                     }
                 }
@@ -1006,7 +1015,7 @@ namespace NexmoPSEDemo.Common
                 Number = number,
                 Sender = configuration["appSettings:Nexmo.Messaging.WA.Sender"],
                 Template = "true",
-                Text = "Interact with us over whatsapp"
+                TemplateName = "whatsapp:hsm:technology:nexmo:jpc_pse_demo_alarm_alert",
             };
 
             logger.Log("Sending alarm alert WhatsApp message with NCCO: " + JsonConvert.SerializeObject(message, Formatting.Indented));

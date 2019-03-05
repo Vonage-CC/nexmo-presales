@@ -12,6 +12,7 @@ namespace NexmoPSEDemo.Models
         public string Text { get; set; }
         public string RequestId { get; set; }
         public string Template { get; set; }
+        public string TemplateName { get; set; }
         public string Brand { get; set; }
     }
 

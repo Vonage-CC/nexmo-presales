@@ -41,6 +41,7 @@ namespace NexmoPSEDemo.Controllers
                     switch (messagingModel.Type)
                     {
                         case "WhatsApp":
+                            messagingModel.TemplateName = "whatsapp:hsm:technology:nexmo:simplewelcome";
                             if (NexmoApi.SendMessage(messagingModel, logger, configuration))
                                 ViewData["feedback"] = "Your " + messagingModel.Type + " message was sent succesfully.";
                             else
