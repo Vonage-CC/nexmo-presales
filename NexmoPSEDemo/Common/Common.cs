@@ -547,8 +547,8 @@ namespace NexmoPSEDemo.Common
 
             try
             {
-                //var inFlightCallDetails = GetInFlightCallDetails(voiceInputObject.Uuid, logger, configuration);
-                //logger.Log("Retrieved in flight call details. Deciding what action to take based on user input: " + voiceInputObject.Dtmf);
+                var inFlightCallDetails = GetInFlightCallDetails(voiceInputObject.Uuid, logger, configuration);
+                logger.Log("Retrieved in flight call details. Deciding what action to take based on user input: " + voiceInputObject.Dtmf);
 
                 switch (voiceInputObject.Dtmf)
                 {
@@ -563,8 +563,7 @@ namespace NexmoPSEDemo.Common
                         // Confirm acknowledgement and send confirmation message
                         logger.Log("User input: 2. Triggering WhatsApp message.");
                         logger.Log("Starting sending WhatsApp message in response to ackowledgement to alarm alert.");
-                        //jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(inFlightCallDetails.to.Number, logger, configuration);
-                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage("447843608441", logger, configuration);
+                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(inFlightCallDetails.to.Number, logger, configuration);
 
                         break;
                     default:
@@ -911,9 +910,6 @@ namespace NexmoPSEDemo.Common
             // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
             try
             {
-                logger = NexmoLogger.GetLogger("CallDetailsLogger");
-                logger.Open();
-
                 var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls/" + uuid;
                 logger.Log(Level.Info, url);
                 var request = new HttpRequestMessage(HttpMethod.Get, url);
