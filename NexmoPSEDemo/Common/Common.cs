@@ -562,8 +562,8 @@ namespace NexmoPSEDemo.Common
                     case "2":
                         // Confirm acknowledgement and send confirmation message
                         logger.Log("User input: 2. Triggering WhatsApp message.");
-                        logger.Log("Starting sending WhatsApp message in response to ackowledgement to alarm alert.");
-                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(inFlightCallDetails.to.Number, logger, configuration);
+                        logger.Log("Starting sending SMS message in response to ackowledgement to alarm alert.");
+                        jsonRequestContent = GenerateAcknowledgementConfirmationNccoAndMessage(inFlightCallDetails, logger, configuration);
 
                         break;
                     default:
@@ -998,25 +998,31 @@ namespace NexmoPSEDemo.Common
             return callDetails;
         }
 
-        private static string GenerateAcknowledgementConfirmationNccoAndMessage(string number, Logger logger, IConfigurationRoot configuration)
+        private static string GenerateAcknowledgementConfirmationNccoAndMessage(InFlightCallDetails callDetails, Logger logger, IConfigurationRoot configuration)
         {
             var ncco = string.Empty;
 
-            // Send WhatsApp message to confirm reception of acknowledgement
+            // Send SMS message to confirm reception of acknowledgement
             var message = new MessagingModel()
             {
-                Brand = "Alarm Systems Limited",
-                ContentType = "text",
-                Type = "WhatsApp",
-                Number = number,
-                Sender = configuration["appSettings:Nexmo.Messaging.WA.Sender"],
-                Template = "true",
-                TemplateName = "whatsapp:hsm:technology:nexmo:jpc_pse_demo_alarm_alert",
+                Number = callDetails.to.Number,
+                Sender = callDetails.from.Number,
+                Text = "We have called you because of an alarm has been triggered in your house. You have confirmed reception of our alert. For any further help please reply to this message. The Alaram Systems Ltd team.",
             };
 
             logger.Log("Sending alarm alert WhatsApp message with NCCO: " + JsonConvert.SerializeObject(message, Formatting.Indented));
 
-            if (SendMessage(message, logger, configuration))
+            var smsResults = NexmoApi.SendSMS(message, configuration, "");
+            foreach (SMS.SMSResponseDetail responseDetail in smsResults.messages)
+            {
+                string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
+                messageDetails += " \n to: " + responseDetail.to;
+                messageDetails += " \n at price: " + responseDetail.message_price;
+                messageDetails += " \n with status: " + responseDetail.status;
+                logger.Log(messageDetails);
+            }
+
+            if(smsResults.messages[0].status == "0")
             {
                 // Send an NCCO back to confirm the acknowledgement has been received
                 var confirmAction = new List<BasicTTSNcco>()
@@ -1041,7 +1047,7 @@ namespace NexmoPSEDemo.Common
                                 new BasicTTSNcco()
                                 {
                                     action = "talk",
-                                    text = "Your input has been registered. However we could not send a WhatsApp confirmation message. Thank you. Good bye."
+                                    text = "Your input has been registered. However we could not send an SMS confirmation message. Thank you. Good bye."
                                 }
                             };
 
