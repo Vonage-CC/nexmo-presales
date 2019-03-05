@@ -1010,7 +1010,7 @@ namespace NexmoPSEDemo.Common
                 Text = "We have called you because of an alarm has been triggered in your house. You have confirmed reception of our alert. For any further help please reply to this message. The Alaram Systems Ltd team.",
             };
 
-            logger.Log("Sending alarm alert WhatsApp message with NCCO: " + JsonConvert.SerializeObject(message, Formatting.Indented));
+            logger.Log("Sending alarm alert SMS message with NCCO: " + JsonConvert.SerializeObject(message, Formatting.Indented));
 
             var smsResults = NexmoApi.SendSMS(message, configuration, "");
             foreach (SMS.SMSResponseDetail responseDetail in smsResults.messages)
@@ -1030,12 +1030,12 @@ namespace NexmoPSEDemo.Common
                                 new BasicTTSNcco()
                                 {
                                     action = "talk",
-                                    text = "Your input has been registered. A WhatsApp confirmation message has been sent. Thank you. Good bye."
+                                    text = "Your input has been registered. An SMS confirmation message has been sent. Thank you. Good bye."
                                 }
                             };
 
                 ncco = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
-                logger.Log("WhatsApp message successful - Generated alert acknowledgement confirmation NCCO: " + ncco);
+                logger.Log("SMS message successful - Generated alert acknowledgement confirmation NCCO: " + ncco);
 
                 return ncco;
             }
@@ -1052,7 +1052,7 @@ namespace NexmoPSEDemo.Common
                             };
 
                 ncco = JsonConvert.SerializeObject(confirmAction, Formatting.Indented);
-                logger.Log("WhatsApp message failed - Generated alert acknowledgement confirmation NCCO: " + ncco);
+                logger.Log("SMS message failed - Generated alert acknowledgement confirmation NCCO: " + ncco);
 
                 return ncco;
             }
