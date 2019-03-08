@@ -1,5 +1,7 @@
-﻿using Microsoft.Azure;
+﻿using Jose;
+using Microsoft.Azure;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -9,6 +11,10 @@ using Nexmo.Api.Request;
 using Nexmo.Api.Voice;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Security;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -16,6 +22,7 @@ using System.IO;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using static Nexmo.Api.NumberInsight;
@@ -158,6 +165,34 @@ namespace NexmoPSEDemo.Common
             }
 
             return blobValue;
+        }
+    }
+
+    public static class Security
+    {
+        public static string GenerateJwtToken()
+        {
+            // Load the configuration file
+            IConfigurationRoot configuration = Configuration.GetConfigFile();
+
+            // Generate a token ID
+            var tokenData = new byte[64];
+            var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(tokenData);
+            var jwtTokenId = Convert.ToBase64String(tokenData);
+
+            var payload = new Dictionary<string, object>
+            {
+                { "iat", (long) (DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalSeconds },
+                { "application_id", configuration["appSettings:Nexmo.Application.Id"] },
+                { "jti", jwtTokenId }
+            };
+
+            string privateKeyString = File.ReadAllText(configuration["appSettings:Nexmo.Application.Key"]);
+            var rsa = PemParse.DecodePEMKey(privateKeyString);
+            var jwtToken = JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+
+            return jwtToken;
         }
     }
 
@@ -328,8 +363,7 @@ namespace NexmoPSEDemo.Common
         // Voice API
         public static bool MakeBasicTTSCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
         {
-            //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
-            string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
+            string encodedJwt = Security.GenerateJwtToken();
 
             // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
             try
@@ -411,8 +445,7 @@ namespace NexmoPSEDemo.Common
 
         public static bool MakeAlertTTSCall(VoiceModel voiceModel, Logger logger, IConfigurationRoot configuration)
         {
-            //TODO: Fix jwt generation logic. For now, the hard coded token is valid until 31/01/2020.
-            string encodedJwt = configuration["appSettings:Nexmo.Voice.Jwt.Token"];
+            string encodedJwt = Security.GenerateJwtToken();
 
             // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
             try
