@@ -15,7 +15,6 @@ Getting Started with Nexmo Pre-sales demo built with C#
     "Nexmo.api_key": "your API key",
     "Nexmo.api_secret": "your API secret",
     "Nexmo.Application.Id": "if using the Voice API",
-    "Nexmo.Application.Key": "if using the Voice API",
     "Nexmo.Application.Number.From.FR": "if using the Messaging API",
     "Nexmo.Application.Number.From.UK": "if using the Messaging API",
     "Nexmo.Messaging.WA.Token": "WhatsApp sandbox token",
@@ -39,3 +38,5 @@ In the GetCloudBlobContainer() method, change this line CloudBlobContainer conta
 
 3. Update the Configuration class in Common/Common.cs
 In the GetConfigFile() method, change the path of the configFile variable depending on where your solution is located on your machine.
+
+4. For the Voice API, you must store a copy of your generated key file in the root folder of your project. The file must be called 'private.key'.
