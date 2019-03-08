@@ -95,10 +95,12 @@ namespace NexmoPSEDemo.Controllers
                     var moSmsObject = JsonConvert.DeserializeObject<InboundSmsObject>(value.Result);
                     logger.Log("Messaging SMS Inbound from: " + host);
                     logger.Log("Messaging SMS Inbound body: " + JsonConvert.SerializeObject(moSmsObject, Formatting.Indented));
+                    logger.Log("Messaging SMS Inbound - The text message entered is: " + moSmsObject.text);
+                    logger.Log("Messaging SMS Inbound - The text message reciptient is: " + moSmsObject.to);
 
-                    if(moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.FR"] || moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.UK"])
+                    if (moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.FR"] || moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.UK"])
                     {
-                        if(moSmsObject.text.ToLower() == "trigger")
+                        if(moSmsObject.text.ToLower().Trim() == "trigger")
                         {
                             VoiceModel voiceModel = new VoiceModel()
                             {
@@ -110,6 +112,10 @@ namespace NexmoPSEDemo.Controllers
                             {
                                 httpRequest.CreateResponse(System.Net.HttpStatusCode.UnprocessableEntity);
                             }
+                        }
+                        else
+                        {
+                            logger.Log(Level.Warning, "Messaging SMS Inbound: The text message entered was: " + moSmsObject.text);
                         }
                     }
                 }

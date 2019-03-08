@@ -32,6 +32,7 @@ appsettings.json
 appsettings.development.json
 Logs/
 *.txt
+*.key
 
 # Mac bundle stuff
 *.dmg

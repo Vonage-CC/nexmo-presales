@@ -176,7 +176,7 @@ namespace NexmoPSEDemo.Common
                 { "jti", jwtTokenId }
             };
 
-            string privateKeyString = File.ReadAllText(configuration["appSettings:Nexmo.Application.Key"]);
+            string privateKeyString = File.ReadAllText("private.key");
             var rsa = PemParse.DecodePEMKey(privateKeyString);
             var jwtToken = JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
 
@@ -1028,7 +1028,7 @@ namespace NexmoPSEDemo.Common
             {
                 Number = callDetails.to.Number,
                 Sender = callDetails.from.Number,
-                Text = "We have called you because of an alarm has been triggered in your house. You have confirmed reception of our alert. For any further help please reply to this message. The Alaram Systems Ltd team.",
+                Text = "An alarm has been triggered in your house. You have confirmed reception of our alert. For help please reply to this message. The Alarm Systems Ltd team.",
             };
 
             logger.Log("Sending alarm alert SMS message with NCCO: " + JsonConvert.SerializeObject(message, Formatting.Indented));
