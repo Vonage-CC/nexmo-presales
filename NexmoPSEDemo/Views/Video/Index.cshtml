@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewData["Title"] = "Video";
+}
+
+<link href="~/css/video.css" rel="stylesheet" type="text/css">
+<script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
+        </svg>
+        Simple 1-2-1 Video Call
+    </h3>
+
+    <div class="Vlt-grid">
+        <div class="Vlt-col">
+            <div class="Vlt-callout Vlt-callout--tip">
+                <i></i>
+                <div class="Vlt-callout__content">
+                    Open a new tab, or open this page in another browser to start the call.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="Vlt-grid">
+        <div class="Vlt-col">
+            <h4>Publisher</h4>
+            <div class="Vlt-card Vlt-article">
+                <div id="publisher" class="videoPlayer"></div>
+            </div>
+        </div>
+        <div class="Vlt-col">
+            <h4>Subscriber</h4>
+            <div class="Vlt-card Vlt-article">
+                <div id="subscriber" class="videoPlayer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/js/video.js"></script>

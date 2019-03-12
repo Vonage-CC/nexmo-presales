@@ -33,7 +33,7 @@
                 <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="registration">2FA</a></li>
                 <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="messaging">Messaging</a></li>
                 <li class="Vlt-tabs__link"><a href="http://jon.nexmodemo.com/vstitchapp/index.html">In-App Messaging</a></li>
-                <li class="Vlt-tabs__link"><a href="https://tokbox-reference-apps.herokuapp.com">Video</a></li>
+                <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="video">Video</a></li>
                 <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="validation">Number Lookup</a></li>
                 <li class="Vlt-tabs__link"><a asp-action="index" asp-controller="voice">Voice</a></li>
             </ul>
@@ -183,30 +183,37 @@ loadMenu();
                 <li>
                     <p class="Vlt-sidemenu__trigger">
                         <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-merge-2"></use></svg>
-                        <span class="Vlt-sidemenu__label">Video (external)</span>
+                        <span class="Vlt-sidemenu__label">Video</span>
                     </p>
                     <ul>
                         <li>
+                            <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="video">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">1-2-1 Video Call</span>
+                            </a>
                             <a class="Vlt-sidemenu__link" href="https://tokbox-reference-apps.herokuapp.com/login/telehealth" target="_blank">
                                 <svg>
                                     <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
                                     </use>
                                 </svg>
-                                <span class="Vlt-sidemenu__label">Healthcare</span>
+                                <span class="Vlt-sidemenu__label">Healthcare (external)</span>
                             </a>
                             <a class="Vlt-sidemenu__link" href="https://tokbox-reference-apps.herokuapp.com/login/financial" target="_blank">
                                 <svg>
                                     <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
                                     </use>
                                 </svg>
-                                <span class="Vlt-sidemenu__label">Finance</span>
+                                <span class="Vlt-sidemenu__label">Finance (external)</span>
                             </a>
                             <a class="Vlt-sidemenu__link" href="https://tokbox-reference-apps.herokuapp.com/login/education" target="_blank">
                                 <svg>
                                     <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
                                     </use>
                                 </svg>
-                                <span class="Vlt-sidemenu__label">Education</span>
+                                <span class="Vlt-sidemenu__label">Education (external)</span>
                             </a>
                         </li>
                     </ul>
