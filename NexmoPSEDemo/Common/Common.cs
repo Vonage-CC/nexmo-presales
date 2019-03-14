@@ -54,7 +54,7 @@ namespace NexmoPSEDemo.Common
             // use this for Mac OS
             logDirectory = "/Volumes/GoogleDrive/My Drive/Documents/nexmo/visual studio apps/Nexmo PSE Demo/nexmo-presales/NexmoPSEDemo/Logs/";
             // use this for PC
-            if(Environment.OSVersion.Platform.ToString().StartsWith("Win"))
+            if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
                 logDirectory = configuration["appSettings:Logs.Path"];
             }
@@ -117,7 +117,7 @@ namespace NexmoPSEDemo.Common
                 logger.Log(Level.Exception, "Blob upload completed successfully.");
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 logger.Log(Level.Exception, "Blob upload did not succeed: " + e.Message);
             }
@@ -135,7 +135,7 @@ namespace NexmoPSEDemo.Common
                 if (item.GetType() == typeof(CloudBlockBlob))
                 {
                     CloudBlockBlob blob = (CloudBlockBlob)item;
-                    if(blob.Name == blockBlob)
+                    if (blob.Name == blockBlob)
                     {
                         blobValue = blob.DownloadTextAsync().Result;
                     }
@@ -178,7 +178,7 @@ namespace NexmoPSEDemo.Common
 
             string privateKeyString = File.ReadAllText("private.key");
             var rsa = PemParse.DecodePEMKey(privateKeyString);
-            var jwtToken = JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
+            var jwtToken = Jose.JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
 
             return jwtToken;
         }
@@ -319,7 +319,7 @@ namespace NexmoPSEDemo.Common
                 logger.Log(rootObj);
                 request.Content = new StringContent(rootObj, Encoding.UTF8, "application/json");
 
-                using(var client = new HttpClient())
+                using (var client = new HttpClient())
                 {
                     var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
 
@@ -337,7 +337,7 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Warning, response.StatusCode.ToString());
                         logger.Log(Level.Warning, response.ReasonPhrase);
                     }
-                }                
+                }
             }
             catch (Exception e)
             {
@@ -530,8 +530,7 @@ namespace NexmoPSEDemo.Common
                 var bargeInAction = new BargeInTTSNcco()
                 {
                     action = "talk",
-                    text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.",
-                    bargeIn = true
+                    text = "Hello. what I can I do for you today?"
                 };
                 ivrInputNcco += JsonConvert.SerializeObject(bargeInAction, Formatting.Indented);
 
@@ -551,6 +550,80 @@ namespace NexmoPSEDemo.Common
 
                 jsonRequestContent = ivrInputNcco;
                 logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return jsonRequestContent;
+        }
+
+        public static string AnswerVoiceAssistantCall(VoiceInboundObject voiceInbound, Logger logger, IConfigurationRoot configuration)
+        {
+            var request = new HttpRequestMessage();
+            string jsonRequestContent = String.Empty;
+            var isFrench = voiceInbound.To.StartsWith("33");
+            string welcomeText = isFrench ? "Bonjour. Comment puis-je vous aider aujourd'hui?" : "Hello. What I can do for you today?";
+            List<string> context = new List<string>(){
+                "what is my nexmo balance", "what are my nexmo numbers", "what time is it", "call my best friend"
+            };
+            if (isFrench)
+            {
+                context = new List<string>(){
+                    "quel est mon solde chez Nexmo", "quels sont mes numeros Nexmo", "quelle heure est-il", "appel mon meilleur ami"
+                };
+            }
+
+            try
+            {
+                // Open the NCCO json string
+                string asrInputNcco = "[";
+
+                var talkAction = new BasicTTSNcco()
+                {
+                    action = "talk",
+                    text = welcomeText
+                };
+                asrInputNcco += JsonConvert.SerializeObject(talkAction, Formatting.Indented);
+
+                // Add the separator between the various actions
+                asrInputNcco += ",";
+
+                var speech = new Speech()
+                {
+                    enable = "true",
+                    context = context,
+                    language = isFrench ? "fr-fr" : "en-uk",
+                    UUID = voiceInbound.Uuid,
+                    priority = "1"
+                };
+                var dtmf = new Dtmf()
+                {
+                    enable = "true",
+                    priority = null
+                };
+                var asrInputObject = new AsrInputObject()
+                {
+                    action = "input",
+                    speech = speech,
+                    dtmf = dtmf,
+                    eventUrl = new List<string>()
+                    {
+                        "https://nexmopsedemo.azurewebsites.net/vapi/asrassistant"
+                    }
+                };
+                asrInputNcco += JsonConvert.SerializeObject(asrInputObject, Formatting.Indented, new JsonSerializerSettings()
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+                // Close the NCCO json string
+                asrInputNcco += "]";
+
+                jsonRequestContent = asrInputNcco;
+                logger.Log("Call Assistant Input NCCO: " + jsonRequestContent);
             }
             catch (Exception e)
             {
@@ -1043,7 +1116,7 @@ namespace NexmoPSEDemo.Common
                 logger.Log(messageDetails);
             }
 
-            if(smsResults.messages[0].status == "0")
+            if (smsResults.messages[0].status == "0")
             {
                 // Send an NCCO back to confirm the acknowledgement has been received
                 var confirmAction = new List<BasicTTSNcco>()
@@ -1121,7 +1194,7 @@ namespace NexmoPSEDemo.Common
             // Close the NCCO json string
             ivrInputNcco += "]";
 
-            return ivrInputNcco;            
+            return ivrInputNcco;
         }
     }
 }

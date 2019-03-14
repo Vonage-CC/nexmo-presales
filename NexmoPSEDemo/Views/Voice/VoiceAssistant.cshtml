@@ -1,0 +1,46 @@
+﻿@model VoiceAssitantModel
+@{
+    ViewData["Title"] = "Voice Assistant";
+}
+
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-rocket"></use>
+        </svg>
+        Voice Assistant
+    </h3>
+
+    <form method="post">
+        <div class="Vlt-grid">
+            <div class="Vlt-col">
+                <div class="Vlt-card Vlt-article">
+                    <ul class="Vlt-list Vlt-list--big-number">
+                        <li>
+                            <div class="Vlt-form__element">
+                                <label class="Vlt-label" for="from">Please select a number to call to our voice assistant in your language</label>
+                                <div class="Vlt-input">
+                                    <select name="language">
+                                        <option value="FR" selected="selected">@ViewData["From.FR"] (France)</option>
+                                        <option value="UK">@ViewData["From.UK"] (UK)</option>
+                                    </select>
+                                </div>
+
+                                <div class="Vlt-callout Vlt-callout--shoutout">
+                                    <i></i>
+                                    <div class="Vlt-callout__content">
+                                        In real life the assistant would be triggered by a voice command into a box.
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="Vlt-col">
+                @{Html.RenderPartial("StatusView"); }
+            </div>
+        </div>
+    </form>
+</div>
+

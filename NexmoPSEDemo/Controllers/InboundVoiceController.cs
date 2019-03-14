@@ -56,8 +56,11 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
+                    var callStatus = JsonConvert.DeserializeObject<CallStatus>(value.Result, new JsonSerializerSettings {
+                        NullValueHandling = NullValueHandling.Ignore
+                    });
                     logger.Log("Voice Status update from: " + host);
-                    logger.Log("Voice Status update body: " + value.Result);
+                    logger.Log("Voice Status update body: " + JsonConvert.SerializeObject(callStatus, Formatting.Indented));
                 }
             }
             catch (Exception e)
@@ -94,7 +97,7 @@ namespace NexmoPSEDemo.Controllers
                 {
                     var value = reader.ReadToEndAsync();
                     var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
-                    ncco = NexmoApi.AnswerVoiceCall(logger, configuration);
+                    ncco = NexmoApi.AnswerVoiceAssistantCall(voiceInboundObject, logger, configuration);
                     logger.Log("Voice Inbound from: " + host);
                     logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
                 }

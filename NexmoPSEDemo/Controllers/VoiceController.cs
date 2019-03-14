@@ -133,5 +133,13 @@ namespace NexmoPSEDemo.Controllers
 
             return View();
         }
+
+        public IActionResult VoiceAssistant()
+        {
+            ViewData["From.FR"] = configuration["appSettings:Nexmo.Application.Number.From.FR"];
+            ViewData["From.UK"] = configuration["appSettings:Nexmo.Application.Number.From.UK"];
+
+            return View();
+        }
     }
 }

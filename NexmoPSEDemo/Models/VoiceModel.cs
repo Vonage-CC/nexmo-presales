@@ -130,6 +130,23 @@ namespace NexmoPSEDemo.Models
         public Links _links { get; set; }
     }
 
+    public class CallStatus
+    {
+        public DateTime end_time { get; set; }
+        public string uuid { get; set; }
+        public string network { get; set; }
+        public string duration { get; set; }
+        public DateTime start_time { get; set; }
+        public string rate { get; set; }
+        public string price { get; set; }
+        public string from { get; set; }
+        public string to { get; set; }
+        public string conversation_uuid { get; set; }
+        public string status { get; set; }
+        public string direction { get; set; }
+        public DateTime timestamp { get; set; }
+    }
+
     public class CallDetails
     {
         public string uuid { get; set; }
@@ -145,5 +162,33 @@ namespace NexmoPSEDemo.Models
         public To to { get; set; }
         public From from { get; set; }
         public Links _links { get; set; }
+    }
+
+    public class VoiceAssitantModel
+    {
+        public string language { get; set; }
+    }
+
+    public class Speech
+    {
+        public string enable { get; set; }
+        public List<string> context { get; set; }
+        public string language { get; set; }
+        public string UUID { get; set; }
+        public string priority { get; set; }
+    }
+
+    public class Dtmf
+    {
+        public string enable { get; set; }
+        public string priority { get; set; }
+    }
+
+    public class AsrInputObject
+    {
+        public string action { get; set; }
+        public Speech speech { get; set; }
+        public Dtmf dtmf { get; set; }
+        public List<string> eventUrl { get; set; }
     }
 }
