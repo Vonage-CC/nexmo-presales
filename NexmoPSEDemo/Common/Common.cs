@@ -98,36 +98,36 @@ namespace NexmoPSEDemo.Common
 
     public static class Storage
     {
-        public static CloudBlobContainer GetCloudBlobContainer()
+        public static CloudBlobContainer GetCloudBlobContainer(string containerReference)
         {
             var configuration = Configuration.GetConfigFile();
             var connString = configuration["ConnectionStrings:AzureStorageConnectionString"];
             var storageAccount = CloudStorageAccount.Parse(connString);
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("vapi-connect-container");
+            CloudBlobContainer container = blobClient.GetContainerReference(containerReference);
             return container;
         }
 
-        public static async Task<bool> UploadBlobAsync(CloudBlobContainer container, Logger logger, string recipient, string blockBlob)
+        public static async Task<bool> UploadBlobAsync(CloudBlobContainer container, Logger logger, string content, string blockBlob)
         {
             CloudBlockBlob blob = container.GetBlockBlobReference(blockBlob);
             try
             {
-                await blob.UploadTextAsync("{\"recipient\": \"" + recipient + "\"}");
-                logger.Log(Level.Exception, "Blob upload completed successfully.");
+                await blob.UploadTextAsync(content);
+                logger.Log("Blob upload completed successfully.");
                 return true;
             }
             catch (Exception e)
             {
-                logger.Log(Level.Exception, "Blob upload did not succeed: " + e.Message);
+                logger.Log(Level.Exception, "Blob upload failed: " + e.Message);
             }
 
             return false;
         }
 
-        public static string GetBlob(string blockBlob)
+        public static string GetBlob(string blockBlob, string containerReference)
         {
-            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlobContainer container = GetCloudBlobContainer(containerReference);
             string blobValue = string.Empty;
             var blobs = container.ListBlobsSegmentedAsync(new BlobContinuationToken() { NextMarker = "" }).Result;
             foreach (IListBlobItem item in blobs.Results)
@@ -723,6 +723,16 @@ namespace NexmoPSEDemo.Common
             });
         }
 
+        // OpenTok API
+        public static void StoreOpenTokSession(string containerReference, Logger logger, string clientSession, string blobName)
+        {
+            CloudBlobContainer container = Storage.GetCloudBlobContainer(containerReference);
+            logger.Log("Blob container created if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString());
+
+            var blobUpload = Storage.UploadBlobAsync(container, logger, clientSession, blobName);
+            logger.Log("The session has been stored successfully.");
+        }
+
         // Shared methods to be used by Nexmo APIs methods
         private static Client GenerateNexmoClient(IConfigurationRoot configuration)
         {
@@ -1169,7 +1179,7 @@ namespace NexmoPSEDemo.Common
             ivrInputNcco += ",";
 
             // Get the recipient's phone number to use in the endpoint
-            string recipientBlob = Storage.GetBlob("alarmAlert");
+            string recipientBlob = Storage.GetBlob("alarmAlert", "vapi-connect-container");
             VoiceRecipient voiceRecipient = JsonConvert.DeserializeObject<VoiceRecipient>(recipientBlob);
 
             // Add the input action to the NCCO

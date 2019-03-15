@@ -75,12 +75,12 @@ namespace NexmoPSEDemo.Controllers
                 logger.Open();
 
                 // Get an instance of the blob storage to store the phone number to connect to
-                CloudBlobContainer container = Storage.GetCloudBlobContainer();
+                CloudBlobContainer container = Storage.GetCloudBlobContainer("vapi-connect-container");
                 ViewData["feedback"] = "Create a blob container if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString() + " \n";
                 ViewData["feedback"] += "The storage container has been loaded successfully. \n";
                 logger.Log(container.Name + " has been loaded successfully.");
 
-                var blobUpload = Storage.UploadBlobAsync(container, logger, string.Empty, "alarmAlert");
+                var blobUpload = Storage.UploadBlobAsync(container, logger, "{\"recipient\": \"\"}", "alarmAlert");
                 ViewData["feedback"] += "The recipient's phone number has been reset successfully.";
                 logger.Log("The recipient's phone number has been reset successfully.");
             }
@@ -112,12 +112,12 @@ namespace NexmoPSEDemo.Controllers
                 logger.Open();
 
                 // Get an instance of the blob storage to store the phone number to connect to
-                CloudBlobContainer container = Storage.GetCloudBlobContainer();
+                CloudBlobContainer container = Storage.GetCloudBlobContainer("vapi-connect-container");
                 ViewData["feedback"] = "Create a blob container if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString() + " \n";
                 ViewData["feedback"] += "The storage container has been loaded successfully. \n";
                 logger.Log(container.Name + " has been loaded successfully.");
 
-                var blobUpload = Storage.UploadBlobAsync(container, logger, voiceModel.To, "alarmAlert");
+                var blobUpload = Storage.UploadBlobAsync(container, logger, "{\"recipient\": \"" + voiceModel.To + "\"}", "alarmAlert");
                 ViewData["feedback"] += "The recipient's phone number " + voiceModel.To + " has been saved successfully.";
                 logger.Log("The recipient's phone number " + voiceModel.To + " has been saved successfully.");
             }
