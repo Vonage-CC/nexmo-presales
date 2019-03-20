@@ -87,13 +87,10 @@ namespace NexmoPSEDemo.Controllers
                 logger = NexmoLogger.GetLogger("InboundMessagingSmsLogger");
                 logger.Open();
 
-                var headers = Request.Headers;
-                var host = headers["Host"];
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
                     var moSmsObject = JsonConvert.DeserializeObject<InboundSmsObject>(value.Result);
-                    logger.Log("Messaging SMS Inbound from: " + host);
                     logger.Log("Messaging SMS Inbound body: " + JsonConvert.SerializeObject(moSmsObject, Formatting.Indented));
                     logger.Log("Messaging SMS Inbound - The text message entered is: " + moSmsObject.text);
                     logger.Log("Messaging SMS Inbound - The text message reciptient is: " + moSmsObject.to);

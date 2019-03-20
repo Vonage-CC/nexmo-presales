@@ -91,20 +91,62 @@ namespace NexmoPSEDemo.Controllers
                 logger = NexmoLogger.GetLogger("InboundVoiceLogger");
                 logger.Open();
 
-                var headers = Request.Headers;
-                var host = headers["Host"];
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
+                    logger.Log("Voice inbound request content: " + value.Result);
                     var voiceInboundObject = JsonConvert.DeserializeObject<VoiceInboundObject>(value.Result);
-                    ncco = NexmoApi.AnswerVoiceAssistantCall(voiceInboundObject, logger, configuration);
-                    logger.Log("Voice Inbound from: " + host);
                     logger.Log("Voice Inbound body: " + JsonConvert.SerializeObject(voiceInboundObject, Formatting.Indented));
+
+                    ncco = NexmoApi.AnswerVoiceAssistantCall(voiceInboundObject, logger, configuration);
                 }
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, "Voice Inbound Exception", e);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return ncco;
+        }
+
+        [Route("vapi/asrassistant")]
+        public string Asr()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            string ncco = String.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("AsrVoiceLogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    logger.Log("ASR input raw request content: " + value.Result);
+                    var asrInputObject = JsonConvert.DeserializeObject<AsrInputObject>(value.Result);
+                    logger.Log("ASR input body: " + JsonConvert.SerializeObject(asrInputObject, Formatting.Indented));
+
+                    var voiceInputObject = new VoiceInputObject()
+                    {
+                        Conversation_uuid = asrInputObject.conversation_uuid,
+                        Uuid = asrInputObject.uuid,
+                        Dtmf = "1",
+                        Timed_out = true,
+                        Timestamp = asrInputObject.timestamp
+                    };
+                    ncco = NexmoApi.AnswerVoiceCallInput(voiceInputObject, logger, configuration);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, "ASR Inbound Exception", e);
             }
             finally
             {
@@ -129,13 +171,10 @@ namespace NexmoPSEDemo.Controllers
                 logger = NexmoLogger.GetLogger("InputVoiceLogger");
                 logger.Open();
 
-                var headers = Request.Headers;
-                var host = headers["Host"];
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
                     var voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(value.Result);
-                    logger.Log("Voice Input from: " + host);
                     logger.Log("Voice Input body: " + JsonConvert.SerializeObject(voiceInputObject, Formatting.Indented));
                     ncco = NexmoApi.AnswerVoiceCallInput(voiceInputObject, logger, configuration);
                 }

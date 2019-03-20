@@ -530,7 +530,8 @@ namespace NexmoPSEDemo.Common
                 var bargeInAction = new BargeInTTSNcco()
                 {
                     action = "talk",
-                    text = "Hello. what I can I do for you today?"
+                    text = "Your sensor in the kitchen has detected some movement. The alarm has been triggered. To call your emergency contact, please press 1. Or to acknowledge receipt of this alert, please press 2.",
+                    bargeIn = true
                 };
                 ivrInputNcco += JsonConvert.SerializeObject(bargeInAction, Formatting.Indented);
 
@@ -565,26 +566,29 @@ namespace NexmoPSEDemo.Common
             var request = new HttpRequestMessage();
             string jsonRequestContent = String.Empty;
             var isFrench = voiceInbound.To.StartsWith("33");
-            string welcomeText = isFrench ? "Bonjour. Comment puis-je vous aider aujourd'hui?" : "Hello. What I can do for you today?";
+            string welcomeText = isFrench ? "Bonjour! Comment puis-je vous aider aujourd'hui?" : "Hello! What can I do for you today?";
+            string voiceName = isFrench ? "Celine" : "Amy";
             List<string> context = new List<string>(){
                 "what is my nexmo balance", "what are my nexmo numbers", "what time is it", "call my best friend"
             };
             if (isFrench)
             {
                 context = new List<string>(){
-                    "quel est mon solde chez Nexmo", "quels sont mes numeros Nexmo", "quelle heure est-il", "appel mon meilleur ami"
+                    "quel est mon solde chez Nexmo", "quels sont mes numeros Nexmo", "quelle heure est-il", "appels mon meilleur ami"
                 };
             }
 
             try
             {
                 // Open the NCCO json string
-                string asrInputNcco = "[";
+                string asrInputNcco = string.Empty;
+                asrInputNcco = "[";
 
                 var talkAction = new BasicTTSNcco()
                 {
                     action = "talk",
-                    text = welcomeText
+                    text = welcomeText,
+                    voiceName = voiceName
                 };
                 asrInputNcco += JsonConvert.SerializeObject(talkAction, Formatting.Indented);
 
@@ -593,18 +597,15 @@ namespace NexmoPSEDemo.Common
 
                 var speech = new Speech()
                 {
-                    enable = "true",
                     context = context,
-                    language = isFrench ? "fr-fr" : "en-uk",
-                    UUID = voiceInbound.Uuid,
-                    priority = "1"
+                    language = isFrench ? "fr-fr" : "en-gb",
+                    uuid = new List<string>() { voiceInbound.Uuid }
                 };
                 var dtmf = new Dtmf()
                 {
-                    enable = "true",
-                    priority = null
+                    submitOnHash = false
                 };
-                var asrInputObject = new AsrInputObject()
+                var asrInputObject = new AsrInputNcco()
                 {
                     action = "input",
                     speech = speech,
@@ -1173,14 +1174,20 @@ namespace NexmoPSEDemo.Common
                 action = "talk",
                 text = "Please wait while we connect you"
             };
-            ivrInputNcco += JsonConvert.SerializeObject(basicAction, Formatting.Indented);
+            ivrInputNcco += JsonConvert.SerializeObject(basicAction, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
 
             // Add the separator between the various actions
             ivrInputNcco += ",";
 
             // Get the recipient's phone number to use in the endpoint
             string recipientBlob = Storage.GetBlob("alarmAlert", "vapi-connect-container");
-            VoiceRecipient voiceRecipient = JsonConvert.DeserializeObject<VoiceRecipient>(recipientBlob);
+            VoiceRecipient voiceRecipient = JsonConvert.DeserializeObject<VoiceRecipient>(recipientBlob, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
 
             // Add the input action to the NCCO
             var endpoint = new List<VoiceEndpoint>()
@@ -1199,7 +1206,10 @@ namespace NexmoPSEDemo.Common
                 from = configuration["appSettings:Nexmo.Application.Number.From.UK"],
                 endpoint = endpoint
             };
-            ivrInputNcco += JsonConvert.SerializeObject(voiceConnectAction, Formatting.Indented);
+            ivrInputNcco += JsonConvert.SerializeObject(voiceConnectAction, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
 
             // Close the NCCO json string
             ivrInputNcco += "]";

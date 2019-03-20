@@ -41,6 +41,7 @@ namespace NexmoPSEDemo.Models
     {
         public string action { get; set; }
         public string text { get; set; }
+        public string voiceName { get; set; }
     }
 
     public class BargeInTTSNcco
@@ -174,21 +175,26 @@ namespace NexmoPSEDemo.Models
         public string enable { get; set; }
         public List<string> context { get; set; }
         public string language { get; set; }
-        public string UUID { get; set; }
+        public List<string> uuid { get; set; }
         public string priority { get; set; }
+        public int endOnSilence { get; set; }
     }
 
     public class Dtmf
     {
-        public string enable { get; set; }
+        public bool enable { get; set; }
         public string priority { get; set; }
+        public bool submitOnHash { get; set; }
+        public int maxDigits { get; set; }
+        public int timeOut { get; set; }
     }
 
-    public class AsrInputObject
+    public class AsrInputNcco
     {
         public string action { get; set; }
         public Speech speech { get; set; }
         public Dtmf dtmf { get; set; }
         public List<string> eventUrl { get; set; }
+        public string eventMethod { get; set; }
     }
 }
