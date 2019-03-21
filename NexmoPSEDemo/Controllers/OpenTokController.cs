@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Text;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -117,14 +118,8 @@ namespace NexmoPSEDemo.Controllers
                         if (sessionBlob.Name == sessionName.Name)
                         {
                             sessionExist = true;
+                            clientSession = sessionBlob;
 
-                            clientSession.ApiKey = sessionBlob.ApiKey;
-                            clientSession.ApiSecret = sessionBlob.ApiSecret;
-                            clientSession.ArchiveMode = sessionBlob.ArchiveMode.ToString();
-                            clientSession.Id = sessionBlob.Id;
-                            clientSession.Location = sessionBlob.Location;
-                            clientSession.MediaMode = sessionBlob.MediaMode.ToString();
-                            clientSession.Name = sessionBlob.Name;
                             // Create an opentok token
                             clientSession.Token = openTok.GenerateToken(sessionBlob.Id);
 
@@ -156,7 +151,7 @@ namespace NexmoPSEDemo.Controllers
                     logger.Log("OpenTok Session object: " + JsonConvert.SerializeObject(session, Formatting.Indented));
                     logger.Log("OpenTok Client Session Object generated with token: " + JsonConvert.SerializeObject(clientSession, Formatting.Indented));
 
-                    NexmoApi.StoreOpenTokSession("opentok-container", logger, JsonConvert.SerializeObject(sessions), blobName);
+                    NexmoApi.StoreOpenTokData("opentok-container", logger, JsonConvert.SerializeObject(sessions), blobName);
                 }
 
 
@@ -208,6 +203,9 @@ namespace NexmoPSEDemo.Controllers
                 logger.Log("OpenTok Session archiving started with archive ID: " + archive.Id);
                 logger.Log("OpenTok Session archiving started with parameters: " + JsonConvert.SerializeObject(archive, Formatting.Indented));
 
+                // store the archive ID to be able to stop the recording later
+                StoreArchiveID(logger, archive);
+
                 var archiveId = archive.Id;
                 return archiveId.ToString();
             }
@@ -217,6 +215,39 @@ namespace NexmoPSEDemo.Controllers
                 logger.Log("OpenTok Error starting archiving the session: " + e.StackTrace);
 
                 return e.Message;
+            }
+        }
+
+        private void StoreArchiveID(Logger logger, OpenTokSDK.Archive archive)
+        {
+            var blobName = "openTokArchives";
+            List<OpenTokSDK.Archive> archives = new List<OpenTokSDK.Archive>();
+
+            // Get an instance of the blob storage to store the session data
+            CloudBlobContainer container = Storage.GetCloudBlobContainer("opentok-container");
+            logger.Log("Blob container created if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString());
+
+            string archiveBlobs = Storage.GetBlob(blobName, "opentok-container");
+            if (archiveBlobs.StartsWith('['))
+                archives = JsonConvert.DeserializeObject<List<OpenTokSDK.Archive>>(archiveBlobs);
+            else if (archiveBlobs.StartsWith('{'))
+                archives.Add(JsonConvert.DeserializeObject<OpenTokSDK.Archive>(archiveBlobs));
+
+            if (archives.Where(s => s.Id == archive.Id).Any())
+            {
+                var archiveJsonFormatted = JsonConvert.SerializeObject(archives.Where(s => s.Id == archive.Id).FirstOrDefault(), Formatting.Indented);
+                logger.Log("OpenTok archive already exist: " + archiveJsonFormatted);
+            }
+            else
+            {
+                // Add the session to the blobs to be uploaded
+                archives.Add(archive);
+
+                logger.Log("OpenTok Archive created with session ID: " + archive.SessionId);
+                logger.Log("OpenTok Archive created with archive ID: " + archive.Id);
+                logger.Log("OpenTok Archive object: " + JsonConvert.SerializeObject(archive, Formatting.Indented));
+
+                NexmoApi.StoreOpenTokData("opentok-container", logger, JsonConvert.SerializeObject(archives), blobName);
             }
         }
 
@@ -248,8 +279,19 @@ namespace NexmoPSEDemo.Controllers
                     logger.Log("OpenTok Session Recording end Request body: " + value);
                 }
 
+                // Get the archive ID from the session ID
+                var blobName = "openTokArchives";
+                CloudBlobContainer container = Storage.GetCloudBlobContainer("opentok-container");
+                string archiveBlobs = Storage.GetBlob(blobName, "opentok-container");
+                var archives = JsonConvert.DeserializeObject<List<OpenTokSDK.Archive>>(archiveBlobs);
+
+                if (archives.Count > 0)
+                    stopArchiveRequest.archiveId = archives.Where(a => a.SessionId == stopArchiveRequest.sessionId).FirstOrDefault().Id;
+                else
+                    return "There is no archive for this session.";
+
                 // Start the recording
-                var archive = openTok.StopArchive(stopArchiveRequest.archiveId);
+                var archive = openTok.StopArchive(stopArchiveRequest.archiveId.ToString());
 
                 logger.Log("OpenTok Session archiving ended for session ID: " + archive.SessionId);
                 logger.Log("OpenTok Session archiving ended with archive ID: " + archive.Id);

@@ -725,12 +725,12 @@ namespace NexmoPSEDemo.Common
         }
 
         // OpenTok API
-        public static void StoreOpenTokSession(string containerReference, Logger logger, string clientSession, string blobName)
+        public static void StoreOpenTokData(string containerReference, Logger logger, string data, string blobName)
         {
             CloudBlobContainer container = Storage.GetCloudBlobContainer(containerReference);
             logger.Log("Blob container created if it does not exist: " + container.CreateIfNotExistsAsync().Result.ToString());
 
-            var blobUpload = Storage.UploadBlobAsync(container, logger, clientSession, blobName);
+            var blobUpload = Storage.UploadBlobAsync(container, logger, data, blobName);
             logger.Log("The session has been stored successfully.");
         }
 

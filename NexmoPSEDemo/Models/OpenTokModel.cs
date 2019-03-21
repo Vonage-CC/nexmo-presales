@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
 using OpenTokSDK;
 
 namespace NexmoPSEDemo.Models
@@ -9,6 +10,7 @@ namespace NexmoPSEDemo.Models
     public class ClientSession
     {
         public string ApiKey { get; set; }
+        [JsonIgnore]
         public string ApiSecret { get; set; }
         public string ArchiveMode { get; set; }
         public string Id { get; set; }
@@ -66,7 +68,8 @@ namespace NexmoPSEDemo.Models
 
     public class StopArchiveRequest
     {
-        public string archiveId { get; set; }
+        public Guid archiveId { get; set; }
+        public string sessionId { get; set; }
     }
 
     public class Archive

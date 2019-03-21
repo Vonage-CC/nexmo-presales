@@ -13,6 +13,7 @@
     <PackageReference Include="Nexmo.Csharp.Client" Version="3.2.4" />
     <PackageReference Include="nspring" Version="1.4.5304.31350" />
     <PackageReference Include="OpenTok" Version="3.1.0" />
+    <PackageReference Include="System.Linq" Version="4.3.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>
   <ItemGroup>
