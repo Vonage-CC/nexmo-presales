@@ -1,7 +1,9 @@
 ﻿using Jose;
+using Microsoft.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
 using Nexmo.Api;
 using NexmoPSEDemo.Models;
@@ -98,6 +100,7 @@ namespace NexmoPSEDemo.Common
 
     public static class Storage
     {
+        // Blob storage
         public static CloudBlobContainer GetCloudBlobContainer(string containerReference)
         {
             var configuration = Configuration.GetConfigFile();
@@ -153,6 +156,41 @@ namespace NexmoPSEDemo.Common
             }
 
             return blobValue;
+        }
+
+        // Queue storage
+        public static CloudQueue CreateQueue(string name, IConfigurationRoot configuration, Logger logger)
+        {
+            // Get the connection string
+            var connString = configuration["ConnectionStrings:AzureStorageConnectionString"];
+            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(connString);
+
+            // Create the queue service client
+            CloudQueueClient queueClient = storageAccount.CreateCloudQueueClient();
+
+            // Retrieve a queue or create it if it does not exist
+            CloudQueue queue = queueClient.GetQueueReference(name);
+            queue.CreateIfNotExistsAsync();
+
+            return queue;
+        }
+
+        public static async void InsertMessageInQueue(CloudQueue queue, string message, Logger logger)
+        {
+            CloudQueueMessage queueMessage = new CloudQueueMessage(message);
+            await queue.AddMessageAsync(queueMessage);
+        }
+
+        public static CloudQueueMessage GetNextMessage(CloudQueue queue, Logger logger)
+        {
+            // Get the next message
+            var message = queue.GetMessageAsync();
+
+            // De-queue this message
+            if(message.Result != null)
+                queue.DeleteMessageAsync(message.Result);
+
+            return message.Result;
         }
     }
 

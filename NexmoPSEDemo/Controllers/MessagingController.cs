@@ -15,13 +15,11 @@ namespace NexmoPSEDemo.Controllers
         // load the configuration file to access Nexmo's API credentials
         readonly IConfigurationRoot configuration = Common.Configuration.GetConfigFile();
 
-        // GET: /<controller>/
         public IActionResult Index()
         {
             return View();
         }
 
-        // POST
         [HttpPost]
         public IActionResult Index(MessagingModel messagingModel)
         {
@@ -82,13 +80,11 @@ namespace NexmoPSEDemo.Controllers
             return View();
         }
 
-        // GET: /<controller>/
         public IActionResult Failover()
         {
             return View();
         }
 
-        // POST
         [HttpPost]
         public IActionResult Failover(FailoverModel failoverModel)
         {
@@ -123,6 +119,11 @@ namespace NexmoPSEDemo.Controllers
                 logger.Log(Level.Warning, "Model State Values: " + ModelState.Values);
             }
 
+            return View();
+        }
+
+        public IActionResult Chat()
+        {
             return View();
         }
     }

@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.WindowsAzure.Storage.Queue;
 using Newtonsoft.Json;
+using Nexmo.Api;
 using NexmoPSEDemo.Common;
 using NexmoPSEDemo.Models;
 using NSpring.Logging;
@@ -21,23 +25,39 @@ namespace NexmoPSEDemo.Controllers
         // load the configuration file to access Nexmo's API credentials
         readonly IConfigurationRoot configuration = Common.Configuration.GetConfigFile();
 
-        // GET: api/<controller>
+        // SMS endpoints
         [HttpGet]
-        [Route("api/[controller]")]
-        public IEnumerable<string> Get()
+        [Route("messaging/sms/queue/next")]
+        public string NexmoSMS()
         {
-            return new string[] { "value1", "value2" };
+            // create a logger placeholder
+            Logger logger = null;
+            var inboundSMS = new InboundSmsObject();
+            var messageResult = string.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingSmsQueueLogger");
+                logger.Open();
+
+                var queue = Storage.CreateQueue("chat", configuration, logger);
+                var message = Storage.GetNextMessage(queue, logger);
+
+                if (message != null)
+                {
+                    messageResult = message.AsString;
+                    inboundSMS = JsonConvert.DeserializeObject<InboundSmsObject>(message.AsString);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return "Error";
+            }
+
+            return messageResult;
         }
 
-        // GET api/<controller>/5
-        //[HttpGet("{id}")]
-        //[Route("messaging/sms/{id}")]
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        // POST messaging/sms/status
         [HttpPost]
         [Route("messaging/sms/status")]
         public HttpResponseMessage SmsStatus()
@@ -51,12 +71,9 @@ namespace NexmoPSEDemo.Controllers
                 logger = NexmoLogger.GetLogger("MessagingSmsStatusLogger");
                 logger.Open();
 
-                var headers = Request.Headers;
-                var host = headers["Host"];
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    logger.Log("Messaging SMS Status update from: " + host);
                     logger.Log("Messaging SMS Status update body: " + value.Result);
                 }
             }
@@ -97,22 +114,27 @@ namespace NexmoPSEDemo.Controllers
 
                     if (moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.FR"] || moSmsObject.to == configuration["appSettings:Nexmo.Application.Number.From.UK"])
                     {
-                        if(moSmsObject.text.ToLower().Trim() == "trigger")
+                        if (moSmsObject.text.ToLower().Trim() == "trigger")
                         {
                             VoiceModel voiceModel = new VoiceModel()
                             {
                                 From = moSmsObject.to,
                                 To = moSmsObject.msisdn
                             };
+
                             var alertNcco = NexmoApi.MakeAlertTTSCall(voiceModel, logger, configuration);
                             if (alertNcco)
                             {
-                                httpRequest.CreateResponse(System.Net.HttpStatusCode.UnprocessableEntity);
+                                httpRequest.CreateResponse(HttpStatusCode.UnprocessableEntity);
                             }
                         }
                         else
                         {
-                            logger.Log(Level.Warning, "Messaging SMS Inbound: The text message entered was: " + moSmsObject.text);
+                            // Add the message in a queue to be processed in the chat demo
+                            var queue = Storage.CreateQueue("chat", configuration, logger);
+                            Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(moSmsObject), logger);
+
+                            logger.Log(Level.Warning, "Messaging SMS Inbound added to the queue: " + JsonConvert.SerializeObject(moSmsObject, Formatting.Indented));
                         }
                     }
                 }
@@ -129,6 +151,62 @@ namespace NexmoPSEDemo.Controllers
             }
 
             return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [Route("messaging/sms/send")]
+        public HttpResponseMessage SendSms()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingSendSmsLogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var chatSmsObject = JsonConvert.DeserializeObject<ChatSmsObject>(value.Result);
+                    logger.Log("Messaging Send SMS Chat body: " + JsonConvert.SerializeObject(chatSmsObject, Formatting.Indented));
+                    logger.Log("Messaging Send SMS Chat - The text message entered is: " + chatSmsObject.Text);
+                    logger.Log("Messaging Send SMS Chat - The text message recipient is: " + chatSmsObject.To);
+
+                    if (!string.IsNullOrEmpty(chatSmsObject.Text))
+                    {
+                        var message = new MessagingModel()
+                        {
+                            Sender = configuration["appSettings:Nexmo.Application.Number.From.UK"],
+                            Number = chatSmsObject.To,
+                            Text = chatSmsObject.Text
+                        };
+
+                        var smsResults = NexmoApi.SendSMS(message, configuration, "");
+                        foreach (SMS.SMSResponseDetail responseDetail in smsResults.messages)
+                        {
+                            string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
+                            messageDetails += " \n to: " + responseDetail.to;
+                            messageDetails += " \n at price: " + responseDetail.message_price;
+                            messageDetails += " \n with status: " + responseDetail.status;
+                            logger.Log(messageDetails);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return httpRequest.CreateResponse(HttpStatusCode.OK);
         }
 
         // Messaging endpoints
@@ -203,20 +281,6 @@ namespace NexmoPSEDemo.Controllers
             }
 
             return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
-        }
-
-        // PUT api/<controller>/5
-        [HttpPut("{id}")]
-        [Route("api/[controller]")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        [Route("api/[controller]")]
-        public void Delete(int id)
-        {
         }
     }
 }

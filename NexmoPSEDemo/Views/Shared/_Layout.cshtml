@@ -19,6 +19,7 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
 </head>
 <body class="Vlt-template Vlt-template--sidenav Vlt-template--header">
 
@@ -48,35 +49,35 @@
         <!-- NOTE: the following script is a hacky solution to maintain the (un)collapsed state of the menu -->
         <!-- You can remove it if you're using a framework or you have an alternative way to achieve this -->
         <script>
-loadMenu();
-           function loadMenu() {
-              if(localStorage.getItem('menuCollapse')) {
-                $('#Vlt-sidenav .Vlt-sidemenu__trigger_active').removeClass('Vlt-sidemenu__trigger_active');
-                $('#Vlt-sidenav').addClass('Vlt-sidenav--collapsed');
-              }
-           }</script>
+            loadMenu();
+            function loadMenu() {
+                if (localStorage.getItem('menuCollapse')) {
+                    $('#Vlt-sidenav .Vlt-sidemenu__trigger_active').removeClass('Vlt-sidemenu__trigger_active');
+                    $('#Vlt-sidenav').addClass('Vlt-sidenav--collapsed');
+                }
+            }</script>
         <!-- End of script -->
 
         <div class="Vlt-sidenav__scroll">
             <ul class="Vlt-sidemenu Vlt-sidemenu--rounded">
                 @*<li>
-            <a href="" class="Vlt-sidemenu__link">
-                <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-report"></use></svg>
-                <span class="Vlt-sidemenu__label">Selected item</span>
-            </a>
-        </li>
-        <li>
-            <a class="Vlt-sidemenu__link" href="">
-                <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-whisper"></use></svg>
-                <span class="Vlt-sidemenu__label">Unselected first-level item</span>
-            </a>
-        </li>
-        <li>
-            <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
-                <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-phone"></use></svg>
-                <span class="Vlt-sidemenu__label">Disabled first-level item</span>
-            </a>
-        </li>*@
+                        <a href="" class="Vlt-sidemenu__link">
+                            <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-report"></use></svg>
+                            <span class="Vlt-sidemenu__label">Selected item</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="Vlt-sidemenu__link" href="">
+                            <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-whisper"></use></svg>
+                            <span class="Vlt-sidemenu__label">Unselected first-level item</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
+                            <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-phone"></use></svg>
+                            <span class="Vlt-sidemenu__label">Disabled first-level item</span>
+                        </a>
+                    </li>*@
                 <li role="separator"><h5 class="Vlt-sidemenu__title">Use Cases</h5></li>
                 <li>
                     <p class="Vlt-sidemenu__trigger">
@@ -85,11 +86,11 @@ loadMenu();
                     </p>
                     <ul>
                         @*<li>
-                    <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
-                        <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-ambulance"></use></svg>
-                        <span class="Vlt-sidemenu__label">A disabled page</span>
-                    </a>
-                </li>*@
+                                <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
+                                    <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-ambulance"></use></svg>
+                                    <span class="Vlt-sidemenu__label">A disabled page</span>
+                                </a>
+                            </li>*@
                         <li>
                             <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="registration">
                                 <svg>
@@ -128,13 +129,13 @@ loadMenu();
                             </a>
                         </li>
                         @*<li>
-                    <p class="Vlt-sidemenu__trigger"><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-tag"></use></svg><span class="Vlt-sidemenu__label">Clickable branch</span></p>
-                    <ul>
-                        <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-file-search"></use></svg><span class="Vlt-sidemenu__label">Oh more pages</span></a></li>
-                        <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-grid-two"></use></svg><span class="Vlt-sidemenu__label">And again</span></a></li>
-                        <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-cursor"></use></svg><span class="Vlt-sidemenu__label">And this is it</span></a></li>
-                    </ul>
-                </li>*@
+                                <p class="Vlt-sidemenu__trigger"><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-tag"></use></svg><span class="Vlt-sidemenu__label">Clickable branch</span></p>
+                                <ul>
+                                    <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-file-search"></use></svg><span class="Vlt-sidemenu__label">Oh more pages</span></a></li>
+                                    <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-grid-two"></use></svg><span class="Vlt-sidemenu__label">And again</span></a></li>
+                                    <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-cursor"></use></svg><span class="Vlt-sidemenu__label">And this is it</span></a></li>
+                                </ul>
+                            </li>*@
                     </ul>
                 </li>
                 <li>
@@ -143,6 +144,15 @@ loadMenu();
                         <span class="Vlt-sidemenu__label">Messaging</span>
                     </p>
                     <ul>
+                        <li>
+                            <a class="Vlt-sidemenu__link" asp-action="chat" asp-controller="messaging">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">SMS Chat</span>
+                            </a>
+                        </li>
                         <li>
                             <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="messaging">
                                 <svg>
@@ -301,7 +311,6 @@ loadMenu();
     <!-- If you do, you'll have to replace the following path with the path to your Volta package -->
     <script src="~/js/addons/prism.js"></script>
 
-    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script src="~/js/site.js"></script>
 
     @RenderSection("Scripts", required: false)

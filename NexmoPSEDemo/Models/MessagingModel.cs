@@ -23,6 +23,12 @@ namespace NexmoPSEDemo.Models
         public Message Message { get; set; }
     }
 
+    public class ChatSmsObject
+    {
+        public string To { get; set; }
+        public string Text { get; set; }
+    }
+
     public class TemplateMessagingObject
     {
         public From From { get; set; }
