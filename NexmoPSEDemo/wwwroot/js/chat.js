@@ -1,29 +1,63 @@
-﻿
+﻿var message = { to: '', text: '' };
+var url = "https://nexmopsedemo.azurewebsites.net/";
+var currentDate = '';
+
 $(document).ready(function () {
     $('#chatControl').hide();
 
+    // Setting the url to match the environment where the app is running
+    var currentUrl = window.location.hostname;
+    if (currentUrl === "localhost") {
+        url = "http://localhost:36802/"
+    }
+
     setInterval(function () {
-        $.get("https://nexmopsedemo.azurewebsites.net/messaging/sms/queue/next")
+        $.get(url + "messaging/sms/queue/next")
             .done(function (data) {
                 if (data.length > 0 || data) {
                     // Parse the message object
                     var msg = JSON.parse(data);
 
+                    // Parse the timestamp
+                    var date = msg['message-timestamp'].substring(0, 10);
+                    if (date != currentDate) {
+                        currentDate = date;
+
+                        var chatTemp = document.createElement("div");
+                        $(chatTemp).attr("align", "center");
+                        chatTemp.append(date);
+                        $('#chatTemplate').append(chatTemp, document.createElement("br"));
+                    }
+
+                    var time = msg['message-timestamp'].substring(11);
+                    var chatTime = document.createElement("div");
+                    $(chatTime).addClass("Vlt-badge");
+                    $(chatTime).addClass("Vlt-bg-orange");
+                    $(chatTime).text(time);
+
                     // Build the message to display
-                    var msisdn = $("<strong></strong>").text(msg.msisdn + " : ");
-                    var text = $("<i></i>").text(msg.text);
+                    var msisdn = $("<i></i>").text(msg.msisdn + " : ");
+                    var text = $("<strong></strong>").text(msg.text);
 
                     // Display the message on screen
-                    var chatTemp = document.createElement("div");
-                    $(chatTemp).addClass("Vlt-badge");
-                    chatTemp.append(msisdn[0], text[0]);
-                    $('#chatTemplate').append(chatTemp, document.createElement("br"));
+                    var chatWrapper = document.createElement("div");
+                    $(chatWrapper).addClass("Vlt-right");
+
+                    var badgeWrapper = document.createElement("div");
+                    $(badgeWrapper).addClass("Vlt-badge-combined");
+
+                    var chatBadge = document.createElement("div");
+                    $(chatBadge).addClass("Vlt-badge");
+                    chatBadge.append(msisdn[0], text[0]);
+
+                    $(badgeWrapper).append(chatBadge);
+                    $(badgeWrapper).append(chatTime);
+                    $(chatWrapper).append(badgeWrapper);
+                    $('#chatTemplate').append(chatWrapper, document.createElement("br"));
                 }
             });
     }, 3000);
 });
-
-var message = { to: '', text: '' };
 
 function setNumber() {
     var msisdn = document.getElementById("msisdn").value;
@@ -42,26 +76,51 @@ function setNumber() {
 }
 
 function Send() {
-    // Build the message to display
     message.text = document.getElementById("text").value;
-    var from = $("<strong></strong>").text("You : ");
-    var text = $("<i></i>").text(message.text);
-
-    // Display the message on screen
-    var chatTemp = document.createElement("div");
-    $(chatTemp).addClass("Vlt-badge");
-    $(chatTemp).addClass("Vlt-bg-green");
-    chatTemp.append(from[0], text[0]);
-    $('#chatTemplate').append(chatTemp, document.createElement("br"));
 
     // Send the SMS
     $.ajax({
-        url: "https://nexmopsedemo.azurewebsites.net/messaging/sms/send",
+        url: url + "messaging/sms/send",
         data: JSON.stringify(message),
         cache: false,
         type: 'POST',
         dataType: "json",
         contentType: 'application/json; charset=utf-8'
+    })
+    .done(function (result) {
+        // Build the message to display
+        var from = $("<i></i>").text("You : ");
+        var text = $("<strong></strong>").text(message.text);
+        var date = new Date();
+        var time = date.toLocaleTimeString('fr-fr');
+
+        var chatTime = document.createElement("div");
+        $(chatTime).addClass("Vlt-badge");
+        $(chatTime).addClass("Vlt-bg-blue");
+        $(chatTime).text(time);
+
+        // Display the message on screen
+        var chatBadge = document.createElement("div");
+        $(chatBadge).addClass("Vlt-badge");
+        $(chatBadge).addClass("Vlt-bg-orange");
+        chatBadge.append(from[0], text[0]);
+
+
+        var chatWrapper = document.createElement("div");
+        $(chatWrapper).addClass("Vlt-right");
+
+        var badgeWrapper = document.createElement("div");
+        $(badgeWrapper).addClass("Vlt-badge-combined");
+
+        $(badgeWrapper).append(chatBadge);
+        $(badgeWrapper).append(chatTime);
+        $(chatWrapper).append(badgeWrapper);
+        $('#chatTemplate').append(chatWrapper, document.createElement("br"));
+
+        // Empty the input field
+        $("#text").val('');
+    })
+    .fail(function (e) {
+        alert("An error has occured. Please try again later: " + e.message);
     });
-    $("#text").val('');
 }
