@@ -128,11 +128,23 @@ namespace NexmoPSEDemo.Controllers
                                 httpRequest.CreateResponse(HttpStatusCode.UnprocessableEntity);
                             }
                         }
+                        else if (moSmsObject.text.ToLower().Trim() == "rob")
+                        {
+                            var result = NexmoApi.MakeIvrCallWithMachineDetection(moSmsObject.text, logger, configuration);
+                        }
+                        else if (moSmsObject.text.ToLower().Trim() == "mason")
+                        {
+                            var result = NexmoApi.MakeIvrCallWithMachineDetection(moSmsObject.text, logger, configuration);
+                        }
+                        else if (moSmsObject.text.ToLower().Trim() == "kaine")
+                        {
+                            var result = NexmoApi.MakeIvrCallWithMachineDetection(moSmsObject.text, logger, configuration);
+                        }
                         else
                         {
                             // Add the message in a queue to be processed in the chat demo
                             var queue = Storage.CreateQueue("chat", configuration, logger);
-                            Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(moSmsObject), logger);
+                            Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(moSmsObject), 3000, logger);
 
                             logger.Log(Level.Warning, "Messaging SMS Inbound added to the queue: " + JsonConvert.SerializeObject(moSmsObject, Formatting.Indented));
                         }

@@ -77,6 +77,44 @@ namespace NexmoPSEDemo.Controllers
             return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
         }
 
+        // GET vapi/input/ivr
+        [HttpGet]
+        [Route("vapi/onanswer")]
+        public string OnAnswer()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            string ncco = String.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("OnAnswerVoiceLogger");
+                logger.Open();
+
+                var queryString = Request.QueryString.Value;
+                var queryStringList = queryString.Split('&');
+
+                var from = queryStringList[1].Split('=')[1];
+                var uuid = queryStringList[3].Split('=')[1];
+                var con_uuid = queryStringList[2].Split('=')[1];
+
+                logger.Log("On Answer Input Query String: " + queryString);
+                ncco = NexmoApi.OnAnswerTalkAction(logger, configuration);
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return ncco;
+        }
+
+
         // POST vapi/inbound
         [HttpPost]
         [Route("vapi/inbound")]
@@ -177,6 +215,41 @@ namespace NexmoPSEDemo.Controllers
                     var voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(value.Result);
                     logger.Log("Voice Input body: " + JsonConvert.SerializeObject(voiceInputObject, Formatting.Indented));
                     ncco = NexmoApi.AnswerVoiceCallInput(voiceInputObject, logger, configuration);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return ncco;
+        }
+
+        // POST vapi/input/ivr
+        [HttpPost]
+        [Route("vapi/input/ivr")]
+        public string InputIvrMachineDetection()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            string ncco = String.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("InputIvrMachineDetectionVoiceLogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(value.Result);
+                    logger.Log("Voice IVR Machine Detection Input body: " + JsonConvert.SerializeObject(voiceInputObject, Formatting.Indented));
+                    ncco = NexmoApi.AnswerVoiceCallInputIvrMachineDetection(voiceInputObject, logger, configuration);
                 }
             }
             catch (Exception e)

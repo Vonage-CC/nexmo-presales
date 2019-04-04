@@ -67,6 +67,12 @@ namespace NexmoPSEDemo.Models
         public string type { get; set; }
         public string number { get; set; }
         public string dtmfAnswer { get; set; }
+        public OnAnswer onAnswer { get; set; }
+    }
+
+    public class OnAnswer
+    {
+        public string url { get; set; }
     }
 
     public class VoiceRootObject
@@ -196,5 +202,11 @@ namespace NexmoPSEDemo.Models
         public Dtmf dtmf { get; set; }
         public List<string> eventUrl { get; set; }
         public string eventMethod { get; set; }
+    }
+
+    public class CallerDetails
+    {
+        public string name { get; set; }
+        public string number { get; set; }
     }
 }

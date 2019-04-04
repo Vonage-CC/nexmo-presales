@@ -175,10 +175,10 @@ namespace NexmoPSEDemo.Common
             return queue;
         }
 
-        public static async void InsertMessageInQueue(CloudQueue queue, string message, Logger logger)
+        public static async void InsertMessageInQueue(CloudQueue queue, string message, int ttl, Logger logger)
         {
             CloudQueueMessage queueMessage = new CloudQueueMessage(message);
-            await queue.AddMessageAsync(queueMessage);
+            await queue.AddMessageAsync(queueMessage, TimeSpan.FromSeconds(ttl), TimeSpan.FromSeconds(0), new QueueRequestOptions(), new OperationContext());
         }
 
         public static CloudQueueMessage GetNextMessage(CloudQueue queue, Logger logger)
@@ -515,7 +515,7 @@ namespace NexmoPSEDemo.Common
 
                 // Add the ncco to the request json
                 ttsIvrCallRequestJson += ",\"ncco\":";
-                ttsIvrCallRequestJson += AnswerVoiceCall(logger, configuration);
+                ttsIvrCallRequestJson += AlarmTriggerAnswerVoiceCall(logger, configuration);
 
                 // Close the NCCO json string
                 ttsIvrCallRequestJson += "}";
@@ -554,7 +554,7 @@ namespace NexmoPSEDemo.Common
             return false;
         }
 
-        public static string AnswerVoiceCall(Logger logger, IConfigurationRoot configuration)
+        public static string AlarmTriggerAnswerVoiceCall(Logger logger, IConfigurationRoot configuration)
         {
             var request = new HttpRequestMessage();
             string jsonRequestContent = String.Empty;
@@ -716,6 +716,253 @@ namespace NexmoPSEDemo.Common
                 }
 
                 logger.Log("Vapi Input Call Reply NCCO: " + jsonRequestContent);
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return jsonRequestContent;
+        }
+
+        public static string AnswerVoiceCallInputIvrMachineDetection(VoiceInputObject voiceInputObject, Logger logger, IConfigurationRoot configuration)
+        {
+            var request = new HttpRequestMessage();
+            string jsonRequestContent = String.Empty;
+
+            try
+            {
+                var inFlightCallDetails = GetInFlightCallDetails(voiceInputObject.Uuid, logger, configuration);
+                logger.Log("Retrieved in flight call details. Deciding what action to take based on user input: " + voiceInputObject.Dtmf);
+
+                switch (voiceInputObject.Dtmf)
+                {
+                    case "1":
+                        // Connect the caller to their preferred number
+                        logger.Log("User input: 1. Triggering connect action.");
+                        jsonRequestContent = GenerateIvrMachineDetectionConnectNcco(inFlightCallDetails.from.Number, configuration, logger);
+                        logger.Log("Vapi IVR Inbound Call NCCO: " + jsonRequestContent);
+
+                        break;
+                    default:
+                        logger.Log("User input: " + voiceInputObject.Dtmf + ". Triggering basic invalid input basic action.");
+                        var invalidInputAction = new List<BasicTTSNcco>()
+                        {
+                            new BasicTTSNcco()
+                            {
+                                action = "talk",
+                                text = "We are sorry but your input was invalid. Please call again. Good bye."
+                            }
+                        };
+
+                        jsonRequestContent = JsonConvert.SerializeObject(invalidInputAction, Formatting.Indented);
+
+                        break;
+                }
+
+                logger.Log("Vapi Input Call Reply NCCO: " + jsonRequestContent);
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return jsonRequestContent;
+        }
+
+        public static string OnAnswerTalkAction(Logger logger, IConfigurationRoot configuration)
+        {
+            string jsonRequestContent = String.Empty;
+
+            try
+            {
+                // Retrieve the caller's details
+                var queue = Storage.CreateQueue("ivrmachinedetection", configuration, logger);
+                var message = Storage.GetNextMessage(queue, logger);
+                var callerDetails = JsonConvert.DeserializeObject<CallerDetails>(message.AsString);
+
+                // Open the NCCO json string
+                string ivrInputNcco = "[";
+
+                // Add the talk action to the NCCO
+                var talkAction = new BasicTTSNcco()
+                {
+                    action = "talk",
+                    text = "Incoming call from " + callerDetails.name + " on " + callerDetails.number
+                };
+                ivrInputNcco += JsonConvert.SerializeObject(talkAction, Formatting.Indented, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+
+                // Close the NCCO json string
+                ivrInputNcco += "]";
+
+                jsonRequestContent = ivrInputNcco;
+                logger.Log("Vapi Inbound Call NCCO: " + jsonRequestContent);
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+            }
+
+            return jsonRequestContent;
+        }
+
+        public static bool MakeIvrCallWithMachineDetection(string name, Logger logger, IConfigurationRoot configuration)
+        {
+            string encodedJwt = Security.GenerateJwtToken();
+
+            // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingLogger");
+                logger.Open();
+
+                var recipient = "447801062819"; // Rob's number
+                var sender = "441279456678"; // CLI number
+                var fullName = "Rob Kelly";
+
+                switch (name.ToLower().Trim())
+                {
+                    case "mason":
+                        recipient = "447825639583";
+                        fullName = "Mason Mansfield";
+                        break;
+                    case "kaine":
+                        recipient = "447538601555";
+                        fullName = "Kaine Amos";
+                        break;
+                }
+
+                // Save the details of the person initiating the call
+                var queue = Storage.CreateQueue("ivrmachinedetection", configuration, logger);
+                var callerDetails = new CallerDetails()
+                {
+                    name = fullName,
+                    number = recipient.Replace("44", "0")
+                };
+                Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(callerDetails), 120, logger);
+
+                // TO BE REMOVED IN PROD
+                recipient = "447843608441";
+
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls";
+                logger.Log(Level.Info, url);
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+                request.Headers.Add("Authorization", "Bearer " + encodedJwt);
+
+                // Add the recipient to the request json
+                string ttsIvrCallRequestJson = "{\"to\":";
+                var to = new List<CallTo>()
+                {
+                    new CallTo()
+                    {
+                        type = "phone",
+                        number = recipient
+                    }
+                };
+                ttsIvrCallRequestJson += JsonConvert.SerializeObject(to, Formatting.Indented);
+
+                // Add the sender to the request json
+                ttsIvrCallRequestJson += ",\"from\":";
+                var from = new CallFrom()
+                {
+                    type = "phone",
+                    number = sender
+                };
+                ttsIvrCallRequestJson += JsonConvert.SerializeObject(from, Formatting.Indented);
+
+                // Add the event Urls to the request json
+                ttsIvrCallRequestJson += ",\"event_url\":";
+                var eventUrls = new List<string>()
+                {
+                    configuration["appSettings:Nexmo.Voice.Url.Event"]
+                };
+                ttsIvrCallRequestJson += JsonConvert.SerializeObject(eventUrls, Formatting.Indented);
+
+                // Add machine detection
+                ttsIvrCallRequestJson += ",\"machine_detection\": \"continue\"";
+
+                // Add the ncco to the request json
+                ttsIvrCallRequestJson += ",\"ncco\":";
+                ttsIvrCallRequestJson += MachineDetectionAnswerVoiceCall(fullName, logger, configuration);
+
+                // Close the NCCO json string
+                ttsIvrCallRequestJson += "}";
+
+                logger.Log("Make IVR Call request json: " + ttsIvrCallRequestJson);
+                request.Content = new StringContent(ttsIvrCallRequestJson, Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log(Level.Info, response.StatusCode);
+                        logger.Log(Level.Info, response.RequestMessage);
+                        logger.Log(Level.Info, response.Headers);
+                        logger.Log(Level.Info, response.Content);
+
+                        return true;
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, response.StatusCode);
+                        logger.Log(Level.Warning, response.ReasonPhrase);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+
+                return false;
+            }
+
+            return false;
+        }
+
+        public static string MachineDetectionAnswerVoiceCall(string name, Logger logger, IConfigurationRoot configuration)
+        {
+            var request = new HttpRequestMessage();
+            string jsonRequestContent = String.Empty;
+
+            try
+            {
+                // Open the NCCO json string
+                string ivrInputNcco = "[";
+
+                // Add the talk action to the NCCO
+                var bargeInAction = new BargeInTTSNcco()
+                {
+                    action = "talk",
+                    text = "Hi this is a call for " + name + ". please can you press 1 now to connect through or call us back on 0121 667 1221.",
+                    bargeIn = true
+                };
+                ivrInputNcco += JsonConvert.SerializeObject(bargeInAction, Formatting.Indented);
+
+                // Add the separator between the various actions
+                ivrInputNcco += ",";
+
+                // Add the input action to the NCCO
+                var inputAction = new InputTTSNcco()
+                {
+                    action = "input",
+                    eventUrl = new List<string>() { configuration["appSettings:Nexmo.Voice.Url.Input.Ivr"] }
+                };
+                ivrInputNcco += JsonConvert.SerializeObject(inputAction, Formatting.Indented);
+
+                // Close the NCCO json string
+                ivrInputNcco += "]";
+
+                jsonRequestContent = ivrInputNcco;
+                logger.Log("IVR Machine Detection Call NCCO: " + jsonRequestContent);
             }
             catch (Exception e)
             {
@@ -1242,6 +1489,62 @@ namespace NexmoPSEDemo.Common
                 eventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/status" },
                 timeout = "45",
                 from = configuration["appSettings:Nexmo.Application.Number.From.UK"],
+                endpoint = endpoint
+            };
+            ivrInputNcco += JsonConvert.SerializeObject(voiceConnectAction, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+
+            // Close the NCCO json string
+            ivrInputNcco += "]";
+
+            return ivrInputNcco;
+        }
+
+        private static string GenerateIvrMachineDetectionConnectNcco(string sender, IConfigurationRoot configuration, Logger logger)
+        {
+            var proxy = "441279456676"; // Number to connect to via proxy
+
+            // TO BE REMOVED FOR PRODUCTION
+            proxy = "442088883634";
+
+            // Open the NCCO json string
+            string ivrInputNcco = "[";
+
+            // Add the talk action to the NCCO
+            var basicAction = new BasicTTSNcco()
+            {
+                action = "talk",
+                text = "Please wait while we connect you"
+            };
+            ivrInputNcco += JsonConvert.SerializeObject(basicAction, Formatting.Indented, new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            });
+
+            // Add the separator between the various actions
+            ivrInputNcco += ",";
+
+            // Add the input action to the NCCO
+            var endpoint = new List<VoiceEndpoint>()
+            {
+                new VoiceEndpoint(){
+                    type = "phone",
+                    number = proxy,
+                    dtmfAnswer = "1",
+                    onAnswer = new OnAnswer()
+                    {
+                        url = "https://nexmopsedemo.azurewebsites.net/vapi/onanswer"
+                    }
+                }
+            };
+            var voiceConnectAction = new VoiceConnectObject()
+            {
+                action = "connect",
+                eventUrl = new List<string>() { "https://nexmopsedemo.azurewebsites.net/vapi/status" },
+                timeout = "45",
+                from = sender,
                 endpoint = endpoint
             };
             ivrInputNcco += JsonConvert.SerializeObject(voiceConnectAction, Formatting.Indented, new JsonSerializerSettings
