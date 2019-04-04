@@ -140,6 +140,10 @@ namespace NexmoPSEDemo.Controllers
                         {
                             var result = NexmoApi.MakeIvrCallWithMachineDetection(moSmsObject.text, logger, configuration);
                         }
+                        else if (moSmsObject.text.ToLower().Trim() == "perry")
+                        {
+                            var result = NexmoApi.MakeIvrCallWithMachineDetection(moSmsObject.text, logger, configuration);
+                        }
                         else
                         {
                             // Add the message in a queue to be processed in the chat demo

@@ -995,6 +995,10 @@ namespace NexmoPSEDemo.Common
                         recipient = "447538601555";
                         fullName = "Kaine Amos";
                         break;
+                    case "perry":
+                        recipient = "447979693046";
+                        fullName = "Rob Perry";
+                        break;
                 }
 
                 // Save the details of the person initiating the call
