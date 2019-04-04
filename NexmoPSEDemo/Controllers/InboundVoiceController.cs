@@ -51,16 +51,18 @@ namespace NexmoPSEDemo.Controllers
                 logger = NexmoLogger.GetLogger("VoiceStatusLogger");
                 logger.Open();
 
-                var headers = Request.Headers;
-                var host = headers["Host"];
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
                     var callStatus = JsonConvert.DeserializeObject<CallStatus>(value.Result, new JsonSerializerSettings {
                         NullValueHandling = NullValueHandling.Ignore
                     });
-                    logger.Log("Voice Status update from: " + host);
                     logger.Log("Voice Status update body: " + JsonConvert.SerializeObject(callStatus, Formatting.Indented));
+
+                    if(callStatus.status == "machine")
+                    {
+                        var ncco = NexmoApi.AnswerMachineMessageVoiceCall(logger, configuration);
+                    }
                 }
             }
             catch (Exception e)
@@ -114,7 +116,6 @@ namespace NexmoPSEDemo.Controllers
             return ncco;
         }
 
-
         // POST vapi/inbound
         [HttpPost]
         [Route("vapi/inbound")]
@@ -150,6 +151,45 @@ namespace NexmoPSEDemo.Controllers
             }
 
             return ncco;
+        }
+
+        // POST vapi/transfer
+        [HttpPost]
+        [Route("vapi/transfer")]
+        public HttpResponseMessage Transfer()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("TransferCallLogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    logger.Log("Transfer Call request content: " + value.Result);
+
+                    if(NexmoApi.AnswerMachineMessageVoiceCall(logger, configuration))
+                    {
+                        return httpRequest.CreateResponse(System.Net.HttpStatusCode.NoContent);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, "Transfer Call Exception", e);
+                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return httpRequest.CreateResponse(System.Net.HttpStatusCode.NoContent);
         }
 
         [Route("vapi/asrassistant")]

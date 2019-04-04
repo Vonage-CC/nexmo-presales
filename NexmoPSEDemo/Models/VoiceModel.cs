@@ -57,6 +57,18 @@ namespace NexmoPSEDemo.Models
         public List<string> eventUrl { get; set; }
     }
 
+    public class CallTransferJson
+    {
+        public string type { get; set; }
+        public List<string> url { get; set; }
+    }
+
+    public class CallTransferNcco
+    {
+        public string action { get; set; }
+        public CallTransferJson destination { get; set; }
+    }
+
     public class VoiceRecipient
     {
         public string recipient { get; set; }
