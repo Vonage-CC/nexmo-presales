@@ -69,6 +69,14 @@ namespace NexmoPSEDemo.Models
         public CallTransferJson destination { get; set; }
     }
 
+    public class CallObject
+    {
+        public string uuid { get; set; }
+        public string status { get; set; }
+        public string direction { get; set; }
+        public string conversation_uuid { get; set; }
+    }
+
     public class VoiceRecipient
     {
         public string recipient { get; set; }

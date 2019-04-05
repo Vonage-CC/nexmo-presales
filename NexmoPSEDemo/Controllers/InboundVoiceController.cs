@@ -16,7 +16,7 @@ using NSpring.Logging;
 
 namespace NexmoPSEDemo.Controllers
 {
-    
+
     public class InboundVoiceController : Controller
     {
         // load the configuration file to access Nexmo's API credentials
@@ -54,14 +54,20 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    var callStatus = JsonConvert.DeserializeObject<CallStatus>(value.Result, new JsonSerializerSettings {
+                    var callStatus = JsonConvert.DeserializeObject<CallStatus>(value.Result, new JsonSerializerSettings
+                    {
                         NullValueHandling = NullValueHandling.Ignore
                     });
                     logger.Log("Voice Status update body: " + JsonConvert.SerializeObject(callStatus, Formatting.Indented));
 
-                    if(callStatus.status == "machine")
+                    if (callStatus.status == "machine")
                     {
-                        var ncco = NexmoApi.AnswerMachineMessageVoiceCall(logger, configuration);
+                        // First cancel the previous call
+                        logger.Log("Cancelling call: " + value.Result);
+                        if (NexmoApi.CancelCall(logger, configuration))
+                        {
+                            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+                        }
                     }
                 }
             }
@@ -172,9 +178,16 @@ namespace NexmoPSEDemo.Controllers
                     var value = reader.ReadToEndAsync();
                     logger.Log("Transfer Call request content: " + value.Result);
 
-                    if(NexmoApi.AnswerMachineMessageVoiceCall(logger, configuration))
+                    // First cancel the previous call
+                    logger.Log("Cancelling call: " + value.Result);
+                    if (NexmoApi.CancelCall(logger, configuration))
                     {
-                        return httpRequest.CreateResponse(System.Net.HttpStatusCode.NoContent);
+                        // Then start the call again with the answer machine message
+                        logger.Log("Sending answer machine message call: " + value.Result);
+                        if (NexmoApi.AnswerMachineMessageVoiceCall(logger, configuration))
+                        {
+                            return httpRequest.CreateResponse(System.Net.HttpStatusCode.NoContent);
+                        }
                     }
                 }
             }

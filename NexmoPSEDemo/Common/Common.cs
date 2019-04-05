@@ -651,15 +651,15 @@ namespace NexmoPSEDemo.Common
                 logger.Open();
 
                 // Get the call leg to transfer details
-                var voiceInputObject = new VoiceInputObject();
+                var callInputObject = new CallObject();
                 var queue = Storage.CreateQueue("callinputmachinedetection", configuration, logger);
                 var message = Storage.GetNextMessage(queue, logger);
                 if (message != null)
                 {
-                    voiceInputObject = JsonConvert.DeserializeObject<VoiceInputObject>(message.AsString);
+                    callInputObject = JsonConvert.DeserializeObject<CallObject>(message.AsString);
                 }
 
-                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls/" + voiceInputObject.Uuid;
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls/" + callInputObject.uuid;
                 logger.Log(Level.Info, url);
                 var request = new HttpRequestMessage(HttpMethod.Put, url);
                 request.Headers.Add("Authorization", "Bearer " + encodedJwt);
@@ -697,6 +697,79 @@ namespace NexmoPSEDemo.Common
                     }
                     else
                     {
+                        logger.Log(Level.Warning, response.StatusCode);
+                        logger.Log(Level.Warning, response.ReasonPhrase);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+
+                return false;
+            }
+
+            return false;
+        }
+
+        public static bool CancelCall(Logger logger, IConfigurationRoot configuration)
+        {
+            string encodedJwt = Security.GenerateJwtToken();
+
+            // TODO: Implement Nexmo's library code. Currently not working because of RSA issue with private key
+            try
+            {
+                logger = NexmoLogger.GetLogger("CancelCallLogger");
+                logger.Open();
+
+                // Get the call leg to transfer details
+                var callInputObject = new CallObject();
+                var queue = Storage.CreateQueue("callinputmachinedetection", configuration, logger);
+                var message = Storage.GetNextMessage(queue, logger);
+                if (message != null)
+                {
+                    callInputObject = JsonConvert.DeserializeObject<CallObject>(message.AsString);
+                }
+
+                var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls/" + callInputObject.uuid;
+                logger.Log(Level.Info, "Cancel call URL: " + url);
+                var request = new HttpRequestMessage(HttpMethod.Put, url);
+                request.Headers.Add("Authorization", "Bearer " + encodedJwt);
+
+                var transferNcco = new CallTransferNcco()
+                {
+                    action = "hangup"
+                };
+
+                string jsonRequestContent = JsonConvert.SerializeObject(transferNcco, Formatting.Indented, new JsonSerializerSettings
+                {
+                    NullValueHandling = NullValueHandling.Ignore
+                });
+                request.Content = new StringContent(jsonRequestContent, Encoding.UTF8, "application/json");
+                logger.Log("Cancel Call NCCO: " + jsonRequestContent);
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log("Successfully cancelled call: " + callInputObject.uuid);
+                        logger.Log(Level.Info, response.StatusCode);
+                        logger.Log(Level.Info, response.RequestMessage);
+                        logger.Log(Level.Info, response.Headers);
+                        logger.Log(Level.Info, response.Content.ReadAsStringAsync().Result);
+
+                        logger.Log("Sending answer machine message call after cancellation of call ID: " + callInputObject.uuid);
+                        if (AnswerMachineMessageVoiceCall(logger, configuration))
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, "Failed to cancel call: " + callInputObject.uuid);
                         logger.Log(Level.Warning, response.StatusCode);
                         logger.Log(Level.Warning, response.ReasonPhrase);
                     }
@@ -999,19 +1072,23 @@ namespace NexmoPSEDemo.Common
                         recipient = "447979693046";
                         fullName = "Rob Perry";
                         break;
+                    case "jpc":
+                        recipient = "447843608441";
+                        fullName = "Jean-Philippe";
+                        sender = "447418342793";
+                        break;
                 }
 
                 // Save the details of the person initiating the call
                 var queue = Storage.CreateQueue("ivrmachinedetection", configuration, logger);
+                var callerNumber = recipient.Remove(0, 2);
+                callerNumber = "0" + callerNumber;
                 var callerDetails = new CallerDetails()
                 {
                     name = fullName,
-                    number = recipient.Replace("44", "0")
+                    number = callerNumber
                 };
-                Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(callerDetails), 120, logger);
-
-                // TO BE REMOVED IN PROD
-                //recipient = "447843608441";
+                Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(callerDetails), 90, logger);
 
                 var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls";
                 logger.Log(Level.Info, url);
@@ -1074,7 +1151,7 @@ namespace NexmoPSEDemo.Common
                         // Save the details of the new connected leg
                         var responseContent = response.Content.ReadAsStringAsync().Result;
                         queue = Storage.CreateQueue("callinputmachinedetection", configuration, logger);
-                        Storage.InsertMessageInQueue(queue, responseContent, 300, logger);
+                        Storage.InsertMessageInQueue(queue, responseContent, 90, logger);
 
                         return true;
                     }
@@ -1148,7 +1225,6 @@ namespace NexmoPSEDemo.Common
             string jsonRequestContent = String.Empty;
             var sender = "441279456678"; // CLI number
             var callerDetails = new CallerDetails();
-
             var recipient = callerDetails.number;
 
             try
@@ -1163,11 +1239,11 @@ namespace NexmoPSEDemo.Common
 
                 if (!string.IsNullOrEmpty(callerDetails.number))
                 {
-                    // TO BE REMOVED IN PROD
-                    //recipient = "447843608441";
+                    recipient = callerDetails.number.Remove(0, 1);
+                    recipient = "44" + recipient;
 
                     var url = configuration["appSettings:Nexmo.Url.Api"] + "/v1/calls";
-                    logger.Log(Level.Info, url);
+                    logger.Log(Level.Info, "Answer machine message URL: " + url);
                     var request = new HttpRequestMessage(HttpMethod.Post, url);
                     request.Headers.Add("Authorization", "Bearer " + encodedJwt);
 
@@ -1213,7 +1289,7 @@ namespace NexmoPSEDemo.Common
                     var answerMachineMessage = new BasicTTSNcco()
                     {
                         action = "talk",
-                        text = "Hi this is a message for " + callerDetails.name + ". please call us back on 0121 667 1221 or visit our website on www.telsolutions.co.uk."
+                        text = "<speak><break time='15s' />Hi this is a message for " + callerDetails.name + ". please call us back on 0121 667 1221 or visit our website on www.telsolutions.co.uk.</speak>"
                     };
                     ivrInputNcco += JsonConvert.SerializeObject(answerMachineMessage, Formatting.Indented);
 
@@ -1235,6 +1311,7 @@ namespace NexmoPSEDemo.Common
 
                         if (response.IsSuccessStatusCode)
                         {
+                            logger.Log("Successfully started answer machine message call: " + response.Content.ReadAsStringAsync().Result);
                             logger.Log(Level.Info, response.StatusCode);
                             logger.Log(Level.Info, response.RequestMessage);
                             logger.Log(Level.Info, response.Headers);
@@ -1244,6 +1321,7 @@ namespace NexmoPSEDemo.Common
                         }
                         else
                         {
+                            logger.Log(Level.Warning, "Failed to transfer call: " + response.Content.ReadAsStringAsync().Result);
                             logger.Log(Level.Warning, response.StatusCode);
                             logger.Log(Level.Warning, response.ReasonPhrase);
                         }
@@ -1494,6 +1572,7 @@ namespace NexmoPSEDemo.Common
             return JsonConvert.SerializeObject(messageJson).ToLower();
         }
 
+        // Not in use
         private static string GenerateDispatchApiJson(FailoverModel failoverModel)
         {
             // build the json body of the request
@@ -1792,8 +1871,9 @@ namespace NexmoPSEDemo.Common
         {
             var proxy = "441279456676"; // Number to connect to via proxy
 
-            // TO BE REMOVED FOR PRODUCTION
-            //proxy = "442088883634";
+            // Used for when JPC is testing
+            if(sender == "447418342793")
+                proxy = "442088883634";
 
             // Open the NCCO json string
             string ivrInputNcco = "[";
