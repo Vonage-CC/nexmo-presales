@@ -62,9 +62,8 @@ namespace NexmoPSEDemo.Controllers
 
                     if (callStatus.status == "machine")
                     {
-                        // First cancel the previous call
-                        logger.Log("Cancelling call: " + value.Result);
-                        if (NexmoApi.CancelCall(logger, configuration))
+                        // Transfer the call to the answer machine message
+                        if(NexmoApi.TransferCall(logger, configuration))
                         {
                             return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
                         }
@@ -107,7 +106,7 @@ namespace NexmoPSEDemo.Controllers
                 var con_uuid = queryStringList[2].Split('=')[1];
 
                 logger.Log("On Answer Input Query String: " + queryString);
-                ncco = NexmoApi.OnAnswerTalkAction(logger, configuration);
+                ncco = NexmoApi.CallWhisperTalkAction(logger, configuration);
             }
             catch (Exception e)
             {
@@ -162,11 +161,11 @@ namespace NexmoPSEDemo.Controllers
         // POST vapi/transfer
         [HttpPost]
         [Route("vapi/transfer")]
-        public HttpResponseMessage Transfer()
+        public string Transfer()
         {
             // create a logger placeholder
             Logger logger = null;
-            var httpRequest = new HttpRequestMessage();
+            var ncco = string.Empty;
 
             try
             {
@@ -176,25 +175,15 @@ namespace NexmoPSEDemo.Controllers
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
-                    logger.Log("Transfer Call request content: " + value.Result);
+                    logger.Log("Call transfered answer machine message request content: " + value.Result);
 
-                    // First cancel the previous call
-                    logger.Log("Cancelling call: " + value.Result);
-                    if (NexmoApi.CancelCall(logger, configuration))
-                    {
-                        // Then start the call again with the answer machine message
-                        logger.Log("Sending answer machine message call: " + value.Result);
-                        if (NexmoApi.AnswerMachineMessageVoiceCall(logger, configuration))
-                        {
-                            return httpRequest.CreateResponse(System.Net.HttpStatusCode.NoContent);
-                        }
-                    }
+                    // Return NCCO with answer machine message
+                    ncco = NexmoApi.AnswerMachineMessageNcco(logger, configuration);
                 }
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, "Transfer Call Exception", e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -202,7 +191,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.NoContent);
+            return ncco;
         }
 
         [Route("vapi/asrassistant")]

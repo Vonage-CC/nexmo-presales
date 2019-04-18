@@ -42,6 +42,7 @@ namespace NexmoPSEDemo.Models
         public string action { get; set; }
         public string text { get; set; }
         public string voiceName { get; set; }
+        public int loop { get; set; }
     }
 
     public class BargeInTTSNcco
@@ -49,6 +50,7 @@ namespace NexmoPSEDemo.Models
         public string action { get; set; }
         public string text { get; set; }
         public bool bargeIn { get; set; }
+        public int loop { get; set; }
     }
 
     public class InputTTSNcco
