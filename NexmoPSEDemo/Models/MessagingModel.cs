@@ -29,6 +29,12 @@ namespace NexmoPSEDemo.Models
         public string Text { get; set; }
     }
 
+    public class ChatWAObject
+    {
+        public string To { get; set; }
+        public string Text { get; set; }
+    }
+
     public class TemplateMessagingObject
     {
         public From From { get; set; }
@@ -46,5 +52,15 @@ namespace NexmoPSEDemo.Models
         public string keyword { get; set; }
         [JsonProperty(PropertyName = "message-timestamp")]
         public string message_timestamp { get; set; }
+    }
+
+    public class InboundWAObject
+    {
+        public string message_uuid { get; set; }
+        public To to { get; set; }
+        public From from { get; set; }
+        public DateTime timestamp { get; set; }
+        public string direction { get; set; }
+        public Message message { get; set; }
     }
 }

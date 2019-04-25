@@ -162,7 +162,7 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -170,7 +170,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            return httpRequest.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpPost]
@@ -266,6 +266,38 @@ namespace NexmoPSEDemo.Controllers
             return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
         }
 
+        [HttpGet]
+        [Route("messaging/wa/queue/next")]
+        public string NexmoWA()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var inboundSMS = new InboundWAObject();
+            var messageResult = string.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingWAQueueLogger");
+                logger.Open();
+
+                var queue = Storage.CreateQueue("wachat", configuration, logger);
+                var message = Storage.GetNextMessage(queue, logger);
+
+                if (message != null)
+                {
+                    messageResult = message.AsString;
+                    inboundSMS = JsonConvert.DeserializeObject<InboundWAObject>(message.AsString);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return "Error";
+            }
+
+            return messageResult;
+        }
+
         [HttpPost]
         [Route("messaging/inbound")]
         public HttpResponseMessage Inbound()
@@ -279,20 +311,17 @@ namespace NexmoPSEDemo.Controllers
                 logger = NexmoLogger.GetLogger("InboundMessagingLogger");
                 logger.Open();
 
-                var headers = Request.Headers;
-                var host = headers["Host"];
                 using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 {
                     var value = reader.ReadToEndAsync();
                     var fmObject = JsonConvert.DeserializeObject<FMRootObject>(value.Result);
-                    logger.Log("Messaging Inbound from: " + host);
                     logger.Log("Messaging Inbound body: " + JsonConvert.SerializeObject(fmObject, Formatting.Indented));
                 }
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -300,7 +329,104 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            return httpRequest.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [Route("messaging/wa/inbound")]
+        public HttpResponseMessage WAInbound()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("InboundMessagingLogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var waInboundObject = JsonConvert.DeserializeObject<InboundWAObject>(value.Result);
+                    logger.Log("Messaging WA Inbound body: " + JsonConvert.SerializeObject(waInboundObject, Formatting.Indented));
+
+                    // Add the message in a queue to be processed in the wa chat demo
+                    var queue = Storage.CreateQueue("wachat", configuration, logger);
+                    Storage.InsertMessageInQueue(queue, JsonConvert.SerializeObject(waInboundObject), 3000, logger);
+
+                    logger.Log(Level.Warning, "Messaging SMS Inbound added to the queue: " + JsonConvert.SerializeObject(waInboundObject, Formatting.Indented));
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return httpRequest.CreateResponse(HttpStatusCode.OK);
+        }
+
+        [HttpPost]
+        [Route("messaging/wa/send")]
+        public HttpResponseMessage SendWA()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var httpRequest = new HttpRequestMessage();
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingSendWALogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var chatWAObject = JsonConvert.DeserializeObject<ChatWAObject>(value.Result);
+                    logger.Log("Messaging Send WA Chat body: " + JsonConvert.SerializeObject(chatWAObject, Formatting.Indented));
+                    logger.Log("Messaging Send WA Chat - The text message entered is: " + chatWAObject.Text);
+                    logger.Log("Messaging Send WA Chat - The text message recipient is: " + chatWAObject.To);
+
+                    if (!string.IsNullOrEmpty(chatWAObject.Text))
+                    {
+                        var message = new MessagingModel()
+                        {
+                            Sender = "447418342149",
+                            Number = chatWAObject.To,
+                            Text = chatWAObject.Text,
+                            Type = "WhatsApp",
+                            ContentType = "text"
+                        };
+
+                        if(NexmoApi.SendMessage(message, logger, configuration))
+                        {
+                            return httpRequest.CreateResponse(HttpStatusCode.OK);
+                        }
+                        else
+                        {
+                            return httpRequest.CreateResponse(HttpStatusCode.FailedDependency);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return httpRequest.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

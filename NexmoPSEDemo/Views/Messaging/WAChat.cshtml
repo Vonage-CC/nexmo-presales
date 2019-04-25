@@ -1,0 +1,57 @@
+﻿@model MessagingModel
+@{
+    ViewData["Title"] = "WhatsApp Chat";
+}
+
+<div class="Vlt-card Vlt-article">
+    <h3 class="Vlt-title--icon">
+        <svg class="Vlt-teal">
+            <use xlink:href="~/symbol/volta-icons.svg" #Vlt-icon-rocket"></use>
+        </svg>
+        WhatsApp Chat
+    </h3>
+
+    <div class="Vlt-grid">
+        <div class="Vlt-col">
+            <div class="Vlt-card Vlt-article">
+                <div id="start" class="Vlt-form__element">
+                    <label class="Vlt-label" for="msisdn">Enter a mobile phone number to start chatting</label>
+                    <div class="Vlt-input">
+                        <input type="text" id="msisdn" name="msisdn" />
+                    </div>
+                </div>
+                <div id="start" class="Vlt-form__element">
+                    <div class="Vlt-input">
+                        <input type="button" value="Set Number" onclick="setNumber()" />
+                    </div>
+                </div>
+            </div>
+            <div class="Vlt-card Vlt-article">
+                <div id="message">
+                </div>
+            </div>
+
+            <div id="chatControl" class="Vlt-card Vlt-article">
+                <div id="start" class="Vlt-form__element">
+                    <label class="Vlt-label" for="text">Enter a message</label>
+                    <div class="Vlt-input">
+                        <input type="text" id="text" name="text" />
+                    </div>
+                </div>
+                <div id="start" class="Vlt-form__element">
+                    <div class="Vlt-input">
+                        <input type="submit" id="pushbtn" onclick="Send()" value="Send" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="Vlt-col">
+            <div class="Vlt-card Vlt-article">
+                <div id="chatTemplate" class="Vlt-badge-group">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/js/wachat.js"></script>
+

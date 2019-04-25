@@ -126,5 +126,9 @@ namespace NexmoPSEDemo.Controllers
         {
             return View();
         }
+        public IActionResult WAChat()
+        {
+            return View();
+        }
     }
 }
