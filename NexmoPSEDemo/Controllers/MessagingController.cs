@@ -89,7 +89,7 @@ namespace NexmoPSEDemo.Controllers
         public IActionResult Failover(FailoverModel failoverModel)
         {
             // create a logger
-            Logger logger = NexmoLogger.GetLogger("SMSLogger");
+            Logger logger = NexmoLogger.GetLogger("FailoverLogger");
             logger.Open();
 
             if (ModelState.IsValid)
@@ -121,7 +121,6 @@ namespace NexmoPSEDemo.Controllers
 
             return View();
         }
-
         public IActionResult Chat()
         {
             return View();

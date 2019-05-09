@@ -75,6 +75,10 @@ namespace NexmoPSEDemo.Controllers
                 {
                     var value = reader.ReadToEndAsync();
                     logger.Log("Messaging SMS Status update body: " + value.Result);
+
+                    // Add status update to a queue
+                    var queue = Storage.CreateQueue("smsstatus", configuration, logger);
+                    Storage.InsertMessageInQueue(queue, value.Result, 120, logger);
                 }
             }
             catch (Exception e)
@@ -232,7 +236,7 @@ namespace NexmoPSEDemo.Controllers
         // Messaging endpoints
         [HttpPost]
         [Route("messaging/status")]
-        public HttpResponseMessage Status()
+        public HttpResponseMessage MessagingStatus()
         {
             // create a logger placeholder
             Logger logger = null;
@@ -250,12 +254,16 @@ namespace NexmoPSEDemo.Controllers
                     var value = reader.ReadToEndAsync();
                     logger.Log("Messaging Status update from: " + host);
                     logger.Log("Messaging Status update body: " + value.Result);
+
+                    // Add status update to a queue
+                    var queue = Storage.CreateQueue("messagingstatus", configuration, logger);
+                    Storage.InsertMessageInQueue(queue, value.Result, 120, logger);
                 }
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -263,7 +271,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            return httpRequest.CreateResponse(HttpStatusCode.OK);
         }
 
         [HttpGet]

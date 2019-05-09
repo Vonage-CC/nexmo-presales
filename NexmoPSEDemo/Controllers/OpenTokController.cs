@@ -47,6 +47,10 @@ namespace NexmoPSEDemo.Controllers
                     var value = reader.ReadToEndAsync();
                     sessionEvent = value.Result;
                     logger.Log("OpenTok Session Monitoring body: " + JsonConvert.SerializeObject(sessionEvent, Formatting.Indented));
+
+                    // Add status update to a queue
+                    var queue = Storage.CreateQueue("videomonitoring", configuration, logger);
+                    Storage.InsertMessageInQueue(queue, sessionEvent, 120, logger);
                 }
             }
             catch (Exception e)

@@ -177,6 +177,9 @@ namespace NexmoPSEDemo.Common
 
         public static async void InsertMessageInQueue(CloudQueue queue, string message, int ttl, Logger logger)
         {
+#if DEBUG
+            ttl = 300;
+#endif
             CloudQueueMessage queueMessage = new CloudQueueMessage(message);
             await queue.AddMessageAsync(queueMessage, TimeSpan.FromSeconds(ttl), TimeSpan.FromSeconds(0), new QueueRequestOptions(), new OperationContext());
         }
@@ -214,7 +217,7 @@ namespace NexmoPSEDemo.Common
                 { "jti", jwtTokenId }
             };
 
-            string privateKeyString = File.ReadAllText("private.key");
+            string privateKeyString = System.IO.File.ReadAllText("private.key");
             var rsa = PemParse.DecodePEMKey(privateKeyString);
             var jwtToken = Jose.JWT.Encode(payload, rsa, JwsAlgorithm.RS256);
 
@@ -346,7 +349,7 @@ namespace NexmoPSEDemo.Common
             string token = configuration["appSettings:Nexmo.Messaging.WA.Token"]; // TODO: replace with input from web user???
 
             // get the json object to pass in the request
-            string rootObj = GenerateDispatchApiJson(failoverModel);
+            string rootObj = GenerateDispatchApiJson(failoverModel, configuration);
 
             // start creating the HTTP request
             var request = new HttpRequestMessage(HttpMethod.Post, url);
@@ -1385,30 +1388,30 @@ namespace NexmoPSEDemo.Common
         }
 
         // Not in use
-        private static string GenerateDispatchApiJson(FailoverModel failoverModel)
+        private static string GenerateDispatchApiJson(FailoverModel failoverModel, IConfigurationRoot configuration)
         {
             // build the json body of the request
-            From waFrom = new From()
+            From viberFrom = new From()
             {
-                Type = "whatsapp",
-                Number = "447418342149" // TODO: replace with a number provided by the user?
+                Type = "viber",
+                Number = failoverModel.sender // TODO: replace with a number provided by the user?
             };
-            To waTo = new To()
+            To viberTo = new To()
             {
-                Type = "whatsapp",
-                Number = "447843608441" // TODO: replace with input from web user
+                Type = "viber",
+                Number = failoverModel.number // TODO: replace with input from web user
             };
             Message waMessage = new Message()
             {
                 Content = new Content()
                 {
                     Type = "text", // TODO: replace with selection from web user
-                    Text = "This is the WA from the failover flow" // TODO: replace with input from web user
+                    Text = "This is the Viber message from the failover flow" // TODO: replace with input from web user
                 }
             };
             Failover failover = new Failover()
             {
-                Expiry_time = 60, // TODO: replace with input from web user
+                Expiry_time = 20, // TODO: replace with input from web user
                 Condition_status = "read" // TODO: replace with selection from web user
             };
             From smsFrom = new From()
@@ -1426,13 +1429,13 @@ namespace NexmoPSEDemo.Common
                 Content = new Content()
                 {
                     Type = "text", // TODO: replace with selection from web user
-                    Text = "This is the SMS from the failover flow" // TODO: replace with input from web user
+                    Text = "This is the SMS message from the failover flow" // TODO: replace with input from web user
                 }
             };
             Workflow workflow = new Workflow()
             {
-                From = waFrom,
-                To = waTo,
+                From = viberFrom,
+                To = viberTo,
                 Message = waMessage,
                 Failover = failover,
                 From2 = smsFrom,
@@ -1449,21 +1452,23 @@ namespace NexmoPSEDemo.Common
 
             string jsonObj = "{\"template\":\"failover\",";
             jsonObj += "\"workflow\": [";
-            jsonObj += "{\"from\": { \"type\": \"whatsapp\", \"number\": \"447418342149\" },";
-            jsonObj += "\"to\": { \"type\": \"whatsapp\", \"number\": \"447843608441\" },";
+            jsonObj += "{\"from\": { \"type\": \"viber\", \"number\": \"" + failoverModel.sender + "\" },";
+            jsonObj += "\"to\": { \"type\": \"viber\", \"number\": \"" + failoverModel.number + "\" },";
             jsonObj += "\"message\": {";
             jsonObj += "\"content\": {";
             jsonObj += "\"type\": \"text\",";
-            jsonObj += "\"text\": \"This is a WhatsApp Message sent via the Dispatch API\"}},";
+            jsonObj += "\"text\": \"This is a Viber Message sent via the Dispatch API\"}},";
             jsonObj += "\"failover\":{";
-            jsonObj += "\"expiry_time\": 60,";
+            jsonObj += "\"expiry_time\": 20,";
             jsonObj += "\"condition_status\": \"read\"}},";
             jsonObj += "{\"from\": {\"type\": \"sms\", \"number\": \"JPC Failover Test\"},";
-            jsonObj += "\"to\": { \"type\": \"sms\", \"number\": \"447843608441\"},";
+            jsonObj += "\"to\": { \"type\": \"sms\", \"number\": \"" + failoverModel.number + "\"},";
             jsonObj += "\"message\": {";
             jsonObj += "\"content\": {";
             jsonObj += "\"type\": \"text\",";
             jsonObj += "\"text\": \"This is an SMS sent via the Dispatch API\"}}}]}";
+
+            jsonObj = JsonConvert.SerializeObject(rootObj, Formatting.Indented);
 
             return jsonObj;
         }

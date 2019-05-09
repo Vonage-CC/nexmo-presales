@@ -60,6 +60,10 @@ namespace NexmoPSEDemo.Controllers
                     });
                     logger.Log("Voice Status update body: " + JsonConvert.SerializeObject(callStatus, Formatting.Indented));
 
+                    // Add status update to a queue
+                    var queue = Storage.CreateQueue("voicestatus", configuration, logger);
+                    Storage.InsertMessageInQueue(queue, value.Result, 120, logger);
+
                     if (callStatus.status == "machine")
                     {
                         // Transfer the call to the answer machine message

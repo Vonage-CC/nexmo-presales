@@ -6,6 +6,9 @@ namespace NexmoPSEDemo.Models
     public class FailoverModel
     {
         public string RequestId { get; set; }        
+        public string sender { get; set; }
+        public string number { get; set; }
+        public string message { get; set; }
     }
 
     public class From

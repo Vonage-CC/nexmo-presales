@@ -1,4 +1,4 @@
-﻿var message = { to: '', text: '' };
+﻿var message = { to: '', text: '', type: '', template: false };
 var url = "https://nexmopsedemo.azurewebsites.net/";
 var currentDate = '';
 
@@ -77,6 +77,7 @@ function setNumber() {
 
 function Send() {
     message.text = document.getElementById("text").value;
+    message.type = "text";
 
     // Send the SMS
     $.ajax({
