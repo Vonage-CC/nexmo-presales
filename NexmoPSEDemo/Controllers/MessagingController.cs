@@ -40,7 +40,7 @@ namespace NexmoPSEDemo.Controllers
                     {
                         case "WhatsApp":
                             messagingModel.TemplateName = "whatsapp:hsm:technology:nexmo:simplewelcome";
-                            if (NexmoApi.SendMessage(messagingModel, logger, configuration))
+                            if (NexmoApi.SendMessage(messagingModel, logger, configuration).IsSuccessStatusCode)
                                 ViewData["feedback"] = "Your " + messagingModel.Type + " message was sent succesfully.";
                             else
                                 ViewData["error"] = "We could not send your " + messagingModel.Type + " message. Please try again later.";

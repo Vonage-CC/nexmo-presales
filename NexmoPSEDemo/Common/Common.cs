@@ -283,7 +283,7 @@ namespace NexmoPSEDemo.Common
         }
 
         // Messaging API
-        public static bool SendMessage(MessagingModel messagingModel, Logger logger, IConfigurationRoot configuration)
+        public static HttpResponseMessage SendMessage(MessagingModel messagingModel, Logger logger, IConfigurationRoot configuration)
         {
             // extract the url and token from the configuration file
             string url = configuration["appSettings:Nexmo.Url.Api"] + "/v0.1/messages";
@@ -323,12 +323,14 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Info, response.Headers);
                         logger.Log(Level.Info, response.Content.ReadAsStringAsync().Result);
 
-                        return true;
-                    }
+                        return response;
+                    } 
                     else
                     {
                         logger.Log(Level.Warning, response.StatusCode.ToString());
                         logger.Log(Level.Warning, response.ReasonPhrase);
+
+                        return request.CreateResponse(response.StatusCode);
                     }
                 }
             }
@@ -336,9 +338,67 @@ namespace NexmoPSEDemo.Common
             {
                 logger.Log(Level.Exception, e.Message);
                 logger.Log(Level.Exception, e.StackTrace);
+
+                return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+            }
+        }
+
+        public static HttpResponseMessage SendFileMessage(FileChatWAObject chatObject, Logger logger, IConfigurationRoot configuration)
+        {
+            // extract the url and token from the configuration file
+            string url = configuration["appSettings:Nexmo.Url.WA.Sandbox"];
+            string token = configuration["appSettings:Nexmo.Messaging.WA.Token"]; // TODO: replace with input from web user???
+
+            // get the json object to pass in the request
+            string messageObj = string.Empty;
+            switch (chatObject.type) {
+                case "image":
+                    messageObj = GenerateImageMessageJson(chatObject);
+                    break;
+                case "file":
+                    break;
+                case "audio":
+                    break;
             }
 
-            return false;
+            // start creating the HTTP request
+            var request = new HttpRequestMessage(HttpMethod.Post, url);
+            request.Headers.Add("Authorization", "Bearer " + token);
+
+            try
+            {
+                logger.Log(JsonConvert.SerializeObject(messageObj, Formatting.Indented));
+                request.Content = new StringContent(messageObj, Encoding.UTF8, "application/json");
+
+                using (var client = new HttpClient())
+                {
+                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        logger.Log(Level.Info, response.StatusCode.ToString());
+                        logger.Log(Level.Info, response.RequestMessage);
+                        logger.Log(Level.Info, response.Headers);
+                        logger.Log(Level.Info, response.Content.ReadAsStringAsync().Result);
+
+                        return response;
+                    }
+                    else
+                    {
+                        logger.Log(Level.Warning, response.StatusCode.ToString());
+                        logger.Log(Level.Warning, response.ReasonPhrase);
+
+                        return request.CreateResponse(response.StatusCode);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e.Message);
+                logger.Log(Level.Exception, e.StackTrace);
+
+                return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+            }
         }
 
         // Disptach API
@@ -1296,6 +1356,50 @@ namespace NexmoPSEDemo.Common
             };
 
             return JsonConvert.SerializeObject(messageJson).ToLower();
+        }
+
+        private static string GenerateImageMessageJson(FileChatWAObject chatObject)
+        {
+            string sender = "447418342149";
+
+            var image = new Image()
+            {
+                caption = "This is what the caption looks like!",
+                url = "https://nexmopsedemo.azurewebsites.net/assets/" + chatObject.path
+            };
+
+            var imageContent = new ImageContent()
+            {
+                image = image,
+                type = chatObject.type
+            };
+
+            var imageMessage = new ImageMessage()
+            {
+                content = imageContent
+            };
+
+            var imageMessageRequest = new ImageMessageRequest()
+            {
+                from = new From()
+                {
+                    Number = sender,
+                    Type = "whatsapp"
+                },
+                to = new To()
+                {
+                    Number = chatObject.to,
+                    Type = "whatsapp"
+                },
+                message = imageMessage
+            };
+
+            var jsonRequest = JsonConvert.SerializeObject(imageMessageRequest, Formatting.Indented, new JsonSerializerSettings()
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            }).ToLower();
+
+            return jsonRequest;
         }
 
         private static string GenerateTemplateMessageJson(MessagingModel messagingModel)

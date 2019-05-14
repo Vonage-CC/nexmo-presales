@@ -23,6 +23,22 @@ namespace NexmoPSEDemo.Models
         public Message Message { get; set; }
     }
 
+    public class MessagingStatus
+    {
+        public string message_uuid { get; set; }
+        public To to { get; set; }
+        public From from { get; set; }
+        public DateTime timestamp { get; set; }
+        public Usage usage { get; set; }
+        public string status { get; set; }
+    }
+
+    public class Usage
+    {
+        public string price { get; set; }
+        public string currency { get; set; }
+    }
+
     // SMS objects
     public class ChatSmsObject
     {
@@ -49,6 +65,13 @@ namespace NexmoPSEDemo.Models
         public string Text { get; set; }
         public string Type { get; set; }
         public bool Template { get; set; }
+    }
+
+    public class FileChatWAObject
+    {
+        public string type { get; set; }
+        public string path { get; set; }
+        public string to { get; set; }
     }
 
     public class TemplateMessagingObject

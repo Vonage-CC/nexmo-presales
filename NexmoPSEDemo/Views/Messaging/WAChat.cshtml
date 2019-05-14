@@ -10,23 +10,23 @@
         </svg>
         WhatsApp Chat
     </h3>
-
     <div class="Vlt-grid">
         <div class="Vlt-col">
             <div class="Vlt-card Vlt-article">
                 <div id="start" class="Vlt-form__element">
                     <label class="Vlt-label" for="msisdn">Enter a mobile phone number to start chatting</label>
-                    <div class="Vlt-input">
-                        <input type="text" id="msisdn" name="msisdn" />
-                    </div>
-                </div>
-                <div id="start" class="Vlt-form__element">
-                    <div class="Vlt-input">
-                        <input type="button" value="Set Number" onclick="setNumber()" />
+                    <div class="Vlt-composite">
+                        <div class="Vlt-input">
+                            <input type="text" id="msisdn" name="msisdn" />
+                        </div>
+                        <div class="Vlt-composite__append">
+                            <button id="set-number" class="Vlt-btn Vlt-btn--primary" onclick="setNumber()">Set Number</button>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="Vlt-card Vlt-article">
+                <h5>Would you like to send a template message?</h5>
                 <div class="Vlt-col" onclick="fillTextareaWithTemplate('message', 'wa-welcome-template')">
                     <div class="Vlt-box Vlt-box--clickable Vlt-box--shadow" id="wa-welcome-template">
                         <h4>WhatsApp Welcome Template</h4>
@@ -42,13 +42,56 @@
             <div id="chatControl" class="Vlt-card Vlt-article">
                 <div id="start" class="Vlt-form__element">
                     <label class="Vlt-label" for="text">Enter a message</label>
-                    <div class="Vlt-input">
-                        <input type="text" id="text" name="text" />
-                    </div>
-                </div>
-                <div id="start" class="Vlt-form__element">
-                    <div class="Vlt-input">
-                        <input type="submit" id="pushbtn" onclick="Send()" value="Send" />
+                    <div class="Vlt-composite">
+                        @*<div class="Vlt-composite__prepend">
+                            <button class="Vlt-btn Vlt-btn--secondary Vlt-btn--icon Vlt-modal-trigger" data-modal="uploadModal">Upload</button>
+
+                            <div id="uploadModal" class="Vlt-modal">
+                                <div class="Vlt-modal__panel">
+                                    <div class="Vlt-modal__header">
+                                        <h4>Please select a file to upload</h4>
+                                        <div class="Vlt-modal__dismiss"></div>
+                                    </div>
+                                    <div class="Vlt-modal__content">
+                                        <div class="Vlt-form__element">
+                                            <div>
+                                                <input type="radio" name="file-type" id="image" value="image" />
+                                                <label for="image">
+                                                    Image <img src="~/assets/wa-file-upload.jpg" width="50" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="Vlt-form__element">
+                                            <div>
+                                                <input type="radio" name="file-type" id="file" value="file" />
+                                                <label for="pdf">
+                                                    PDF <img src="~/assets/pdf.png" width="50" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="Vlt-form__element">
+                                            <div>
+                                                <input type="radio" name="file-type" id="audio" value="audio" />
+                                                <label for="audio">
+                                                    Audio <img src="~/assets/audio.png" width="50" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="Vlt-modal__footer">
+                                        <button class="Vlt-btn Vlt-btn--app Vlt-btn--tertiary Vlt-modal__cancel">Cancel</button>
+                                        <button class="Vlt-btn Vlt-btn--app Vlt-btn--secondary Vlt-modal__confirm" onclick="sendFile()">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                        <div class="Vlt-input">
+                            <input type="text" id="text" name="text" />
+                        </div>
+                        <div class="Vlt-composite__append">
+                            <button id="pushbtn" class="Vlt-btn Vlt-btn--primary" onclick="Send()">Send</button>
+                            <input type="hidden" id="type" name="type" />
+                        </div>
                     </div>
                 </div>
             </div>

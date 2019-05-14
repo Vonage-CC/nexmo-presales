@@ -280,13 +280,16 @@ namespace NexmoPSEDemo.Controllers
         {
             // create a logger placeholder
             Logger logger = null;
-            var inboundSMS = new InboundWAObject();
+            var inboundWAMsg = new InboundWAObject();
             var messageResult = string.Empty;
 
             try
             {
-                logger = NexmoLogger.GetLogger("MessagingWAQueueLogger");
-                logger.Open();
+                //if (logger == null)
+                //{
+                //    logger = NexmoLogger.GetLogger("MessagingWAQueueLogger");
+                //}
+                //logger.Open();
 
                 var queue = Storage.CreateQueue("wachat", configuration, logger);
                 var message = Storage.GetNextMessage(queue, logger);
@@ -294,13 +297,58 @@ namespace NexmoPSEDemo.Controllers
                 if (message != null)
                 {
                     messageResult = message.AsString;
-                    inboundSMS = JsonConvert.DeserializeObject<InboundWAObject>(message.AsString);
+                    inboundWAMsg = JsonConvert.DeserializeObject<InboundWAObject>(message.AsString);
                 }
             }
             catch (Exception e)
             {
-                logger.Log(Level.Exception, e);
+                //logger.Log(Level.Exception, e);
                 return "Error";
+            }
+            //finally
+            //{
+            //    logger.Close();
+            //    logger.Deregister();
+            //}
+
+            return messageResult;
+        }
+
+        [HttpGet]
+        [Route("messaging/status")]
+        public string WAStatus()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var inboundWAStatus = new MessagingStatus();
+            var messageResult = string.Empty;
+
+            try
+            {
+                //if(logger == null)
+                //{
+                //    logger = NexmoLogger.GetLogger("MessagingWAStatusQueueLogger");
+                //}
+                //logger.Open();
+
+                var queue = Storage.CreateQueue("messagingstatus", configuration, logger);
+                var message = Storage.GetNextMessage(queue, logger);
+
+                if (message != null)
+                {
+                    messageResult = message.AsString;
+                    inboundWAStatus = JsonConvert.DeserializeObject<MessagingStatus>(message.AsString);
+                }
+            }
+            catch (Exception e)
+            {
+                //logger.Log(Level.Exception, e);
+                return "Error";
+            }
+            finally
+            {
+                //logger.Close();
+                //logger.Deregister();
             }
 
             return messageResult;
@@ -382,11 +430,11 @@ namespace NexmoPSEDemo.Controllers
 
         [HttpPost]
         [Route("messaging/wa/send")]
-        public HttpResponseMessage SendWA()
+        public string SendWA()
         {
             // create a logger placeholder
             Logger logger = null;
-            var httpRequest = new HttpRequestMessage();
+            var responseContent = string.Empty;
 
             try
             {
@@ -412,21 +460,14 @@ namespace NexmoPSEDemo.Controllers
                             ContentType = "text"
                         };
 
-                        if(NexmoApi.SendMessage(message, logger, configuration))
-                        {
-                            return httpRequest.CreateResponse(HttpStatusCode.OK);
-                        }
-                        else
-                        {
-                            return httpRequest.CreateResponse(HttpStatusCode.FailedDependency);
-                        }
+                        var response = NexmoApi.SendMessage(message, logger, configuration);
+                        responseContent = response.Content.ReadAsStringAsync().Result;
                     }
                 }
             }
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
             }
             finally
             {
@@ -434,7 +475,57 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(HttpStatusCode.OK);
+            return responseContent;
+        }
+
+        [HttpPost]
+        [Route("messaging/wa/file/send")]
+        public string SendWAFile()
+        {
+            // create a logger placeholder
+            Logger logger = null;
+            var responseContent = string.Empty;
+
+            try
+            {
+                logger = NexmoLogger.GetLogger("MessagingSendWAFileLogger");
+                logger.Open();
+
+                using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                {
+                    var value = reader.ReadToEndAsync();
+                    var chatWAObject = JsonConvert.DeserializeObject<FileChatWAObject>(value.Result);
+                    logger.Log("Messaging Send WA File Chat - The file message selecgted is: " + chatWAObject.path);
+
+                    if (!string.IsNullOrEmpty(chatWAObject.path))
+                    {
+                        switch (chatWAObject.type)
+                        {
+                            case "image":
+                                var response = NexmoApi.SendFileMessage(chatWAObject, logger, configuration);
+                                responseContent = response.Content.ReadAsStringAsync().Result;
+                                break;
+                            case "file":
+                                break;
+                            case "audio":
+                                break;
+                        }
+                    }
+
+                    
+                }
+            }
+            catch (Exception e)
+            {
+                logger.Log(Level.Exception, e);
+            }
+            finally
+            {
+                logger.Close();
+                logger.Deregister();
+            }
+
+            return responseContent;
         }
     }
 }
