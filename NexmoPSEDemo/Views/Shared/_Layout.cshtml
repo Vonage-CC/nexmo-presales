@@ -61,23 +61,23 @@
         <div class="Vlt-sidenav__scroll">
             <ul class="Vlt-sidemenu Vlt-sidemenu--rounded">
                 @*<li>
-                        <a href="" class="Vlt-sidemenu__link">
-                            <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-report"></use></svg>
-                            <span class="Vlt-sidemenu__label">Selected item</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="Vlt-sidemenu__link" href="">
-                            <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-whisper"></use></svg>
-                            <span class="Vlt-sidemenu__label">Unselected first-level item</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
-                            <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-phone"></use></svg>
-                            <span class="Vlt-sidemenu__label">Disabled first-level item</span>
-                        </a>
-                    </li>*@
+            <a href="" class="Vlt-sidemenu__link">
+                <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-report"></use></svg>
+                <span class="Vlt-sidemenu__label">Selected item</span>
+            </a>
+        </li>
+        <li>
+            <a class="Vlt-sidemenu__link" href="">
+                <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-whisper"></use></svg>
+                <span class="Vlt-sidemenu__label">Unselected first-level item</span>
+            </a>
+        </li>
+        <li>
+            <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
+                <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-phone"></use></svg>
+                <span class="Vlt-sidemenu__label">Disabled first-level item</span>
+            </a>
+        </li>*@
                 <li role="separator"><h5 class="Vlt-sidemenu__title">Use Cases</h5></li>
                 <li>
                     <p class="Vlt-sidemenu__trigger">
@@ -86,11 +86,11 @@
                     </p>
                     <ul>
                         @*<li>
-                                <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
-                                    <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-ambulance"></use></svg>
-                                    <span class="Vlt-sidemenu__label">A disabled page</span>
-                                </a>
-                            </li>*@
+                    <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" href="">
+                        <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-ambulance"></use></svg>
+                        <span class="Vlt-sidemenu__label">A disabled page</span>
+                    </a>
+                </li>*@
                         <li>
                             <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="registration">
                                 <svg>
@@ -129,13 +129,13 @@
                             </a>
                         </li>
                         @*<li>
-                                <p class="Vlt-sidemenu__trigger"><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-tag"></use></svg><span class="Vlt-sidemenu__label">Clickable branch</span></p>
-                                <ul>
-                                    <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-file-search"></use></svg><span class="Vlt-sidemenu__label">Oh more pages</span></a></li>
-                                    <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-grid-two"></use></svg><span class="Vlt-sidemenu__label">And again</span></a></li>
-                                    <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-cursor"></use></svg><span class="Vlt-sidemenu__label">And this is it</span></a></li>
-                                </ul>
-                            </li>*@
+                    <p class="Vlt-sidemenu__trigger"><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-tag"></use></svg><span class="Vlt-sidemenu__label">Clickable branch</span></p>
+                    <ul>
+                        <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-file-search"></use></svg><span class="Vlt-sidemenu__label">Oh more pages</span></a></li>
+                        <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-grid-two"></use></svg><span class="Vlt-sidemenu__label">And again</span></a></li>
+                        <li><a class="Vlt-sidemenu__link" href=""><svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-cursor"></use></svg><span class="Vlt-sidemenu__label">And this is it</span></a></li>
+                    </ul>
+                </li>*@
                     </ul>
                 </li>
                 <li>
@@ -163,6 +163,15 @@
                             </a>
                         </li>
                         <li>
+                            <a class="Vlt-sidemenu__link" href="http://nexmoapac.hopto.me/workflow/" target="_blank">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">Send notification with failover from social channel to SMS (external)</span>
+                            </a>
+                        </li>
+                        <li>
                             <a class="Vlt-sidemenu__link" asp-action="index" asp-controller="messaging">
                                 <svg>
                                     <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
@@ -171,32 +180,7 @@
                                 <span class="Vlt-sidemenu__label">Send an SMS notification to a mobile number</span>
                             </a>
                         </li>
-                        <li>
-                            <a class="Vlt-sidemenu__link Vlt-sidemenu__link--disabled" asp-action="failover" asp-controller="messaging">
-                                <svg>
-                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
-                                    </use>
-                                </svg>
-                                <span class="Vlt-sidemenu__label">Send notification with failover from social channel to SMS to a mobile number</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <p class="Vlt-sidemenu__trigger">
-                        <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-merge-2"></use></svg>
-                        <span class="Vlt-sidemenu__label">In-App Messaging (external)</span>
-                    </p>
-                    <ul>
-                        <li>
-                            <a class="Vlt-sidemenu__link" href="http://jon.nexmodemo.com/vstitchapp/index.html" target="_blank">
-                                <svg>
-                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
-                                    </use>
-                                </svg>
-                                <span class="Vlt-sidemenu__label">Nexmo Client JS SDK</span>
-                            </a>
-                        </li>
+
                     </ul>
                 </li>
                 <li>
@@ -285,6 +269,32 @@
                                     </use>
                                 </svg>
                                 <span class="Vlt-sidemenu__label">Voice Proxy with Automated Speech Recognition</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <p class="Vlt-sidemenu__trigger">
+                        <svg><use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-merge-2"></use></svg>
+                        <span class="Vlt-sidemenu__label">Contextual Communication (external)</span>
+                    </p>
+                    <ul>
+                        <li>
+                            <a class="Vlt-sidemenu__link" href="http://nexmoapac.hopto.me/unifiedagent/" target="_blank">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">Comms Router</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="Vlt-sidemenu__link" href="http://jon.nexmodemo.com/vstitchapp/index.html" target="_blank">
+                                <svg>
+                                    <use xlink:href="~/symbol/volta-icons.svg#Vlt-icon-clipboard-add">
+                                    </use>
+                                </svg>
+                                <span class="Vlt-sidemenu__label">Nexmo Client JS SDK</span>
                             </a>
                         </li>
                     </ul>
