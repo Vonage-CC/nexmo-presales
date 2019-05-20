@@ -59,19 +59,18 @@
                 <div class="Vlt-card Vlt-article">
                     <div class="Vlt-form__element">
                         <label class="Vlt-label" for="codeCheck">Please enter the code you received in the box below</label>
-                        <div class="Vlt-composite">
-                            <div class="Vlt-input">
-                                <input type="text" placeholder="Enter code here" name="pincodecheck" />
-                            </div>
-                            <div class="Vlt-composite__append">
-                                <div class="Vlt-input">
-                                    <input type="submit" value="Check" name="verifyAction" />
-                                </div>
-                            </div>
+                        <div class="Vlt-input">
+                            <input type="text" placeholder="Enter code here" name="pincodecheck" />
                         </div>
                         <input type="hidden" value='@ViewData["RequestId"]' name="requestId" />
                         <input type="hidden" value='@ViewData["Number"]' name="recipient" />
                         <input type="hidden" value='@ViewData["Model"]' name="model" />
+                    </div>
+                    <div class="Vlt-form__element">
+                        <div class="Vlt-input">
+                            <input type="submit" value="Check" name="verifyAction" />
+                        </div>
+
                     </div>
                 </div>
             </div>
