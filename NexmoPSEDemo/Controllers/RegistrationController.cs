@@ -36,32 +36,62 @@ namespace NexmoPSEDemo.Controllers
                 {
                     if (verifyAction == "Register")
                     {
-                        if( logger == null){
+                        if (logger == null)
+                        {
                             logger = NexmoLogger.GetLogger("RegistrationLogger");
                         }
                         logger.Open();
 
-                        var results = NexmoApi.SendVerifyRequest(viewModel, logger, configuration);
-                        if (results.status == "0")
+                        if (string.IsNullOrEmpty(viewModel.PinCode))
                         {
-                            logger.Log("Verify request successfully created with requestId: " + results.request_id);
-                            ViewData["feedback"] = "Thanks " + viewModel.Name + ". We have sent a verification code to the number you provided.";
-                            ViewData["requestId"] = results.request_id;
-                            ViewData["number"] = viewModel.Number;
-                            ViewData["RegistrationStatus"] = "started";
-                        }
-                        else if (results.status == "10")
-                        {
-                            ViewData["warning"] = "Please wait for the previous request to complete, then try again.";
-                            logger.Log(Level.Warning, "Response code: " + results.status + " - Concurrent verifications to the same number are not allowed. Request ID: " + results.request_id);
+                            var results = NexmoApi.SendVerifyRequest(viewModel, logger, configuration);
+                            if (results.status == "0")
+                            {
+                                logger.Log("Verify request successfully created with requestId: " + results.request_id);
+                                ViewData["feedback"] = "Thanks " + viewModel.Name + ". We have sent a verification code to the number you provided.";
+                                ViewData["requestId"] = results.request_id;
+                                ViewData["number"] = viewModel.Number;
+                                ViewData["model"] = "0";
+                                ViewData["RegistrationStatus"] = "started";
+                            }
+                            else if (results.status == "10")
+                            {
+                                ViewData["warning"] = "Please wait for the previous request to complete, then try again.";
+                                logger.Log(Level.Warning, "Response code: " + results.status + " - Concurrent verifications to the same number are not allowed. Request ID: " + results.request_id);
+                            }
+                            else
+                            {
+                                ViewData["error"] = "Your request could not be created at this time. Please try again later.";
+                                logger.Log(Level.Warning, "Response code: " + results.status + " - Request could not be completed. Request ID: " + results.request_id + " - Error Text: " + results.error_text);
+                            }
                         }
                         else
                         {
-                            ViewData["error"] = "Your request could not be created at this time. Please try again later.";
-                            logger.Log(Level.Warning, "Response code: " + results.status + " - Request could not be completed. Request ID: " + results.request_id + " - Error Text: " + results.error_text);
+                            var results = NexmoApi.VerifyRequest(viewModel, logger, configuration);
+                            var response = JsonConvert.DeserializeObject<VerifyResponse>(results);
+
+                            if (response.status == "0")
+                            {
+                                logger.Log("Verify request successfully created with requestId: " + response.request_id);
+                                ViewData["feedback"] = "Thanks " + viewModel.Name + ". We have sent a verification code to the number you provided.";
+                                ViewData["requestId"] = response.request_id;
+                                ViewData["number"] = viewModel.Number;
+                                ViewData["model"] = "2";
+                                ViewData["RegistrationStatus"] = "started";
+                            }
+                            else if (response.status == "10")
+                            {
+                                ViewData["warning"] = "Please wait for the previous request to complete, then try again.";
+                                logger.Log(Level.Warning, "Response code: " + response.status + " - Concurrent verifications to the same number are not allowed. Request ID: " + response.request_id);
+                            }
+                            else
+                            {
+                                ViewData["error"] = "Your request could not be created at this time. Please try again later.";
+                                logger.Log(Level.Warning, "Response code: " + response.status + " - Request could not be completed. Request ID: " + response.request_id + " - Error Text: " + response.error_text);
+                            }
                         }
                     }
-                    else if(verifyAction == "Check")
+                    else if (verifyAction == "Check")
                     {
                         if (logger == null)
                         {
@@ -71,8 +101,17 @@ namespace NexmoPSEDemo.Controllers
 
                         string pinCode = viewModel.PinCode;
                         string requestId = viewModel.RequestId;
-                        string number = viewModel.Recipient; 
-                        var results = NexmoApi.CheckVerifyRequest(viewModel, logger, configuration, requestId);
+                        string number = viewModel.Recipient;
+                        var results = new NumberVerify.CheckResponse();
+
+                        if(viewModel.Model == "2") // pay per request pricing model
+                        {
+                            results = NexmoApi.CheckVerify(viewModel, logger, configuration, requestId);
+                        }
+                        else
+                        {
+                            results = NexmoApi.CheckVerifyRequest(viewModel, logger, configuration, requestId);
+                        }
 
                         // log the request response for future debugging
                         string response = "Response returned with status code: " + results.status;
@@ -96,7 +135,7 @@ namespace NexmoPSEDemo.Controllers
                                 Text = "Your account has been created successfully. You can access it here: http://dashboard.nexmo.com"
                             };
                             var smsResults = NexmoApi.SendSMS(messagingModel, configuration, "60");
-                            foreach(SMS.SMSResponseDetail responseDetail in smsResults.messages)
+                            foreach (SMS.SMSResponseDetail responseDetail in smsResults.messages)
                             {
                                 string messageDetails = "SMS sent successfully with messageId: " + responseDetail.message_id;
                                 messageDetails += " for Verify requestId: " + requestId;

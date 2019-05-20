@@ -29,4 +29,17 @@ function toggleStatusBoxes() {
         $("#errorCallout").slideDown();
 }
 
+function generatePin() {
+    var randomPin = "";
+    var length = Math.floor(Math.random() * (11 - 4)) + 4;
+
+    var char_list = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (var i = 0; i < length; i++) {
+        randomPin += char_list.charAt(Math.floor(Math.random() * char_list.length));
+    }
+
+    $("#pin").val(randomPin);
+    event.preventDefault();
+}
+
 $(document).ready(toggleStatusBoxes);

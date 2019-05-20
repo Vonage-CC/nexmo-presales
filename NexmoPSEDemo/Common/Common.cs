@@ -228,7 +228,7 @@ namespace NexmoPSEDemo.Common
     public static class NexmoApi
     {
         // Verify API
-        public static VerifyResponse SendVerifyRequest(RegistrationModel viewModel, Logger logger, IConfigurationRoot configuration)
+        public static NumberVerify.VerifyResponse SendVerifyRequest(RegistrationModel viewModel, Logger logger, IConfigurationRoot configuration)
         {
             var verifyRequest = new NumberVerify.VerifyRequest
             {
@@ -257,7 +257,7 @@ namespace NexmoPSEDemo.Common
         {
             var checkRequest = new NumberVerify.CheckRequest
             {
-                code = viewModel.PinCode,
+                code = viewModel.PinCodeCheck,
                 request_id = requestId
             };
 
@@ -265,6 +265,51 @@ namespace NexmoPSEDemo.Common
             logger.Log("Making a PIN check request with requestId: " + checkRequest.request_id + " and PIN code: " + checkRequest.code);
 
             var client = GenerateNexmoClient(configuration);
+
+            return client.NumberVerify.Check(request: checkRequest);
+        }
+
+        // Verify new pricing model and PIN self-management
+        public static string VerifyRequest(RegistrationModel viewModel, Logger logger, IConfigurationRoot configuration)
+        {
+            var queryParams = new Dictionary<string, string>();
+            queryParams.Add("number", viewModel.Number);
+            queryParams.Add("brand", "Nexmo PSE Demo");
+            queryParams.Add("sender_id", "Nexmo PSE");
+            queryParams.Add("pin_expiry", "60");
+            queryParams.Add("next_event_wait", "60");
+            queryParams.Add("pin_code", viewModel.PinCode);
+
+            // log the request parameters for future debugging
+            logger.Log(queryParams.Values.ToString());
+
+            // trigger Verify API request
+            var apiKey = configuration["appSettings:Nexmo.api_key.sub"];
+            var apiSecret = configuration["appSettings:Nexmo.api_secret.sub"];
+            var url = configuration["appSettings:Nexmo.Url.Api"] + "/verify/json";
+
+            var req = Nexmo.Api.Request.ApiRequest.DoRequest(new Uri(url), queryParams, new Nexmo.Api.Request.Credentials
+            {
+                ApiKey = apiKey,
+                ApiSecret = apiSecret,
+                AppUserAgent = configuration["appSettings:Nexmo.UserAgent"]
+            });
+
+            return req;
+        }
+
+        public static CheckResponse CheckVerify(RegistrationModel viewModel, Logger logger, IConfigurationRoot configuration, string requestId)
+        {
+            var checkRequest = new NumberVerify.CheckRequest
+            {
+                code = viewModel.PinCodeCheck,
+                request_id = requestId
+            };
+
+            // log the request parameters for future debugging
+            logger.Log("Making a PIN check request with requestId: " + checkRequest.request_id + " and PIN code: " + checkRequest.code);
+
+            var client = GenerateNexmoClientSubKey(configuration);
 
             return client.NumberVerify.Check(request: checkRequest);
         }
@@ -1216,6 +1261,18 @@ namespace NexmoPSEDemo.Common
             {
                 ApiKey = configuration["appSettings:Nexmo.api_key"],
                 ApiSecret = configuration["appSettings:Nexmo.api_secret"],
+                AppUserAgent = configuration["appSettings:Nexmo.UserAgent"]
+            });
+
+            return client;
+        }
+
+        private static Client GenerateNexmoClientSubKey(IConfigurationRoot configuration)
+        {
+            var client = new Client(creds: new Nexmo.Api.Request.Credentials
+            {
+                ApiKey = configuration["appSettings:Nexmo.api_key.sub"],
+                ApiSecret = configuration["appSettings:Nexmo.api_secret.sub"],
                 AppUserAgent = configuration["appSettings:Nexmo.UserAgent"]
             });
 
