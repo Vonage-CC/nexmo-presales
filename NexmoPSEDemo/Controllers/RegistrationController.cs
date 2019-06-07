@@ -42,7 +42,7 @@ namespace NexmoPSEDemo.Controllers
                         }
                         logger.Open();
 
-                        if (string.IsNullOrEmpty(viewModel.PinCode))
+                        if (string.IsNullOrEmpty(viewModel.PinCode) && viewModel.Workflow == "1")
                         {
                             var results = NexmoApi.SendVerifyRequest(viewModel, logger, configuration);
                             if (results.status == "0")
@@ -67,6 +67,25 @@ namespace NexmoPSEDemo.Controllers
                         }
                         else
                         {
+                            // If a different workflow than the default has been selected but the PIN code is not generated in the UI
+                            // then generate a random PIN
+                            if (string.IsNullOrEmpty(viewModel.PinCode))
+                            {
+                                var random = new Random();
+                                string pin = random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+                                pin += random.Next(0, 9).ToString();
+
+                                viewModel.PinCode = pin;
+                            }
+
                             var results = NexmoApi.VerifyRequest(viewModel, logger, configuration);
                             var response = JsonConvert.DeserializeObject<VerifyResponse>(results);
 

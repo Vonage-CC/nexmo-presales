@@ -33,6 +33,18 @@
                         </div>
                     </div>
                     <div class="Vlt-form__element">
+                        <label class="Vlt-label" for="type">Select the worfklow to use for this request</label>
+                        <div class="Vlt-select">
+                            <select id="select" name="workflow">
+                                <option value="1">SMS-TTS-TTS (Default)</option>
+                                <option value="2">SMS-SMS-TTS</option>
+                                <option value="3">TTS-TTS</option>
+                                <option value="4">SMS-SMS</option>
+                                <option value="5">SMS-TTS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="Vlt-form__element">
                         <label class="Vlt-label" for="number">Phone Number</label>
                         <div class="Vlt-input">
                             <input type="text" name="number" placeholder="Please enter your phone number" />

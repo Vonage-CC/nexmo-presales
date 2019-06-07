@@ -279,6 +279,7 @@ namespace NexmoPSEDemo.Common
             queryParams.Add("pin_expiry", "60");
             queryParams.Add("next_event_wait", "60");
             queryParams.Add("pin_code", viewModel.PinCode);
+            queryParams.Add("workflow_id", viewModel.Workflow);
 
             // log the request parameters for future debugging
             logger.Log(queryParams.Values.ToString());

@@ -11,6 +11,7 @@ namespace NexmoPSEDemo.Models
         public string PinCodeCheck { get; set; }
         public string Recipient { get; set; }
         public string Model { get; set; }
+        public string Workflow { get; set; }
     }
 
     public class VerifyRequest
