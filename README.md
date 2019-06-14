@@ -21,6 +21,7 @@ This is a list of prerequirements to run the demo application within Visual Stud
     "Nexmo.Application.Number.From.FR": "if using the Messaging API",
     "Nexmo.Application.Number.From.UK": "if using the Messaging API",
     "Nexmo.Messaging.WA.Token": "WhatsApp sandbox token",
+    "Nexmo.Messaging.WA.Sender": "the WhatsApp sandbox number",
     "Nexmo.Url.Api": "https://api.nexmo.com",
     "Nexmo.Url.Rest": "https://rest.nexmo.com",
     "Nexmo.Url.WA.Sandbox": "https://sandbox.nexmodemo.com/v0.1/messages/",
@@ -46,7 +47,7 @@ In the GetConfigFile() method, change the path of the configFile variable depend
 
 4. For the Voice API, you must store a copy of your generated key file in the root folder of your project. The file must be called 'private.key'.
 
-5. For the Messaging API, particularly for the WhatsApp sandbox, you must fill in the parameter Nexmo.Messaging.WA.Token.
+5. For the Messaging API, particularly for the WhatsApp sandbox, you must fill in the parameters Nexmo.Messaging.WA.Token and  Nexmo.Messaging.WA.Sender. 
 
 6. For the OpenTok demo, you must create a project in your OpenTok dashboard and you must fill in the parameters prefixed with OT.
 
