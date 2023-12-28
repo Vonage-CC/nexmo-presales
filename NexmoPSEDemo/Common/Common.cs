@@ -1,5 +1,4 @@
 ﻿using Jose;
-using Microsoft.Azure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
@@ -28,7 +27,7 @@ namespace NexmoPSEDemo.Common
             string configFile;
 #if DEBUG
             // use this for Mac OS
-            configFile = "/Volumes/GoogleDrive/My Drive/Documents/nexmo/visual studio apps/Nexmo PSE Demo/nexmo-presales/NexmoPSEDemo/appsettings.json";
+            configFile = "/Users/jchenot/Library/CloudStorage/GoogleDrive-jeanphilippe.chenot@vonage.com/My Drive/Dev/apps/nexmo-presales/NexmoPSEDemo/appsettings.json";
             // use this for PC
             if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
@@ -54,7 +53,7 @@ namespace NexmoPSEDemo.Common
             // Make sure the directory to write the log files to exists
 #if DEBUG
             // use this for Mac OS
-            logDirectory = "/Volumes/GoogleDrive/My Drive/Documents/nexmo/visual studio apps/Nexmo PSE Demo/nexmo-presales/NexmoPSEDemo/Logs/";
+            logDirectory = "/Users/jchenot/Library/CloudStorage/GoogleDrive-jeanphilippe.chenot@vonage.com/My Drive/Dev/apps/nexmo-presales/NexmoPSEDemo/Logs/";
             // use this for PC
             if (Environment.OSVersion.Platform.ToString().StartsWith("Win"))
             {
@@ -376,7 +375,8 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Warning, response.StatusCode.ToString());
                         logger.Log(Level.Warning, response.ReasonPhrase);
 
-                        return request.CreateResponse(response.StatusCode);
+                        // return request.CreateResponse(response.StatusCode);
+                        return response;
                     }
                 }
             }
@@ -385,7 +385,13 @@ namespace NexmoPSEDemo.Common
                 logger.Log(Level.Exception, e.Message);
                 logger.Log(Level.Exception, e.StackTrace);
 
-                return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
         }
 
@@ -434,7 +440,8 @@ namespace NexmoPSEDemo.Common
                         logger.Log(Level.Warning, response.StatusCode.ToString());
                         logger.Log(Level.Warning, response.ReasonPhrase);
 
-                        return request.CreateResponse(response.StatusCode);
+                        // return request.CreateResponse(response.StatusCode);
+                        return response;
                     }
                 }
             }
@@ -443,7 +450,13 @@ namespace NexmoPSEDemo.Common
                 logger.Log(Level.Exception, e.Message);
                 logger.Log(Level.Exception, e.StackTrace);
 
-                return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
         }
 

@@ -56,7 +56,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -64,7 +70,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
         }
 
         [HttpPost]

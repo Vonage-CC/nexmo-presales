@@ -84,7 +84,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -92,7 +98,8 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+            // return httpRequest.CreateResponse(System.Net.HttpStatusCode.OK);
+              return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         [HttpPost]
@@ -129,7 +136,10 @@ namespace NexmoPSEDemo.Controllers
                             var alertNcco = NexmoApi.MakeAlertTTSCall(voiceModel, logger, configuration);
                             if (alertNcco)
                             {
-                                httpRequest.CreateResponse(HttpStatusCode.UnprocessableEntity);
+                                // httpRequest.CreateResponse(HttpStatusCode.UnprocessableEntity);
+                                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.UnprocessableEntity);
+
+                                return errorResponse;
                             }
                         }
                         else if (moSmsObject.text.ToLower().Trim() == "rob")
@@ -166,7 +176,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -174,7 +190,8 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(HttpStatusCode.OK);
+            // return httpRequest.CreateResponse(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         [HttpPost]
@@ -222,7 +239,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -230,7 +253,8 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(HttpStatusCode.OK);
+            // return httpRequest.CreateResponse(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         // Messaging endpoints
@@ -263,7 +287,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -271,7 +301,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         [HttpGet]
@@ -377,7 +407,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -385,7 +421,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         [HttpPost]
@@ -417,7 +453,13 @@ namespace NexmoPSEDemo.Controllers
             catch (Exception e)
             {
                 logger.Log(Level.Exception, e);
-                return httpRequest.CreateResponse(HttpStatusCode.InternalServerError);
+                // return request.CreateResponse(System.Net.HttpStatusCode.InternalServerError);
+                var errorResponse = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError)
+                {
+                    ReasonPhrase = e.Message
+                };
+
+                return errorResponse;
             }
             finally
             {
@@ -425,7 +467,7 @@ namespace NexmoPSEDemo.Controllers
                 logger.Deregister();
             }
 
-            return httpRequest.CreateResponse(HttpStatusCode.OK);
+            return new HttpResponseMessage(HttpStatusCode.OK);
         }
 
         [HttpPost]
